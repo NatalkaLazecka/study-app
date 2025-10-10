@@ -4,15 +4,61 @@ import HomePage from '@/pages/home/HomePage';
 import LoginPage from '@/features/auth/pages/LoginPage';
 import RegisterPage from '@/features/auth/pages/RegisterPage';
 import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage';
+import TodoListPage from '@/features/todo/pages/TodoListPage';
+import TodoDetailsPage from '@/features/todo/pages/TodoDetailsPage';
 
-export default function AppRouter() {
+const ProtectedRoute = ({ isAuthed, children }) =>
+  isAuthed ? children : <Navigate to="/login" replace />;
+
+export default function AppRouter({ isAuthed = true }) {
   return (
     <Routes>
+      {/*  Landing & Auth */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/home" element={<HomePage />} />
+
+      {/*  Home */}
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute isAuthed={isAuthed}>
+            <HomePage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/*  To-Do list */}
+      <Route
+        path="/todo"
+        element={
+          <ProtectedRoute isAuthed={isAuthed}>
+            <TodoListPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/*  To-Do details / edit / new */}
+      <Route
+        path="/todo/:id"
+        element={
+          <ProtectedRoute isAuthed={isAuthed}>
+            <TodoDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/todo/new"
+        element={
+          <ProtectedRoute isAuthed={isAuthed}>
+            <TodoDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/*  Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
