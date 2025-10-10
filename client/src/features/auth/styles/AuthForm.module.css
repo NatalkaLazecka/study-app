@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
+
+.login-container {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse 70% 60% at 70% 60%, #b854b4 0%, #3D2A3C 60%, #160c1a 100%), #0a0610;
+    color: #e8d2e7;
+    box-sizing: border-box;
+    font-family: 'Roboto Mono', monospace;
+    overflow: hidden;
+}
+
+.title {
+    font-size: 4.5rem;
+    font-weight: bold;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.12em;
+    text-align: center;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.title-highlight {
+    color: #e85bbf;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid #e85bbf;
+    border-radius: 10px;
+    padding: 2.2rem 2.2rem 1.2rem 2.2rem;
+    min-width: 400px;
+    box-shadow: 0 0 40px 0 rgba(180, 70, 180, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin: 0 auto;
+}
+
+.login-box label {
+    margin-top: 1.2rem;
+    margin-bottom: 0.2rem;
+    font-size: 0.95rem;
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.login-box input {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: #fff;
+    color: #222;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    font-family: 'Roboto Mono', monospace;
+    box-shadow: none;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s;
+    display: block;
+}
+
+.login-box input:focus {
+    box-shadow: 0 0 0 2px #e89bdd;
+}
+
+.login-box button {
+    margin-top: 1.2rem;
+    padding: 0.65rem 0;
+    background: transparent;
+    color: #fff;
+    font-weight: bold;
+    font-family: 'Roboto Mono', monospace;
+    border: 1px solid #e85bbf;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
+    letter-spacing: 0.08em;
+    display: block;
+}
+
+.login-box button:hover {
+    background: #e85bbf;
+    color: #222;
+}
+
+.forgot {
+    font-size: 0.82rem;
+    margin-top: 1.1rem;
+    text-align: left;
+    color: #eee;
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.01em;
+}
+
+.back-btn {
+    margin-top: 1.5rem;
+    background: transparent;
+    color: #eee;
+    border: 1px solid #e85bbf;
+    border-radius: 999px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.98rem;
+    padding: 0.65rem 0;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    display: block;
+    width: 15%;
+    letter-spacing: 0.08em;
+}
+
+.back-btn:hover {
+    background: #e85bbf;
+    color: #222;
+    border-color: #e85bbf;
+}
+
+@media (max-width: 500px) {
+    .login-box {
+        min-width: 90vw;
+        padding: 1.2rem 0.8rem 1rem 0.8rem;
+    }
+
+    .title {
+        font-size: 2.2rem;
+    }
+}

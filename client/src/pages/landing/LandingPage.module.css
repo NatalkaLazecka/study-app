@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+.landing-root {
+    position: relative;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    font-family: 'Roboto Mono', monospace;
+    background: #140b11;
+    overflow: hidden;
+}
+
+.landing-gradient {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 90vw;
+    height: 110vh;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(circle at 75% 65%,
+    #b854b4 0%,
+    #3D2A3C 30%,
+    #b854b4 55%,
+    #3D2A3C 75%,
+    transparent 100%
+    );
+    filter: blur(32px);
+    border-radius: 50%;
+    opacity: 0.85;
+    animation: waveGlow 3s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes waveGlow {
+    0% { transform: scale(1) skew(0deg, 0deg) rotate(0deg); }
+    25% { transform: scale(1.03, 0.97) skew(2deg, -1deg) rotate(1deg); }
+    50% { transform: scale(0.98, 1.02) skew(-2deg, 2deg) rotate(-1deg); }
+    75% { transform: scale(1.02, 0.98) skew(1deg, -2deg) rotate(1deg); }
+    100% { transform: scale(1) skew(0deg, 0deg) rotate(0deg); }
+}
+
+.landing-content {
+    position: relative;
+    z-index: 2;
+    height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 60px 0 0 60px;
+}
+
+.landing-title {
+    font-size: 3.5rem;
+    color: #e8d2e7;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.25em;
+}
+
+.landing-title-highlight {
+    color: #e85bbf;
+}
+
+.landing-subtitle {
+    color: #e8d2e7;
+    font-size: 1rem;
+    margin-bottom: 2.5em;
+    letter-spacing: 0.11em;
+}
+
+.landing-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15em;
+}
+
+.landing-btn {
+    background: transparent;
+    color: #e85bbf;
+    border: 1px solid #e85bbf;
+    padding: 0.5em 1.7em 0.5em 1em;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.09em;
+    margin-bottom: 0.1em;
+    border-radius: 2px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 180px;
+}
+
+.landing-btn:hover {
+    background: #e85bbf18;
+    color: #e85bbf;
+    border-color: #e85bbf;
+}
+
+.arrow {
+    font-size: 1.2em;
+    margin-left: 0.8em;
+}
+
+.corner-icon {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    color: #e8d2e7;
+    font-size: 1.25em;
+    z-index: 3;
+    font-family: 'Roboto Mono', monospace;
+    opacity: 0.75;
+}
+
+@media (max-width: 800px) {
+    .landing-content {
+        padding: 30px 0 0 20px;
+    }
+
+    .landing-title {
+        font-size: 2.2rem;
+    }
+
+    .landing-btn {
+        min-width: 120px;
+        font-size: 0.92rem;
+        padding: 0.4em 1.2em 0.4em 0.7em;
+    }
+
+    .landing-gradient {
+        width: 85vw;
+        height: 60vh;
+    }
+}
