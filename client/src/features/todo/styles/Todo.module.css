@@ -6,13 +6,64 @@
   --bg-dark: #160c1a;
 }
 
-/* ROOT */
-.todo-root {
-  min-height: 100vh;
-  background: radial-gradient(circle at 50% 50%, #b854b4 0%, #3D2A3C 60%, #160c1a 100%);
+.menu-bar{
+  background: #0c0c0c;
+  height: 70px;
+  width: 100%;
+}
+
+/* Sekcja z przyciskiem study i tytułem */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
+  padding: 0 3rem;
+}
+
+/* Przycisk study < */
+.back-button {
+  background: none;
+  border: none;
   color: var(--light);
   font-family: 'Roboto Mono', monospace;
-  padding: 3rem;
+  font-size: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+}
+
+.back-button:hover {
+  color: var(--pink);
+}
+
+.back-text {
+  color: var(--light);
+  margin-bottom: 2rem;
+}
+
+/* Specjalny styl dla litery 'y' */
+.back-text-y {
+  color: var(--pink);
+}
+
+.back-arrow {
+  color: var(--pink);
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* ROOT */
+.todo-root {
+  min-height: calc(100vh - 70px);
+  width: 100%;
+  background: radial-gradient(circle at 50% 50%, #C92C72 0%, #821E87 30%, #140B0F 85%);
+  color: var(--light);
+  font-family: 'Roboto Mono', monospace;
+  padding: 3rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
