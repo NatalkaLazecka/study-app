@@ -6,6 +6,7 @@ import RegisterPage from '@/features/auth/pages/RegisterPage';
 import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage';
 import TodoListPage from '@/features/todo/pages/TodoListPage';
 import TodoDetailsPage from '@/features/todo/pages/TodoDetailsPage';
+import CalendarPage from "../pages/calendar/CalendarPage";
 
 const ProtectedRoute = ({ isAuthed, children }) =>
   isAuthed ? children : <Navigate to="/login" replace />;
@@ -18,6 +19,9 @@ export default function AppRouter({ isAuthed = true }) {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+        {/* Calendar */}
+        <Route path="/calendar" element={<CalendarPage />} />
 
       {/*  Home */}
       <Route

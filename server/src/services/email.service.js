@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { Resend } from 'resend'
 import fs from 'fs'
 import path from 'path'
@@ -5,7 +8,7 @@ import handlebars from 'handlebars'
 import { fileURLToPath } from 'url'
 import { RESEND_API_KEY, FRONTEND_URL } from '../config/env.js'
 
-const resend = new Resend(RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // konfiguracja ścieżki szablonu
 const __filename = fileURLToPath(import.meta.url)
