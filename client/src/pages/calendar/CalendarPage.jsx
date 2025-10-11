@@ -10,7 +10,26 @@ export default function CalendarPage() {
   return (
     <div>
         <div className={styles['menu-bar']}>
+            <div className={styles['menu-icons']}>
+                <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')}>
+                    <i className="fa-solid fa-list-check"></i>
+                </button>
+                <button className={styles['menu-icon-btn']} onClick={() => navigate('/calendar')}>
+                    <i className="fa-regular fa-calendar-days"></i>
+                </button>
+                <button className={styles['menu-icon-btn']} onClick={() => navigate('/groups')}>
+                    <i className="fa-solid fa-people-group"></i>
+                </button>
+                <button className={styles['menu-icon-btn']} onClick={() => navigate('/notifications')}>
+                    <i className="fa-solid fa-question"></i>
+                </button>
+            </div>
 
+            <div className={styles['menu-user']}>
+                <button className={styles['menu-icon-btn']}>
+                    <i class="fa-regular fa-circle-user"></i>
+                </button>
+            </div>
         </div>
 
         <div className={styles['calendar-root']}>

@@ -10,6 +10,48 @@
   background: #0c0c0c;
   height: 70px;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+/* Kontener dla ikon */
+.menu-icons {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.menu-user {
+  display: flex;
+  align-items: center;
+}
+
+/* Style przycisków z ikonami */
+.menu-icon-btn {
+  background: none;
+  border: none;
+  color: #FBFBFBCC;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: color 0.3s ease, background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.menu-icon-btn:hover {
+  color: var(--pink);
+  background: rgba(232, 91, 191, 0.1);
+}
+
+.menu-icon-btn:active {
+  transform: scale(0.95);
 }
 
 /* Sekcja z przyciskiem study i tytułem */
@@ -51,7 +93,7 @@
 
 .back-arrow {
   color: var(--pink);
-  font-size: 1.4rem;
+  font-size: 26px;
   font-weight: bold;
 }
 
