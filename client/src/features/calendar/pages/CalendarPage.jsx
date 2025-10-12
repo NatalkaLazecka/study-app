@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
-import styles from './CalendarPage.module.css';
+import styles from '../styles/CalendarPage.module.css';
 import {useNavigate} from "react-router-dom";
 
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
   const navigate = useNavigate();
+
+  const handleDateClick = (selectedDate) => {
+      setDate(selectedDate);
+
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+
+      navigate(`/calendar/newEvent?date=${formattedDate}`);
+  }
 
   return (
     <div>
@@ -49,7 +60,7 @@ export default function CalendarPage() {
             <div className={styles['calendar-content']}>
               <div className={styles['calendar-box']}>
                 <Calendar
-                  onChange={setDate}
+                  onChange={handleDateClick}
                   value={date}
                   locale="en-US"
                   formatShortWeekday={(locale, date) => {
