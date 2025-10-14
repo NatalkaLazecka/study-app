@@ -3,7 +3,7 @@ import styles from '../styles/Todo.module.css';
 import { useState } from 'react';
 import CalendarPicker from '../components/CalendarPicker';
 
-export default function TodoDetailsPage() {
+export default function TodoDetailsPage({ mode = 'edit' }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [priority, setPriority] = useState(2);
@@ -12,10 +12,15 @@ export default function TodoDetailsPage() {
 
   return (
     <div className={styles['edit-root']}>
-        <h1 className={styles['edit-title']}>IN EDIT MODE <i className="fa-regular fa-pen-to-square"></i></h1>
+      <h1 className={styles['edit-title']}>
+        {mode === 'new' ? (
+          <>NEW TASK <i className="fa-solid fa-plus"></i></>
+        ) : (
+          <>EDIT TASK <i className="fa-regular fa-pen-to-square"></i></>
+        )}
+      </h1>
 
-
-        <div className={styles['edit-section']}>
+      <div className={styles['edit-section']}>
         <div className={styles['edit-box']}>
           <p className={styles['edit-label']}>Task</p>
           <input
@@ -57,7 +62,6 @@ export default function TodoDetailsPage() {
           </div>
         </div>
 
-
         <div className={styles['edit-box']}>
           <p className={styles['edit-label']}>Effort</p>
           <div className={styles['icons-row']}>
@@ -89,7 +93,6 @@ export default function TodoDetailsPage() {
           </div>
         </div>
       </div>
-
 
       <div className={styles['edit-section']}>
         <textarea

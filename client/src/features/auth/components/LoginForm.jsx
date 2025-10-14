@@ -13,7 +13,7 @@ export default function LoginForm({ onLogin, onForgotPassword, onBackToLanding }
   return (
     <div className={styles['login-container']}>
       <h1 className={styles.title}>
-        Welcome to <span className={styles['title-highlight']}>StudY</span>
+        welcome to stud<span className={styles['title-highlight']}>y</span>
       </h1>
 
       <form className={styles['login-box']} onSubmit={handleSubmit}>

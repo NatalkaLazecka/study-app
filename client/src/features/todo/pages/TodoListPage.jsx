@@ -1,20 +1,19 @@
-import {useNavigate} from 'react-router-dom';
-import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import styles from '../styles/Todo.module.css';
-
 
 export default function TodoListPage() {
     const navigate = useNavigate();
 
     const [todos, setTodos] = useState([
-        {id: 1, task: 'Set up database', priority: 2, effort: 3, done: false},
-        {id: 2, task: 'Send the project', priority: 3, effort: 4, done: false},
-        {id: 3, task: 'Take notes for exam', priority: 2, effort: 2, done: false},
+        { id: 1, task: 'Set up database', priority: 2, effort: 3, done: false },
+        { id: 2, task: 'Send the project', priority: 3, effort: 4, done: false },
+        { id: 3, task: 'Take notes for exam', priority: 2, effort: 2, done: false },
     ]);
 
     const toggleDone = (id) => {
         setTodos((prev) =>
-            prev.map((t) => (t.id === id ? {...t, done: !t.done} : t))
+            prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
         );
     };
 
@@ -26,7 +25,7 @@ export default function TodoListPage() {
                         .fill(false)
                         .map((_, i) => i < t.effort);
                     newEffort[index] = !newEffort[index];
-                    return {...t, effort: newEffort.filter(Boolean).length};
+                    return { ...t, effort: newEffort.filter(Boolean).length };
                 }
                 return t;
             })
@@ -41,7 +40,7 @@ export default function TodoListPage() {
                         .fill(false)
                         .map((_, i) => i < t.priority);
                     newPriority[index] = !newPriority[index];
-                    return {...t, priority: newPriority.filter(Boolean).length};
+                    return { ...t, priority: newPriority.filter(Boolean).length };
                 }
                 return t;
             })
@@ -79,8 +78,9 @@ export default function TodoListPage() {
                         className={styles['back-button']}
                         onClick={() => navigate(-1)}
                     >
-                    <span className={styles['back-text']}>stud
-                      <span className={styles['back-text-y']}>y</span></span>
+                        <span className={styles['back-text']}>stud
+                            <span className={styles['back-text-y']}>y</span>
+                        </span>
                         <span className={styles['back-arrow']}>&lt;</span>
                     </button>
                     <h1 className={styles['todo-title']}>MY TO-DO LIST</h1>
@@ -103,59 +103,68 @@ export default function TodoListPage() {
 
                 <table className={styles['todo-table']}>
                     <tbody>
-                    {todos.map((t) => (
-                        <tr
-                            key={t.id}
-                            className={`${styles['todo-row']} ${
-                                t.done ? styles['todo-done'] : ''
-                            }`}
-                        >
-                            <td
-                                className={styles['todo-cell']}
-                                onClick={() => toggleDone(t.id)}
+                        {todos.map((t) => (
+                            <tr
+                                key={t.id}
+                                className={`${styles['todo-row']} ${t.done ? styles['todo-done'] : ''}`}
                             >
-                                <input
-                                    type="checkbox"
-                                    className={styles['todo-checkbox']}
-                                    checked={t.done}
-                                    readOnly
-                                />
-                                {t.task}
-                            </td>
+                                <td
+                                    className={styles['todo-cell']}
+                                    onClick={() => toggleDone(t.id)}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        className={styles['todo-checkbox']}
+                                        checked={t.done}
+                                        readOnly
+                                    />
+                                    {t.task}
+                                </td>
 
-                            <td className={styles['todo-cell']}>
-                                {Array(3).fill(null).map((_, i) => (
-                                    <span
-                                        key={i}
-                                        onClick={() => togglePriority(t.id, i)}
-                                        className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
-                                        role="button"
-                                        aria-label={`Priority level ${i + 1}`}
-                                    >
-                                        <i className="fa-solid fa-fire"/>
-                                    </span>
-                                ))}
-                            </td>
-
-
-                            <td className={styles['todo-cell']}>
-                                {Array(4).fill(null).map((_, i) => {
-                                    const isActive = i < t.effort;
-                                    return (
+                                <td className={styles['todo-cell']}>
+                                    {Array(3).fill(null).map((_, i) => (
                                         <span
                                             key={i}
-                                            onClick={() => toggleEffort(t.id, i)}
-                                            className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
+                                            onClick={() => togglePriority(t.id, i)}
+                                            className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
                                             role="button"
-                                            aria-label={`Effort level ${i + 1}`}
+                                            aria-label={`Priority level ${i + 1}`}
                                         >
-                                            <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'}/>
+                                            <i className="fa-solid fa-fire" />
                                         </span>
-                                    );
-                                })}
-                            </td>
-                        </tr>
-                    ))}
+                                    ))}
+                                </td>
+
+                                <td className={styles['todo-cell']}>
+                                    {Array(4).fill(null).map((_, i) => {
+                                        const isActive = i < t.effort;
+                                        return (
+                                            <span
+                                                key={i}
+                                                onClick={() => toggleEffort(t.id, i)}
+                                                className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
+                                                role="button"
+                                                aria-label={`Effort level ${i + 1}`}
+                                            >
+                                                <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'} />
+                                            </span>
+                                        );
+                                    })}
+                                </td>
+
+                                <td className={styles['todo-cell']}>
+                                    <span
+                                        className={styles['edit-icon']}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/todo/edit/${t.id}`);
+                                        }}
+                                    >
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
 
