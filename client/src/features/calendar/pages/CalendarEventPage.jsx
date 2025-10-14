@@ -96,7 +96,10 @@ export default function CalendarEventPage(){
                         />
                     </div>
 
-                    <h3 className={styles['event-h3']}>import notes/files/etc.</h3>
+                    <div className={styles['import-box']}>
+                        <div className={styles['import-icon']}><i className="fa-solid fa-file-import" /></div>
+                        <h3 className={styles['event-h3']}>import notes/files/etc.</h3>
+                    </div>
                     <h2 className={styles['event-h2']}>choose category:</h2>
                     <div className={styles['event-buttons']}>
                         <button
@@ -116,6 +119,11 @@ export default function CalendarEventPage(){
                             onClick={() => toggleCategory('other')}
                         >other</button>
                     </div>
+                </div>
+
+                <div className={styles['end-buttons']}>
+                    <button className={styles['end-button']} onClick={() => navigate(-1)}>SAVE</button>
+                    <button className={styles['end-button']} onClick={() => navigate(-1)}>CANCEL</button>
                 </div>
             </div>
         </div>

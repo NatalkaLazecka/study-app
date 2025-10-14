@@ -7,6 +7,10 @@
     --bg-dark: #160c1a;
     --white: #fdfdfd;
     --black: #0c0c0c;
+    --dotblue: #9ED7FF;
+    --dotgreen: #8EF19D;
+    --dotorang: #FF9335;
+    --dotpink: #FF79CB;
 }
 
 .menu-bar {
@@ -397,7 +401,7 @@
 .event-dot {
     color: #9ED7FF;
     margin-top: 3px;
-    font-size: 22px
+    font-size: 22px;
 }
 
 .event-descripsion {
@@ -424,11 +428,85 @@
 }
 
 .event-descripsion-title{
-    font-size: 24px;
+    font-size: 23px;
 }
 
 .event-descripsion-date{
-    font-size: 18px;
+    font-size: 16px;
     color: var(--light);
     font-weight: lighter;
+}
+
+.schedule-descripsion{
+    display: grid;
+    grid-template-columns: 24px auto;
+    color: var(--white);
+    padding: 10px 10px 0 10px;
+    text-align: start;
+    gap: 25px
+}
+
+.schedule-component{
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 20px;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.event-descripsion-time{
+    font-size: 16px;
+    color: var(--light);
+    font-weight: lighter;
+    text-align: end;
+}
+
+.tile-event-indicators {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    display: flex;
+    gap: 3px;
+    pointer-events: none;
+}
+
+.tile-event-indicator {
+    font-size: 10px;
+}
+
+.end-buttons{
+    margin-top: 20px;
+    gap: 20px;
+    display: flex;
+}
+
+.end-button{
+    border: var(--pink) solid 2px;
+    border-radius: 12px;
+    height: 35px;
+    width: 120px;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 16px;
+}
+
+.end-button:hover{
+    border: 2px solid var(--pink);
+    background: rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.import-box{
+    margin-top: 10px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.import-icon{
+    font-size: 28px;
 }
