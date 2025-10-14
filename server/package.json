@@ -6,11 +6,10 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "dotenv": "^16",
     "express": "^5",
     "handlebars": "^4.7.8",
     "resend": "^4"
   }
 }
-
-

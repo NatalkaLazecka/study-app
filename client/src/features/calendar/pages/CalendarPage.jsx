@@ -77,7 +77,9 @@ export default function CalendarPage() {
                 </div>
 
                 <div className={styles['menu-user']}>
-                    <button className={styles['menu-icon-btn']}>
+                    <button className={styles['menu-icon-btn']}
+                            onClick={() => navigate('/profile')}
+                            >
                         <i class="fa-regular fa-circle-user"></i>
                     </button>
                 </div>

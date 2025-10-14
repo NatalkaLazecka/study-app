@@ -8,6 +8,8 @@ import TodoListPage from '@/features/todo/pages/TodoListPage';
 import TodoDetailsPage from '@/features/todo/pages/TodoDetailsPage';
 import CalendarPage from "../features/calendar/pages/CalendarPage";
 import CalendarEventPage from "../features/calendar/pages/CalendarEventPage";
+import UserProfilePage from "../features/profile/pages/UserProfilePage";
+
 
 const ProtectedRoute = ({ isAuthed, children }) =>
   isAuthed ? children : <Navigate to="/login" replace />;
@@ -63,6 +65,16 @@ export default function AppRouter({ isAuthed = true }) {
           </ProtectedRoute>
         }
       />
+        {/* Profile */}
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute isAuthed={true}>
+                        <UserProfilePage/>
+                    </ProtectedRoute>
+                }
+            />
+
 
       {/*  Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

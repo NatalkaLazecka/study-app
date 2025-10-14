@@ -66,7 +66,9 @@ export default function TodoListPage() {
                 </div>
 
                 <div className={styles['menu-user']}>
-                    <button className={styles['menu-icon-btn']}>
+                    <button className={styles['menu-icon-btn']}
+                      onClick={() => navigate('/profile')}
+                    >
                         <i className="fa-regular fa-circle-user"></i>
                     </button>
                 </div>
