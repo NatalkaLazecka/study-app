@@ -23,6 +23,8 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
       <div className={styles['edit-section']}>
         <div className={styles['edit-box']}>
           <p className={styles['edit-label']}>Task</p>
+          <p className={styles['edit-sublabel']}>name task:</p>
+
           <input
             type="text"
             className={styles['edit-input']}
@@ -33,6 +35,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
 
         <div className={styles['edit-box']}>
           <p className={styles['edit-label']}>Priority</p>
+          <p className={styles['edit-sublabel']}>choose:</p>
           <div className={styles['icons-row']}>
             {Array(3)
               .fill(null)
@@ -64,6 +67,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
 
         <div className={styles['edit-box']}>
           <p className={styles['edit-label']}>Effort</p>
+          <p className={styles['edit-sublabel']}>choose:</p>
           <div className={styles['icons-row']}>
             {Array(4)
               .fill(null)
@@ -86,6 +90,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
                     aria-label={`Effort level ${i + 1}`}
                     tabIndex={0}
                   >
+
                     <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'} />
                   </span>
                 );
@@ -101,7 +106,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
           defaultValue="Example task details..."
         ></textarea>
 
-        <div>
+        <div className={styles["due-date"]}>
           <p>due date:</p>
           <CalendarPicker date={date} setDate={setDate} />
         </div>
