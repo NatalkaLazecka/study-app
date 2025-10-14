@@ -9,19 +9,19 @@ export default function LandingPage() {
       <div className={styles['landing-content']}>
         <div>
           <h1 className={styles['landing-title']}>
-            Stud<span className={styles['landing-title-highlight']}>Y</span>
+            stud<span className={styles['landing-title-highlight']}>y</span>
           </h1>
 
           <p className={styles['landing-subtitle']}>
-            Manage your study in one place.
+                MAKE PLANNING SIMPLE
           </p>
 
           <div className={styles['landing-buttons']}>
             <Link to="/login" className={styles['landing-btn']}>
-              Log in <span className={styles.arrow}>→</span>
+              LOG IN <span className={styles.arrow}>→</span>
             </Link>
             <Link to="/register" className={styles['landing-btn']}>
-              Create account <span className={styles.arrow}>→</span>
+              REGISTER <span className={styles.arrow}>→</span>
             </Link>
           </div>
         </div>

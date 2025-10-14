@@ -21,9 +21,9 @@ export default function AppRouter({ isAuthed = true }) {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        {/* Calendar */}
-        <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/calendar/newEvent" element={<CalendarEventPage />} />
+      {/* Calendar */}
+      <Route path="/calendar" element={<CalendarPage />} />
+      <Route path="/calendar/newEvent" element={<CalendarEventPage />} />
 
       {/*  Home */}
       <Route
@@ -47,10 +47,10 @@ export default function AppRouter({ isAuthed = true }) {
 
       {/*  To-Do details / edit / new */}
       <Route
-        path="/todo/:id"
+        path="/todo/edit/:id"
         element={
           <ProtectedRoute isAuthed={isAuthed}>
-            <TodoDetailsPage />
+            <TodoDetailsPage mode="edit" />
           </ProtectedRoute>
         }
       />
@@ -59,7 +59,7 @@ export default function AppRouter({ isAuthed = true }) {
         path="/todo/new"
         element={
           <ProtectedRoute isAuthed={isAuthed}>
-            <TodoDetailsPage />
+            <TodoDetailsPage mode="new" />
           </ProtectedRoute>
         }
       />
