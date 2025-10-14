@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import styles from '../styles/CalendarPage.module.css';
 import {useNavigate} from "react-router-dom";
+import CalendarEventComponent from "../component/CalendarEventComponent";
 
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
@@ -74,7 +75,7 @@ export default function CalendarPage() {
                 <div className={styles['panel-section']}>
                   <div className={styles['side-panel']}>Events</div>
                   <div className={styles['panel-content']}>
-                    {/* Tutaj będzie lista Events */}
+                      <CalendarEventComponent />
                   </div>
                 </div>
 
