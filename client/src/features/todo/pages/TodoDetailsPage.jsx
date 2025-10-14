@@ -12,9 +12,10 @@ export default function TodoDetailsPage() {
 
   return (
     <div className={styles['edit-root']}>
-      <h1 className={styles['edit-title']}>EDIT TASK ✏️</h1>
+        <h1 className={styles['edit-title']}>IN EDIT MODE <i className="fa-regular fa-pen-to-square"></i></h1>
 
-      <div className={styles['edit-section']}>
+
+        <div className={styles['edit-section']}>
         <div className={styles['edit-box']}>
           <p className={styles['edit-label']}>Task</p>
           <input
@@ -27,43 +28,89 @@ export default function TodoDetailsPage() {
 
         <div className={styles['edit-box']}>
           <p className={styles['edit-label']}>Priority</p>
-          <p
-            onClick={() => setPriority((p) => (p < 3 ? p + 1 : 1))}
-            style={{ cursor: 'pointer' }}
-          >
-            {'🔥'.repeat(priority)}
-          </p>
+          <div className={styles['icons-row']}>
+            {Array(3)
+              .fill(null)
+              .map((_, i) => {
+                const isActive = i < priority;
+                return (
+                  <span
+                    key={i}
+                    onClick={() =>
+                      setPriority((prev) => {
+                        const arr = Array(3)
+                          .fill(false)
+                          .map((_, j) => j < prev);
+                        arr[i] = !arr[i];
+                        return arr.filter(Boolean).length;
+                      })
+                    }
+                    className={`${styles.emoji} ${isActive ? styles.activeFire : ''}`}
+                    role="button"
+                    aria-label={`Priority level ${i + 1}`}
+                    tabIndex={0}
+                  >
+                    <i className="fa-solid fa-fire" />
+                  </span>
+                );
+              })}
+          </div>
         </div>
+
 
         <div className={styles['edit-box']}>
           <p className={styles['edit-label']}>Effort</p>
-          <p
-            onClick={() => setEffort((e) => (e < 4 ? e + 1 : 1))}
-            style={{ cursor: 'pointer' }}
-          >
-            {'⭕'.repeat(effort)}
-          </p>
+          <div className={styles['icons-row']}>
+            {Array(4)
+              .fill(null)
+              .map((_, i) => {
+                const isActive = i < effort;
+                return (
+                  <span
+                    key={i}
+                    onClick={() =>
+                      setEffort((prev) => {
+                        const arr = Array(4)
+                          .fill(false)
+                          .map((_, j) => j < prev);
+                        arr[i] = !arr[i];
+                        return arr.filter(Boolean).length;
+                      })
+                    }
+                    className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
+                    role="button"
+                    aria-label={`Effort level ${i + 1}`}
+                    tabIndex={0}
+                  >
+                    <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'} />
+                  </span>
+                );
+              })}
+          </div>
         </div>
       </div>
 
-      <div>
-        <p className={styles['edit-label']}>Due date:</p>
-        <CalendarPicker date={date} setDate={setDate} />
-      </div>
 
-      <textarea
-        className={styles['edit-desc']}
-        placeholder="Example description..."
-        defaultValue="Example task details..."
-      ></textarea>
+      <div className={styles['edit-section']}>
+        <textarea
+          className={styles['edit-desc']}
+          placeholder="Example description..."
+          defaultValue="Example task details..."
+        ></textarea>
 
-      <div className={styles['edit-btns']}>
-        <button className={styles['edit-btn']} onClick={() => navigate('/todo')}>
-          SAVE
-        </button>
-        <button className={styles['edit-btn']} onClick={() => navigate('/todo')}>
-          CANCEL
-        </button>
+        <div>
+          <p>due date:</p>
+          <CalendarPicker date={date} setDate={setDate} />
+        </div>
+
+        <div className={styles['edit-btns']}>
+          <button className={styles['edit-btn']} onClick={() => navigate('/todo')}>
+            SAVE
+          </button>
+          <button className={styles['edit-btn']} onClick={() => navigate('/todo')}>
+            CANCEL
+          </button>
+        </div>
       </div>
     </div>
   );
