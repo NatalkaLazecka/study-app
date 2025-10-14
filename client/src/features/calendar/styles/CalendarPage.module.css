@@ -2,393 +2,433 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --pink: #e85bbf;
-  --light: #f6d3f4;
-  --bg-dark: #160c1a;
-  --white: #fdfdfd;
-  --black: #0c0c0c;
+    --pink: #e85bbf;
+    --light: #f6d3f4;
+    --bg-dark: #160c1a;
+    --white: #fdfdfd;
+    --black: #0c0c0c;
 }
 
-.menu-bar{
-  background: var(--black);
-  height: 70px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
+.menu-bar {
+    background: var(--black);
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
 }
 
 /* Kontener dla ikon */
 .menu-icons {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
 }
 
 .menu-user {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 /* Style przycisków z ikonami */
 .menu-icon-btn {
-  background: none;
-  border: none;
-  color: var(--white);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: color 0.3s ease, background 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: color 0.3s ease, background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
 }
 
 .menu-icon-btn:hover {
-  color: var(--pink);
-  background: rgba(232, 91, 191, 0.1);
+    color: var(--pink);
+    background: rgba(232, 91, 191, 0.1);
 }
 
 .menu-icon-btn:active {
-  transform: scale(0.95);
+    transform: scale(0.95);
 }
 
 /* Sekcja z przyciskiem study i tytułem */
 .header-section {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: start;
-  width: 100%;
-  margin-bottom: 2rem;
-  padding: 0 3rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 0 3rem;
 }
 
-.header-section > div:last-child{
+.header-section > div:last-child {
     justify-self: end;
 }
 
 /* Przycisk study < */
 .back-button {
-  background: none;
-  border: none;
-  color: var(--light);
-  font-family: 'Roboto Mono', monospace;
-  font-size: 26px;
-  cursor: pointer;
-  display: flex;
-  gap: 0.5rem;
-  transition: color 0.2s;
-  justify-self: start;
+    background: none;
+    border: none;
+    color: var(--light);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 26px;
+    cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    transition: color 0.2s;
+    justify-self: start;
 }
 
 .back-button:hover {
-  color: var(--pink);
+    color: var(--pink);
 }
 
 .back-text {
-  color: var(--light);
-  margin-bottom: 2rem;
+    color: var(--light);
+    margin-bottom: 2rem;
 }
 
 /* Specjalny styl dla litery 'y' */
 .back-text-y {
-  color: #FF66C4;
+    color: #FF66C4;
 }
 
 .back-arrow {
-  color: var(--pink);
-  font-size: 26px;
-  font-weight: bold;
+    color: var(--pink);
+    font-size: 26px;
+    font-weight: bold;
 }
 
-.calendar-title{
-  font-size: 2.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 2rem;
-  color: var(--light);
-  text-shadow: 0 0 15px rgba(232, 91, 191, 0.4);
-  justify-self: center;
+.calendar-title {
+    font-size: 2.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 2rem;
+    color: var(--light);
+    text-shadow: 0 0 15px rgba(232, 91, 191, 0.4);
+    justify-self: center;
 }
 
 /* Twoje style modułowe zostają bez zmian */
 .calendar-root {
-  min-height: calc(100vh - 70px);
-  width: 100%;
-  background: radial-gradient(circle at 50% 50%, #C92C72 0%, #821E87 30%, #140B0F 85%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  font-family: 'Roboto Mono', monospace;
-  padding: 3rem 0;
+    min-height: calc(100vh - 70px);
+    width: 100%;
+    background: radial-gradient(ellipse 70% 65% at 50% 50%, #b854b4 0%, #3D2A3C 60%, #160c1a 100%), #0a0610;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-family: 'Roboto Mono', monospace;
+    padding: 3rem 0;
 }
 
 .calendar-content {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 3rem;
-  width: 100%;
-  max-width: 1400px;
-  place-items: center;
-  align-items: start;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 3rem;
+    width: 100%;
+    max-width: 1400px;
+    place-items: center;
+    align-items: start;
 }
 
 .calendar-box {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid var(--pink);
-  border-radius: 16px;
-  box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
-  padding: 10px;
-  color: var(--light);
-  min-width: 470px;
-  max-width: 650px;
-  min-height: 700px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid var(--pink);
+    border-radius: 16px;
+    box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
+    padding: 10px;
+    color: var(--light);
+    min-width: 470px;
+    max-width: 650px;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Sekcja z nagłówkiem i contentem */
 .panel-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 350px;
 }
 
 /* Style ramek z tekstem Events i Schedule */
 .side-panel {
-  background: #1E1E1E21;
-  border: 4px solid var(--pink);
-  border-radius: 12px;
-  color: var(--pink);
-  font-family: 'Roboto Mono', monospace;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 1.5rem 3rem;
-  box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
-  min-width: 200px;
-  text-align: center;
+    background: #1E1E1E21;
+    border: 4px solid var(--pink);
+    border-radius: 12px;
+    color: var(--pink);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 1.5rem 3rem;
+    box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
+    min-width: 200px;
+    text-align: center;
 }
 
 .panel-content {
-  background: #B381B030;
-  border: 1.5px solid #A45EA1;
-  border-radius: 12px;
-  height: 615px;
-  min-width: 200px;
-  padding: 1rem;
-  box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
+    background: #B381B030;
+    border: 1.5px solid #A45EA1;
+    border-radius: 12px;
+    height: 615px;
+    min-width: 200px;
+    padding: 1rem;
+    box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
 }
 
 :global(.react-calendar) {
-  background: transparent;
-  border: none;
-  color: var(--light);
-  font-family: 'Roboto Mono', monospace;
-  width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--light);
+    font-family: 'Roboto Mono', monospace;
+    width: 100%;
 
 }
 
 /* Nawigacja - pasek gorny od miesiaca */
 :global(.react-calendar__navigation) {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 0.7rem;
-  gap: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.7rem;
+    gap: 1.6rem;
 }
 
 :global(.react-calendar__navigation__label) {
-  color: #f6d3f4;
-  font-size: 28px;
-  font-weight: bold;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+    color: #f6d3f4;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
 }
 
 :global(.react-calendar__navigation button) {
-  color: #e85bbf;
-  font-size: 1.6rem;
-  font-weight: bold;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0 1rem;
-  transition: color 0.2s;
+    color: #e85bbf;
+    font-size: 1.6rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0 1rem;
+    transition: color 0.2s;
 }
 
 :global(.react-calendar__navigation button:disabled) {
-  color: #888;
-  opacity: 0.5;
-  cursor: default;
+    color: #888;
+    opacity: 0.5;
+    cursor: default;
 }
 
 /* Naglowki dni tygodnia */
 :global(.react-calendar__month-view__weekdays) {
-  display: flex;
-  color: var(--white);
-  font-weight: bold;
-  font-size: 26px;
-  text-transform: uppercase;
-  background: none;
-  letter-spacing: 0.09em;
+    display: flex;
+    color: var(--white);
+    font-weight: bold;
+    font-size: 26px;
+    text-transform: uppercase;
+    background: none;
+    letter-spacing: 0.09em;
 }
 
 :global(.react-calendar__month-view__weekdays__weekday) {
-  flex: 1 0 14.2857%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.6em 0;
-  text-align: center;
+    flex: 1 0 14.2857%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.6em 0;
+    text-align: center;
 }
 
 /* Siatka z dniami tygodnia */
 :global(.react-calendar__month-view__days) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.1em;
-  height: 320px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1em;
+    height: 320px;
 }
 
 /* Kafelek dnia */
 :global(.react-calendar__tile) {
-  flex: 0 0 calc(14.2857% - 0.1em);
-  max-width: calc(14.2857% - 0.1em);
-  background: #ffffff40;
-  color: var(--white);
-  font-size: 22px;
-  border-radius: 1.5px;
-  border: 1px solid rgba(218, 218, 218, 0.9);
-  margin: 0;
-  min-height: 44px;
-  position: relative;
-  transition: background 0.16s, color 0.16s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+    flex: 0 0 calc(14.2857% - 0.1em);
+    max-width: calc(14.2857% - 0.1em);
+    background: #ffffff40;
+    color: var(--white);
+    font-size: 22px;
+    border-radius: 1.5px;
+    border: 1px solid rgba(218, 218, 218, 0.9);
+    margin: 0;
+    min-height: 44px;
+    position: relative;
+    transition: background 0.16s, color 0.16s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 :global(.react-calendar__tile--active) {
-  background: #e85bbf;
-  color: var(--white);
-  border: 1.5px solid #e85bbf;
+    background: #e85bbf;
+    color: var(--white);
+    border: 1.5px solid #e85bbf;
 }
 
 :global(.react-calendar__tile--now) {
-  background: rgba(232, 91, 191, 0.46);
-  color: #e85bbf;
+    background: rgba(232, 91, 191, 0.46);
+    color: var(--light);
 }
 
 :global(.react-calendar__tile:enabled:hover),
 :global(.react-calendar__tile:enabled:focus) {
-  background: rgba(217, 217, 217, 0.7);
-  color: var(--black);
-  border: 1px solid var(--black);
+    background: rgba(217, 217, 217, 0.7);
+    color: var(--black);
+    border: 1px solid var(--black);
 }
 
 :global(.react-calendar__month-view__days__day--weekend) {
-  color: #ffd1fa;
+    color: #ffd1fa;
 }
 
 :global(.react-calendar__month-view__days__day--neighboringMonth) {
-  color: #cccccc;
-  opacity: 0.55;
+    color: #cccccc;
+    opacity: 0.55;
 }
 
 :global(.react-calendar__navigation__prev2-button),
-:global(.react-calendar__navigation__next2-button){
+:global(.react-calendar__navigation__next2-button) {
     display: none;
 }
 
 /* Style dla CalendarEventPage */
-.calendar-event-content{
-  background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid var(--pink);
-  border-radius: 16px;
-  box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
-  padding: 10px;
-  color: var(--light);
-  min-width: 830px;
-  min-height: 625px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px
+.calendar-event-content {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid var(--pink);
+    border-radius: 16px;
+    box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
+    padding: 10px;
+    color: var(--light);
+    min-width: 830px;
+    min-height: 625px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px
 }
 
 .input-title {
-  color: var(--white);
-  font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 5px;
+    color: var(--white);
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
 }
 
-.event-input{
-  border: 0.5px solid var(--white);
-  padding: 10px;
-  color: var(--white);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  width: 350px;
-  height: 40px;
+.event-input {
+    border: 0.5px solid var(--white);
+    padding: 10px;
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    width: 350px;
+    height: 40px;
 }
 
-.event-h3{
-  font-size: 18px;
-  font-family: 'Source Code Pro', monospace;
-  font-weight: lighter;
-  color: var(--white);
+.event-h3 {
+    font-size: 18px;
+    font-family: 'Source Code Pro', monospace;
+    font-weight: lighter;
+    color: var(--white);
 }
 
-.event-h2{
-  font-weight: lighter;
-  font-size: 35px;
-  font-family: 'Source Code Pro', monospace;
-  color: var(--white);
+.event-h2 {
+    font-weight: lighter;
+    font-size: 35px;
+    font-family: 'Source Code Pro', monospace;
+    color: var(--white);
 }
 
-.event-buttons{
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+.event-buttons {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
-.event-button{
-  border: var(--pink) solid 1px;
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--white);
-  width: 150px;
-  height: 35px;
-  font-size: 16px;
-  font-family: 'Source Code Pro', monospace;
+.event-button {
+    border: var(--pink) solid 1px;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    width: 150px;
+    height: 35px;
+    font-size: 16px;
+    font-family: 'Source Code Pro', monospace;
 }
 
-.event-button:hover{
-  border: 2px solid var(--pink);
-  background: rgba(255, 255, 255, 0.25);
-  color: var(--white);
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
+.event-button:hover {
+    border: 2px solid var(--pink);
+    background: rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.event-button-active{
-  border: 3px solid var(--pink);
-  background: rgba(255, 255, 255, 0.3);
-  color: var(--white);
-  font-weight: bold;
-  cursor: pointer;
+.event-button-active {
+    border: 3px solid var(--pink);
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* event component */
+.event-dot {
+    color: #9ED7FF;
+    margin-top: 3px;
+    font-size: 22px
+}
+
+.event-descripsion {
+    color: var(--white);
+    font-family: 'Source Code Pro', monospace;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+}
+
+.event-component {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0 3rem;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.event-component > div:first-child {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+}
+
+.event-descripsion-title{
+    font-size: 24px;
+}
+
+.event-descripsion-date{
+    font-size: 18px;
+    color: var(--light);
+    font-weight: lighter;
 }
