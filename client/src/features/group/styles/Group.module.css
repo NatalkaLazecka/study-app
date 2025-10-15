@@ -1,0 +1,346 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+:root {
+    --accent: #e85bbf;
+    --text: #e8d2e7;
+    --bg: #0a0610;
+    --muted: #3D2A3C;
+    --glow: #b854b4;
+    --panel: #ffffff10;
+    --panel-border: #ffffff20;
+}
+
+.groupsRoot {
+    min-height: 100vh;
+    width: 100%;
+    background: radial-gradient(ellipse 65% 60% at 50% 50%, var(--glow) 0%, var(--muted) 60%, #160c1a 100%),
+    var(--bg);
+    color: var(--text);
+    font-family: 'Roboto Mono', monospace;
+    padding: 20px 28px 40px;
+}
+
+/* ===== Header ===== */
+.headerBar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.backBtn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.backBtn:hover {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+.title {
+    margin: 0;
+    font-size: 1.9rem;
+    letter-spacing: .06em;
+    text-shadow: 0 0 14px #e85bbf66;
+}
+
+/* ===== Actions row (under title) ===== */
+.actionsRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.actionBtn {
+    border: 1px solid var(--accent);
+    color: var(--text);
+    background: #ffffff0a;
+    border-radius: 999px;
+    padding: 8px 12px;
+    cursor: pointer;
+    box-shadow: 0 0 12px #e85bbf40;
+    transition: .2s;
+}
+
+.actionBtn:hover {
+    background: #e85bbf26;
+    box-shadow: 0 0 18px #e85bbf7a;
+}
+
+.iconBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--accent);
+    background: #ffffff0a;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.iconBtn:hover {
+    background: #e85bbf26;
+    box-shadow: 0 0 14px #e85bbf7a;
+}
+
+/* ===== Grid widgets (RGL content) ===== */
+.widgetCard {
+    background: var(--panel);
+    border: 1.5px solid var(--panel-border);
+    border-radius: 16px;
+    padding: 14px;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 20px #e85bbf33 inset, 0 0 14px #e85bbf33;
+    display: flex;
+    flex-direction: column;
+}
+
+.widgetHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    user-select: none;
+}
+
+.dragHandle {
+    cursor: move;
+    opacity: .7;
+}
+
+.widgetBody {
+    flex: 1;
+}
+
+/* ===== Members grid ===== */
+.avatars {
+    display: grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ffffff18;
+    border: 1px solid #fff2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff9;
+}
+
+.adminBadge {
+    font-size: 11px;
+    padding: 2px 6px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    margin-left: 8px;
+    opacity: .9;
+}
+
+.pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.pillBtn {
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.pillBtn:hover {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+/* ===== Notes list ===== */
+.searchBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    background: #ffffff10;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 8px 10px;
+}
+
+.searchInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'Roboto Mono', monospace;
+}
+
+.noteList {
+    display: grid;
+    gap: 10px;
+}
+
+.noteItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px dashed #ffffff33;
+    border-radius: 12px;
+    background: #ffffff08;
+    transition: .2s;
+}
+
+.noteItem:hover {
+    background: #ffffff12;
+    box-shadow: 0 0 10px #e85bbf44;
+}
+
+/* ===== Announcements ===== */
+.announceList {
+    display: grid;
+    gap: 10px;
+}
+
+.announce {
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 10px;
+    background: #ffffff0c;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ===== Join requests (bottom) ===== */
+.requests {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.request {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff0b;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.reqUser {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reqBtns {
+    display: flex;
+    gap: 8px;
+}
+
+.approve {
+    border-color: #55d58a;
+    color: #55d58a;
+}
+
+.approve:hover {
+    background: #55d58a;
+    color: #120911;
+}
+
+.reject {
+    border-color: #e15454;
+    color: #e15454;
+}
+
+.reject:hover {
+    background: #e15454;
+    color: #120911;
+}
+
+/* ===== Create page ===== */
+.formGrid {
+    display: grid;
+    gap: 12px;
+    max-width: 640px;
+}
+
+.fieldLabel {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: .06em;
+}
+
+.input, .textarea {
+    width: 100%;
+    background: #ffffff10;
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 10px 12px;
+    outline: none;
+}
+
+.textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.btnRow {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.categoryRow {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.category {
+    border: 1px solid var(--panel-border);
+    background: #ffffff08;
+    color: var(--text);
+    border-radius: 999px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.category.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px #e85bbf66;
+}
+
+.primaryBtn {
+    composes: actionBtn;
+}
+
+/* z akcji */
+
+.secondaryBtn {
+    composes: pillBtn;
+}

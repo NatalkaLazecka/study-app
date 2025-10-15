@@ -427,17 +427,17 @@
     flex-direction: column;
 }
 
-.event-descripsion-title{
+.event-descripsion-title {
     font-size: 23px;
 }
 
-.event-descripsion-date{
+.event-descripsion-date {
     font-size: 16px;
     color: var(--light);
     font-weight: lighter;
 }
 
-.schedule-descripsion{
+.schedule-descripsion {
     display: grid;
     grid-template-columns: 24px auto;
     color: var(--white);
@@ -446,7 +446,7 @@
     gap: 25px
 }
 
-.schedule-component{
+.schedule-component {
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -454,7 +454,7 @@
     font-family: 'Source Code Pro', monospace;
 }
 
-.event-descripsion-time{
+.event-descripsion-time {
     font-size: 16px;
     color: var(--light);
     font-weight: lighter;
@@ -474,13 +474,13 @@
     font-size: 10px;
 }
 
-.end-buttons{
+.end-buttons {
     margin-top: 20px;
     gap: 20px;
     display: flex;
 }
 
-.end-button{
+.end-button {
     border: var(--pink) solid 2px;
     border-radius: 12px;
     height: 35px;
@@ -491,7 +491,7 @@
     font-size: 16px;
 }
 
-.end-button:hover{
+.end-button:hover {
     border: 2px solid var(--pink);
     background: rgba(255, 255, 255, 0.25);
     color: var(--white);
@@ -500,13 +500,131 @@
     transition: 0.3s;
 }
 
-.import-box{
+.import-box {
     margin-top: 10px;
     display: flex;
     gap: 20px;
     align-items: center;
 }
 
-.import-icon{
+.import-icon {
     font-size: 28px;
+}
+
+/* ===== Centered panel for groups list ===== */
+.centerWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: calc(100vh - 120px);
+}
+
+.centerPanel {
+    width: min(980px, 92vw);
+    height: min(640px, 76vh);
+    border: 1.5px solid var(--panel-border);
+    background: var(--panel);
+    border-radius: 20px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 28px #e85bbf44 inset, 0 0 18px #e85bbf33;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+/* top bar inside panel */
+.panelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.panelTitle {
+    margin: 0;
+    letter-spacing: .06em;
+}
+
+/* scrollable list */
+.scrollList {
+    flex: 1;
+    overflow: auto;
+    padding-right: 6px; /* space for scrollbar */
+    display: grid;
+    gap: 10px;
+}
+
+.scrollList::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scrollList::-webkit-scrollbar-thumb {
+    background: #ffffff2e;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.scrollList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.listItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff0c;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.listItem:hover {
+    background: #ffffff18;
+    box-shadow: 0 0 14px #e85bbf55;
+}
+
+.itemName {
+    font-weight: 700;
+}
+
+.itemMeta {
+    opacity: .8;
+}
+
+/* footer button */
+.panelFooter {
+    display: flex;
+    justify-content: center;
+    padding-top: 12px;
+    border-top: 1px dashed #ffffff30;
+}
+
+.bigCreateBtn {
+    border: 1px solid var(--accent);
+    background: #ffffff0a;
+    color: var(--text);
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    box-shadow: 0 0 16px #e85bbf40;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.bigCreateBtn:hover {
+    background: #e85bbf26;
+    box-shadow: 0 0 22px #e85bbf80;
+}
+
+/* mały, wąski przycisk w stylu event-button */
+.event-button-small {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    letter-spacing: .04em;
+    min-width: auto; /* bez szerokości kapsuły */
 }

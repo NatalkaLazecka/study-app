@@ -9,7 +9,6 @@
 }
 
 
-
 /* =========================================
    Górny pasek
    ========================================= */
@@ -89,7 +88,7 @@
 }
 
 .back-button:hover {
-    color:#3D2A3C;
+    color: #3D2A3C;
 }
 
 .back-text {
@@ -398,7 +397,6 @@
 }
 
 
-
 .edit-input, .edit-desc {
     background: transparent;
     border: 1px solid var(--accent);
@@ -451,6 +449,7 @@
     text-align: center;
 
 }
+
 .icon-with-border {
     border: 2px solid #333;
     border-radius: 50%;
