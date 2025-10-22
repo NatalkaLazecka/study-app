@@ -2,6 +2,7 @@ import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import styles from '../../calendar/styles/CalendarPage.module.css';
 import {useGroups} from '../store/groupStore';
+import NotificationComponent from "../../notification/component/NotificationComponent";
 
 export default function GroupListPage() {
     const navigate = useNavigate();
@@ -27,6 +28,8 @@ export default function GroupListPage() {
                 </div>
 
                 <div className={styles['menu-user']}>
+                    <NotificationComponent/>
+
                     <button className={styles['menu-icon-btn']} onClick={() => navigate('/profile')}>
                         <i className="fa-regular fa-circle-user"></i>
                     </button>

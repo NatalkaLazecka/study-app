@@ -4,6 +4,7 @@ import styles from '../styles/CalendarPage.module.css';
 import {useNavigate} from "react-router-dom";
 import CalendarEventComponent from "../component/CalendarEventComponent";
 import CalendarScheduleComponent from "../component/CalendarScheduleComponent";
+import NotificationComponent from "../../notification/component/NotificationComponent";
 
 export default function CalendarPage() {
     const [date, setDate] = useState(new Date());
@@ -77,10 +78,12 @@ export default function CalendarPage() {
                 </div>
 
                 <div className={styles['menu-user']}>
+                    <NotificationComponent/>
+
                     <button className={styles['menu-icon-btn']}
                             onClick={() => navigate('/profile')}
-                            >
-                        <i class="fa-regular fa-circle-user"></i>
+                    >
+                        <i className="fa-regular fa-circle-user"></i>
                     </button>
                 </div>
             </div>

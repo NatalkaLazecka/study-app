@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import styles from '../styles/Todo.module.css';
+import NotificationComponent from "../../notification/component/NotificationComponent";
 
 export default function TodoListPage() {
     const navigate = useNavigate();
@@ -66,6 +67,8 @@ export default function TodoListPage() {
                 </div>
 
                 <div className={styles['menu-user']}>
+                    <NotificationComponent/>
+
                     <button className={styles['menu-icon-btn']}
                       onClick={() => navigate('/profile')}
                     >
