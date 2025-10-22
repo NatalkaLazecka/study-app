@@ -6,17 +6,12 @@ export default function NotificationComponent() {
     const [currentTime, setCurrentTime] = useState(new Date());
 
     // Przykładowe dane powiadomień
-    const notifications = [{
-        id: 1, title: 'Test 1', message: 'Otrzymałeś nowe zamówienie #12345', time: '2025-10-22 10:00:09', unread: true
-    }, {
-        id: 2,
-        title: 'Test 2',
-        message: 'System został zaktualizowany do wersji 2.0',
-        time: '2025-10-22 13:40:09',
-        unread: true
-    }, {
-        id: 3, title: 'Test 3', message: 'Jan Kowalski wysłał Ci wiadomość', time: '2025-10-22 08:11:59', unread: false
-    }, {id: 4, title: 'Przypomnienie', message: 'Spotkanie o 15:00', time: '2025-09-20 08:15:00', unread: false},];
+    const notifications = [
+        {id: 1, title: 'Test 1', message: 'You have received a new order #12345', time: '2025-10-22 10:00:09', unread: true},
+        {id: 2, title: 'Test 2', message: 'The system has been updated to version 2.0', time: '2025-10-22 13:40:09', unread: true},
+        {id: 3, title: 'Test 3', message: 'Jan Kowalski sent you a message', time: '2025-10-22 08:11:59', unread: false},
+        {id: 4, title: 'Reminder', message: 'Meeting at 3:00 PM', time: '2025-09-20 08:15:00', unread: false},
+    ];
 
     const unreadCount = notifications.filter(n => n.unread).length;
 
@@ -48,7 +43,12 @@ export default function NotificationComponent() {
         const diffMinutes = Math.floor(diffMs / 60000);
         const diffHours = Math.floor(diffMs / 3600000);
 
-        if (diffMinutes < 1) return 'przed chwilą'; else if (diffMinutes === 1) return '1 minutę temu'; else if (diffMinutes < 60) return `${diffMinutes} minut temu`; else if (diffHours === 1) return '1 godzinę temu'; else if (diffHours < 24) return `${diffHours} godzin temu`; else return 'dzisiaj';
+        if (diffMinutes < 1) return 'a moment ago';
+        else if (diffMinutes === 1) return '1 minute ago';
+        else if (diffMinutes < 60) return `${diffMinutes} minutes ago`;
+        else if (diffHours === 1) return '1 hour ago';
+        else if (diffHours < 24) return `${diffHours} hours ago`;
+        else return 'today';
     }
 
     const formatRelativeDateTime = (date) => {
@@ -58,7 +58,7 @@ export default function NotificationComponent() {
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
 
-        return `${day}.${month}.${year} o ${hours}:${minutes}`;
+        return `${day}.${month}.${year} at ${hours}:${minutes}`;
     }
 
     useEffect(() => {
@@ -87,8 +87,8 @@ export default function NotificationComponent() {
             <button
                 className={styles.notificationButton}
                 onClick={() => setIsOpen(!isOpen)}
-                aria-label="Otwórz powiadomienia"
-                title="Powiadomienia"
+                aria-label="Open notyfications"
+                title="Notifications"
             >
                 <i className="fa-regular fa-bell"></i>
                 {unreadCount > 0 && (<span className={styles.badge}>{unreadCount}</span>)}
@@ -105,11 +105,11 @@ export default function NotificationComponent() {
                     {/* Panel */}
                     <div className={styles.panel}>
                         <div className={styles.header}>
-                            <h3 className={styles.title}>Powiadomienia</h3>
+                            <h3 className={styles.title}>Notifications</h3>
                             <button
                                 className={styles.closeButton}
                                 onClick={() => setIsOpen(false)}
-                                aria-label="Zamknij"
+                                aria-label="Close"
                             >
                                 ✕
                             </button>
@@ -135,7 +135,7 @@ export default function NotificationComponent() {
 
                         <div className={styles.footer}>
                             <button className={styles.footerButton}>
-                                Oznacz wszystkie jako przeczytane
+                                Mark all as read
                             </button>
                         </div>
                     </div>
