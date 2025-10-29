@@ -121,7 +121,6 @@ export default function CalendarPage() {
                         <div className={styles['side-panel']}>Events</div>
                         <div className={styles['panel-content']}>
                             <CalendarEventComponent dotColor="var(--dotblue)"/>
-
                         </div>
                     </div>
 
