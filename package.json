@@ -9,6 +9,7 @@
   "private": true,
   "dependencies": {
     "date-fns": "^4.1.0",
+    "mysql": "^2.18.1",
     "react-calendar": "^6.0.0",
     "react-datepicker": "^8.7.0",
     "react-grid-layout": "^1.5.2",
