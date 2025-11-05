@@ -10,6 +10,7 @@
     "dotenv": "^16",
     "express": "^5",
     "handlebars": "^4.7.8",
-    "resend": "^4"
+    "resend": "^4",
+    "uuid": "^13.0.0"
   }
 }

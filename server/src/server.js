@@ -13,7 +13,7 @@ app.use(express.json())
 
 //ROUTES
 app.use("/api/emails", emailRoutes);
-app.use("/api/students", studentsRoute());
+app.use("/api/students", studentsRoute);
 // app.use("/api/notes", notesRoutes);
 // app.use("/api/tasks", tasksRoutes);
 // app.use("/api/groups", groupsRoutes);
