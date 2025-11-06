@@ -1,14 +1,12 @@
 import mysql from "mysql";
 import util from "util";
-import dotenv from "dotenv";
-dotenv.config();
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
+  host: "34.57.186.71",
   port: 3306,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  user: "root",
+  password: "m>P?_9C[H*|H>8|l",
+  database: "study",
   ssl: {
     rejectUnauthorized: false
   },

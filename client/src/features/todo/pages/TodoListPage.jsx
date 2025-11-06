@@ -2,8 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import styles from '../styles/Todo.module.css';
 import NotificationComponent from "../../notification/component/NotificationComponent";
-import dotenv from "dotenv";
-dotenv.config();
 
 export default function TodoListPage() {
     const navigate = useNavigate();
@@ -48,7 +46,7 @@ export default function TodoListPage() {
     useEffect(() => {
         const fetchTodos = async () => {
             try{
-                const res = await fetch(`${process.env.VITE_API_URL}/api/tasks`);
+                const res = await fetch(`http://localhost:3001/api/tasks`);
                 const data = await res.json();
                 setTodos(data);
             }catch (err){
