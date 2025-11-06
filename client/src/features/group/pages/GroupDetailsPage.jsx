@@ -1,4 +1,4 @@
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
@@ -35,6 +35,18 @@ export default function GroupDetailsPage() {
         setLayout(lgLayout);
         localStorage.setItem(`layout_${group.id}`, JSON.stringify(lgLayout));
     };
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try{
+    //             const res = await fetch(`http://localhost:3000/api/students`);
+    //             const data = await res.json();
+    //             // mapa studentów
+    //         }catch(err){
+    //             console.error(err);
+    //         }
+    //     }
+    // })
 
     return (
         <div className={styles.groupsRoot}>

@@ -1,16 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from '../styles/Todo.module.css';
 import NotificationComponent from "../../notification/component/NotificationComponent";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function TodoListPage() {
     const navigate = useNavigate();
-
-    const [todos, setTodos] = useState([
-        { id: 1, task: 'Set up database', priority: 2, effort: 3, done: false },
-        { id: 2, task: 'Send the project', priority: 3, effort: 4, done: false },
-        { id: 3, task: 'Take notes for exam', priority: 2, effort: 2, done: false },
-    ]);
+    const [todos, setTodos] = useState([]);
 
     const toggleDone = (id) => {
         setTodos((prev) =>
@@ -47,6 +44,19 @@ export default function TodoListPage() {
             })
         );
     };
+
+    useEffect(() => {
+        const fetchTodos = async () => {
+            try{
+                const res = await fetch(`${process.env.VITE_API_URL}/api/tasks`);
+                const data = await res.json();
+                setTodos(data);
+            }catch (err){
+                console.error(err);
+            }
+        }
+        fetchTodos();
+    }, [todos]);
 
     return (
         <div>
@@ -123,7 +133,7 @@ export default function TodoListPage() {
                                         checked={t.done}
                                         readOnly
                                     />
-                                    {t.task}
+                                    {t.tytul}
                                 </td>
 
                                 <td className={styles['todo-cell']}>
@@ -131,7 +141,7 @@ export default function TodoListPage() {
                                         <span
                                             key={i}
                                             onClick={() => togglePriority(t.id, i)}
-                                            className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
+                                            className={`${styles.emoji} ${i < t.priorytet ? styles.activeFire : ''}`}
                                             role="button"
                                             aria-label={`Priority level ${i + 1}`}
                                         >
@@ -142,7 +152,7 @@ export default function TodoListPage() {
 
                                 <td className={styles['todo-cell']}>
                                     {Array(4).fill(null).map((_, i) => {
-                                        const isActive = i < t.effort;
+                                        const isActive = i < t.wysilek;
                                         return (
                                             <span
                                                 key={i}
