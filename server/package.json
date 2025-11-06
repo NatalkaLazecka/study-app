@@ -3,7 +3,8 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "node src/server.js"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -11,6 +12,7 @@
     "dotenv": "^16",
     "express": "^5",
     "handlebars": "^4.7.8",
+    "nodemon": "^3.1.10",
     "resend": "^4",
     "uuid": "^13.0.0"
   }
