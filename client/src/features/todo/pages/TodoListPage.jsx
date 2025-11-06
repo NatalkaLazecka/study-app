@@ -48,7 +48,7 @@ export default function TodoListPage() {
     useEffect(() => {
         const fetchTodos = async () => {
             try{
-                const res = await fetch(`${process.env.VITE_API_URL}/tasks`);
+                const res = await fetch(`${process.env.VITE_API_URL}/api/tasks`);
                 const data = await res.json();
                 setTodos(data);
             }catch (err){
