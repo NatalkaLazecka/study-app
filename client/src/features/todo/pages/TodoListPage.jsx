@@ -4,6 +4,7 @@ import styles from '../styles/Todo.module.css';
 import NotificationComponent from "../../notification/component/NotificationComponent";
 
 export default function TodoListPage() {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     const navigate = useNavigate();
     const [todos, setTodos] = useState([]);
 
@@ -46,7 +47,9 @@ export default function TodoListPage() {
     useEffect(() => {
         const fetchTodos = async () => {
             try{
-                const res = await fetch(`http://localhost:3001/api/tasks`);
+                const res = await fetch(`${API_URL}/api/tasks`);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
                 const data = await res.json();
                 setTodos(data);
             }catch (err){
