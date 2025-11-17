@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
 :root {
   --accent: #e85bbf;
   --accent-dark: #b854b4;
@@ -17,26 +18,28 @@
   --background: #140b11;
 }
 
-/* Root and navigation */
+/* ===== ROOT AND NAVIGATION ===== */
 .profile-root {
   font-family: 'Roboto Mono', monospace;
   min-height: 100vh;
   background: radial-gradient(ellipse 70% 65% at 50% 50%, #b854b4 0%, #3D2A3C 60%, #140b11 100%), #0a0610;
   color: var(--white);
-  padding-top: 70px;
+  padding-top: clamp(50px, 7vh, 70px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: clamp(2rem, 4vh, 3rem);
 }
+
 .menu-bar {
   background: var(--menu-bg);
-  height: 70px;
-  width: 100vw;
+  height: clamp(50px, 7vh, 70px);
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
-  margin-bottom: 3.5rem;
+  padding: 0 clamp(0.5rem, 3vw, 2rem);
+  margin-bottom: clamp(2rem, 4vh, 3.5rem);
   border-radius: 0 0 18px 18px;
   box-sizing: border-box;
   position: fixed;
@@ -44,54 +47,60 @@
   left: 0;
   z-index: 10;
 }
+
 .menu-icons {
   display: flex;
-  gap: 1.5rem;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
   align-items: center;
 }
+
 .menu-user {
   display: flex;
   align-items: center;
 }
+
 .menu-icon-btn {
   background: none;
   border: none;
   color: var(--white);
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
   cursor: pointer;
-  padding: 0.5rem;
+  padding: clamp(0.3rem, 0.8vw, 0.5rem);
   border-radius: 6px;
   transition: color 0.3s ease, background 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: clamp(32px, 4.5vw, 40px);
+  height: clamp(32px, 4.5vw, 40px);
 }
+
 .menu-icon-btn:hover {
   color: var(--accent);
   background: rgba(232, 91, 191, 0.1);
 }
+
 .menu-icon-btn:active {
   transform: scale(0.95);
 }
 
-/* Main card with two columns */
+/* ===== MAIN CARD ===== */
 .profile-maincard {
-  width: 1100px;
-  max-width: 98vw;
-  min-height: 500px;
+  width: 100%;
+  max-width: min(1100px, 95vw);
+  min-height: clamp(400px, 60vh, 500px);
   background: var(--panel);
-  border: 3.5px solid var(--panel-border-thick);
-  border-radius: 18px;
+  border: clamp(2px, 0.3vw, 3.5px) solid var(--panel-border-thick);
+  border-radius: clamp(12px, 1.5vw, 18px);
   box-shadow: var(--panel-shadow);
   display: flex;
   flex-direction: row;
-  gap: 3rem;
-  padding: 3rem 2.5rem 2.5rem 2.5rem;
-  margin-top: 40px;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 2.5vw, 2.5rem);
+  margin-top: clamp(1rem, 3vh, 2rem);
   align-items: flex-start;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .profile-left,
@@ -99,18 +108,22 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: clamp(1rem, 2vh, 2rem);
+  min-width: 0; /* Ważne dla flexbox */
 }
+
+/* ===== AVATAR SECTION ===== */
 .profile-avatar-row {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 1.4rem; /* odstęp między avatar a przyciskiem */
-  margin-bottom: 2.5rem;
+  gap: clamp(0.8rem, 1.5vw, 1.4rem);
+  margin-bottom: clamp(1rem, 2.5vh, 2.5rem);
 }
+
 .profile-image-container {
-  width: 120px;
-  height: 120px;
+  width: clamp(80px, 12vw, 120px);
+  height: clamp(80px, 12vw, 120px);
   border-radius: 50%;
   overflow: hidden;
   position: relative;
@@ -119,12 +132,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
+
 .profile-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .profile-image-placeholder {
   width: 100%;
   height: 100%;
@@ -132,38 +148,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.2rem;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
   background: var(--input-bg);
 }
+
 .profile-upload-btn {
   background: var(--accent);
   color: var(--white);
   border-radius: 50%;
-  padding: 0.7rem;
+  padding: clamp(0.5rem, 0.8vw, 0.7rem);
   cursor: pointer;
   border: none;
   transition: background 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 0.6rem;
-  font-size: 1.3rem;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  flex-shrink: 0;
 }
+
 .profile-upload-btn:hover {
   background: var(--accent-hover);
 }
+
 .profile-upload-btn input[type="file"] {
   display: none;
 }
+
+/* ===== FORM STYLES ===== */
 .profile-form-left {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: clamp(0.7rem, 1.2vh, 1.1rem);
 }
 
 .profile-row {
   display: flex;
-  gap: 1.1rem;
+  gap: clamp(0.7rem, 1.2vw, 1.1rem);
   width: 100%;
 }
 
@@ -171,12 +192,13 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .profile-sublabel {
   color: var(--gray);
-  font-size: 0.95rem;
-  margin-bottom: 0.3rem;
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  margin-bottom: clamp(0.2rem, 0.4vh, 0.3rem);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   font-weight: 600;
@@ -184,121 +206,184 @@
 
 .profile-input {
   width: 100%;
-  padding: 0.7rem 0.9rem;
+  padding: clamp(0.5rem, 0.8vw, 0.7rem) clamp(0.6rem, 1vw, 0.9rem);
   border-radius: 6px;
   background: rgba(255,255,255,0.07);
   border: 1.5px solid var(--input-border);
   color: var(--white);
-  font-size: 1rem;
-  margin-bottom: 0.6rem;
+  font-size: clamp(0.85rem, 1vw, 1rem);
+  margin-bottom: clamp(0.4rem, 0.7vh, 0.6rem);
   transition: border 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
+  font-family: 'Roboto Mono', monospace;
 }
+
 .profile-input:focus {
   outline: none;
   border: 2px solid var(--input-border-focus);
   box-shadow: 0 0 0 2px rgba(232,91,191,0.07);
 }
 
-/* react-datepicker custom styles */
+/* ===== SELECT STYLES ===== */
+.profile-input select,
+select.profile-input {
+  color: var(--white);
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid var(--input-border);
+  cursor: pointer;
+}
+
+.profile-input option,
+select.profile-input option {
+  color: #e85bbf;
+  background: #1e1e2d;
+}
+
+/* ===== REACT DATEPICKER ===== */
 .react-datepicker__input-container input {
   background: rgba(255,255,255,0.07);
   border: 1.5px solid #b854b4;
   color: #fbfbfb;
   font-family: 'Roboto Mono', monospace;
   border-radius: 6px;
-  padding: 0.7rem 0.9rem;
-  font-size: 1rem;
+  padding: clamp(0.5rem, 0.8vw, 0.7rem) clamp(0.6rem, 1vw, 0.9rem);
+  font-size: clamp(0.85rem, 1vw, 1rem);
+  width: 100%;
+  box-sizing: border-box;
 }
+
 .react-datepicker {
   background: #1e1e2d !important;
   border: 2px solid #e85bbf !important;
   color: #fbfbfb !important;
+  font-family: 'Roboto Mono', monospace;
 }
+
 .react-datepicker__header {
   background: #b854b4 !important;
   border-bottom: 2px solid #e85bbf !important;
 }
+
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
   background: #e85bbf !important;
   color: #fff !important;
 }
+
 .react-datepicker__day:hover {
   background: #ff66c4 !important;
   color: #fff !important;
 }
+
 .react-datepicker__current-month,
 .react-datepicker-time__header,
 .react-datepicker-year-header {
   color: #fbfbfb !important;
 }
+
 .react-datepicker__day-name {
   color: #ff66c4 !important;
 }
 
+/* ===== BUTTONS ===== */
 .profile-btns-row {
   display: flex;
-  gap: 1rem;
+  gap: clamp(0.7rem, 1.2vw, 1rem);
   justify-content: flex-end;
-  margin-top: 2.2rem;
+  margin-top: clamp(1rem, 2.5vh, 2.2rem);
+  flex-wrap: wrap;
 }
 
 .profile-btn {
-  padding: 0.7rem 1.6rem;
+  padding: clamp(0.5rem, 0.8vw, 0.7rem) clamp(1rem, 1.8vw, 1.6rem);
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
-  font-size: 1rem;
+  font-size: clamp(0.85rem, 1vw, 1rem);
   display: flex;
   align-items: center;
   gap: 0.5rem;
   border: none;
   transition: background 0.2s, color 0.2s, box-shadow 0.14s;
   box-shadow: 0 1px 6px 0px rgba(232,91,191,0.07);
+  white-space: nowrap;
 }
+
 .profile-btn-primary {
   background: var(--accent);
   color: var(--white);
 }
+
 .profile-btn-primary:hover {
   background: var(--accent-hover);
 }
+
 .profile-btn-secondary {
   background: var(--input-bg);
   color: var(--white);
   border: 1.5px solid var(--panel-border);
 }
+
 .profile-btn-secondary:hover {
   background: var(--panel-border);
   color: var(--white);
 }
-.profile-input,
-.profile-input select {
-  background: rgba(255,255,255,0.07);
-  border: 1.5px solid var(--input-border);
-  color: var(--white);
-  font-family: 'Roboto Mono', monospace;
-  border-radius: 6px;
-  padding: 0.7rem 0.9rem;
-  font-size: 1rem;
-  margin-bottom: 0.6rem;
-  transition: border 0.2s, box-shadow 0.2s;
-  box-sizing: border-box;
+
+/* ===== MEDIA QUERIES - TYLKO STRUKTURALNE ZMIANY ===== */
+
+/* Tablet - jedna kolumna */
+@media (max-width: 900px) {
+  .profile-maincard {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .profile-left,
+  .profile-right {
+    width: 100%;
+  }
+
+  .profile-avatar-row {
+    justify-content: center;
+  }
 }
 
-/* Specyficznie dla select: */
-.profile-input select,
-select.profile-input {
-  color: var(--white);
-  background: rgba(255,255,255,0.07);
-  border: 1.5px solid var(--input-border);
+/* Mobile - inputy w pełnej szerokości */
+@media (max-width: 600px) {
+  .profile-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .profile-btns-row {
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .profile-btn {
+    flex: 1;
+    justify-content: center;
+    min-width: 100px;
+  }
+
+  .menu-bar {
+    border-radius: 0;
+  }
 }
 
-/* Opcje w select */
-.profile-input option,
-select.profile-input option {
-  color: #e85bbf; /* różowy tekst opcji */
-  background: #1e1e2d; /* ciemne tło opcji */
+/* Bardzo małe ekrany */
+@media (max-width: 400px) {
+  .profile-maincard {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .profile-btns-row {
+    flex-direction: column;
+  }
+
+  .profile-btn {
+    width: 100%;
+  }
 }
