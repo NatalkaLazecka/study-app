@@ -4,7 +4,7 @@ import styles from '../styles/Todo.module.css';
 import NotificationComponent from "../../notification/component/NotificationComponent";
 
 export default function TodoListPage() {
-    const API_URL = import.meta.env.RAILWAY_API_URL || 'http://localhost:3001';
+    const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
     const navigate = useNavigate();
     const [todos, setTodos] = useState([]);
 
