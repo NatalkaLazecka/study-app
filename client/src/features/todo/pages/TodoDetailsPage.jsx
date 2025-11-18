@@ -10,6 +10,38 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
   const [effort, setEffort] = useState(3);
   const [date, setDate] = useState('2025-02-24');
 
+  const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
+
+  const handleSave = async () => {
+  const data = {
+    tytul: title,
+    tresc: desc,
+    priorytet: priority,
+    deadline: date,
+    wysilek: effort,
+    data_rozpoczecia: date,
+  };
+
+  try {
+    const res = await fetch(`${API_URL}/api/tasks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Błąd: ${res.status} - ${errorText}`);
+    }
+
+    navigate('/todo');
+  } catch (err) {
+    console.error('Błąd przy dodawaniu zadania:', err);
+  }
+};
+
   return (
     <div className={styles['edit-root']}>
       <h1 className={styles['edit-title']}>
