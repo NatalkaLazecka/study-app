@@ -6,6 +6,8 @@ import CalendarPicker from '../components/CalendarPicker';
 export default function TodoDetailsPage({ mode = 'edit' }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
   const [priority, setPriority] = useState(2);
   const [effort, setEffort] = useState(3);
   const [date, setDate] = useState('2025-02-24');
@@ -61,7 +63,8 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
             type="text"
             className={styles['edit-input']}
             placeholder="Task name..."
-            defaultValue={id ? 'Send the project' : ''}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
 
@@ -135,7 +138,9 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
         <textarea
           className={styles['edit-desc']}
           placeholder="Example description..."
+          value={desc}
           defaultValue="Example task details..."
+          onChange={(e) => setDesc(e.target.value)}
         ></textarea>
 
         <div className={styles["due-date"]}>
@@ -144,7 +149,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
         </div>
 
         <div className={styles['edit-btns']}>
-          <button className={styles['edit-btn']} onClick={() => navigate('/todo')}>
+          <button className={styles['edit-btn']} onClick={handleSave}>
             SAVE
           </button>
           <button className={styles['edit-btn']} onClick={() => navigate('/todo')}>
