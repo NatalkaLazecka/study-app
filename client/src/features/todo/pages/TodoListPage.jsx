@@ -51,14 +51,21 @@ export default function TodoListPage() {
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
                 const data = await res.json();
-                console.log('✅ Todos:', data);
-                setTodos(data);
+                const mappedData = data.map(task => ({
+                    id: task.id,
+                    tytul: task.tytul,
+                    done: false, // dodaj domyślną wartość
+                    priority: task.priorytet,
+                    effort: task.wysilek
+                }));
+                console.log('✅ Todos:', mappedData);
+                setTodos(mappedData);
             }catch (err){
                 console.error(err);
             }
         }
         fetchTodos();
-    }, [todos]);
+    }, []);
 
     return (
         <div>
@@ -143,7 +150,7 @@ export default function TodoListPage() {
                                         <span
                                             key={i}
                                             onClick={() => togglePriority(t.id, i)}
-                                            className={`${styles.emoji} ${i < t.priorytet ? styles.activeFire : ''}`}
+                                            className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
                                             role="button"
                                             aria-label={`Priority level ${i + 1}`}
                                         >
@@ -154,7 +161,7 @@ export default function TodoListPage() {
 
                                 <td className={styles['todo-cell']}>
                                     {Array(4).fill(null).map((_, i) => {
-                                        const isActive = i < t.wysilek;
+                                        const isActive = i < t.effort;
                                         return (
                                             <span
                                                 key={i}
