@@ -8,7 +8,7 @@ import tasksRoutes from "./routes/tasks.routes.js";
 import groupsRoutes from "./routes/groups.routes.js";
 // import announcementsRoutes from "./routes/announcements.routes.js";
 import eventsRoutes from "./routes/events.routes.js";
-// import scheduleRoutes from "./routes/schedule.routes.js";
+/// import scheduleRoutes from "./routes/schedule.routes.js";
 
 
 const app = express()
