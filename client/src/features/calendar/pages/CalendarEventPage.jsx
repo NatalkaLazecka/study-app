@@ -241,7 +241,9 @@ export default function CalendarEventPage(){
                 <div className={styles['end-buttons']}>
                     <button className={styles['end-button']} onClick={handleSave} disabled={loading}>{loading ? 'SAVING...' : 'SAVE'}</button>
                     <button className={styles['end-button']} onClick={() => navigate(-1)} disabled={loading}>CANCEL</button>
-                    <button className={styles['end-button-delete']} onClick={() => navigate(-1)} disabled={loading}>{loading ? 'DELETING...' : 'DELETE'}</button>
+                    {eventId && (
+                        <button className={styles['end-button-delete']} onClick={handleDelete} disabled={loading}>{loading ? 'DELETING...' : 'DELETE'}</button>
+                    )}
                 </div>
             </div>
         </div>
