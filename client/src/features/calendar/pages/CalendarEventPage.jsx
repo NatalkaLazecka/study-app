@@ -11,7 +11,7 @@ export default function CalendarEventPage(){
     const [date, setDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [activeCategory, setActiveCategory] = useState('');
-    const [categories, setACategories] = useState('');
+    const [categories, setCategories] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -19,32 +19,15 @@ export default function CalendarEventPage(){
 
     useEffect(() => {
         const fetchCategories = async () => {
-            console.log('🔄 Rozpoczynam pobieranie kategorii...');
-            console.log('📡 API URL:', API_URL);
-            console.log('📍 Full endpoint:', `${API_URL}/api/events/categories`);
-
             try{
                 const res = await fetch(`${API_URL}/api/events/categories`);
-                console.log('📊 Response status:', res.status);
-                console.log('📊 Response ok:', res.ok);
-                console.log('📊 Response headers:', [...res.headers.entries()]);
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                 const data = await res.json();
 
                 console.log('✅ Otrzymane dane:', data);
-                console.log('📦 Typ danych:', typeof data);
-                console.log('📦 Czy to tablica?:', Array.isArray(data));
-                console.log('📦 Długość:', data?.length);
-                setACategories(data);
+                setCategories(data);
             }catch (err){
-                console.error('❌ Błąd podczas pobierania kategorii:', err);
-                console.error('❌ Szczegóły błędu:', {
-                    name: err.name,
-                    message: err.message,
-                    stack: err.stack
-                });
                 setError(`Failed to load categories: ${err.message}`);
-                setCategories([]);
             }
         };
         fetchCategories();
