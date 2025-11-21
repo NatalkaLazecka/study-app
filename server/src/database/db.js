@@ -13,17 +13,5 @@ const pool = mysql.createPool({
   waitForConnections: true
 });
 
-//test
-// async function test(){
-//     try{
-//         const [rows] = await pool.query("SELECT 1 + 1 AS solution");
-//         console.log("The solution is: ", rows[0].solution);
-//     }catch (err){
-//         console.error("Error executing query: ", err);
-//     }
-// }
-//
-// test();
-
 pool.query = util.promisify(pool.query);
 export default pool;

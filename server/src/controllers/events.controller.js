@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const getEvents = async (req, res) => {
   try {
-    const [result] = await pool.query(`
+    const result = await pool.query(`
       SELECT w.id, w.tytul, w.opis, w.data_start, w.data_koncowa, w.priorytet, w.notatka_id, w.student_id, r.nazwa AS rodzaj, p.nazwa AS powtarzanie
       FROM wydarzenie w
       LEFT JOIN rodzaj_wydarzenia r ON w.rodzaj_wydarzenia_id = r.id
@@ -18,11 +18,8 @@ export const getEvents = async (req, res) => {
 
 export const getCategories = async (req, res) => {
     try{
-        console.log('🔍 Fetching categories from DB...');
-
-        const [rows] = await pool.query('SELECT id, nazwa FROM rodzaj_wydarzenia ORDER BY id asc');
-        console.log('📊 Query result:', rows);
-        res.json(rows);
+        const result = await pool.query('SELECT id, nazwa FROM rodzaj_wydarzenia ORDER BY id asc');
+        res.json(result);
     }catch (err){
         res.status(500).json({ error: err.message });
     }
