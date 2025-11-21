@@ -11,7 +11,7 @@ export default function CalendarEventPage(){
     const [date, setDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [activeCategory, setActiveCategory] = useState('');
-    const [categories, setCategories] = useState('');
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
