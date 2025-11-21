@@ -7,10 +7,12 @@
     --bg-dark: #160c1a;
     --white: #fdfdfd;
     --black: #0c0c0c;
+    --red: #FF5C5C;
     --dotblue: #9ED7FF;
     --dotgreen: #8EF19D;
     --dotorang: #FF9335;
     --dotpink: #FF79CB;
+    --dotgrey: #2e2e2e;
 }
 
 /* ===== BASE STYLES ===== */
@@ -22,6 +24,13 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+}
+
+.err-message{
+    color: var(--red);
+    font-family: 'Roboto Mono', monospace;
+    font-size: clamp(14px, 1.5vw, 16px);
+    margin-top: clamp(5px, 1.5vh, 10px);
 }
 
 /* ===== MENU BAR ===== */
@@ -118,6 +127,7 @@ body {
     color: var(--pink);
     font-size: clamp(18px, 2.5vw, 26px);
     font-weight: bold;
+    cursor: pointer;
 }
 
 .calendar-title {
@@ -216,7 +226,7 @@ body {
     color: var(--light);
     width: 100%;
     max-width: 830px;
-    min-height: clamp(400px, 60vh, 625px);
+    min-height: clamp(400px, 60vh, 650px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -294,7 +304,7 @@ body {
 
 .event-button-active {
     border: 3px solid var(--pink);
-    background: rgba(255, 255, 255, 0.3);
+    background: 0;
     color: var(--white);
     font-weight: bold;
     cursor: pointer;
@@ -342,7 +352,7 @@ body {
 }
 
 .event-descripsion-title {
-    font-size: clamp(16px, 2vw, 23px);
+    font-size: clamp(16px, 2vw, 20px);
     margin: 0 0 clamp(2px, 0.5vh, 4px) 0;
     padding: 0;
     font-weight: 600;
@@ -426,6 +436,26 @@ body {
 .end-button:hover {
     border: 2px solid var(--pink);
     background: rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.end-button-delete{
+    border: var(--red) solid 2px;
+    border-radius: 12px;
+    height: clamp(30px, 4vh, 35px);
+    width: clamp(100px, 15vw, 120px);
+    background: rgba(255, 111, 111, 0.2);
+    color: var(--white);
+    font-family: 'Source Code Pro', monospace;
+    font-size: clamp(14px, 1.5vw, 16px);
+}
+
+.end-button-delete:hover{
+    border: 2px solid var(--red);
+    background: rgba(255, 111, 111, 0.3);
     color: var(--white);
     font-weight: bold;
     cursor: pointer;

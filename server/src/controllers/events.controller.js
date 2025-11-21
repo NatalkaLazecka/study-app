@@ -1,10 +1,10 @@
 import pool from "../database/db.js";
 import { v4 as uuidv4 } from "uuid";
 
-export const getEvents = async (_, res) => {
+export const getEvents = async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT w.*, r.nazwa AS rodzaj, p.nazwa AS powtarzanie
+    const [result] = await pool.query(`
+      SELECT w.id, w.tytul, w.opis, w.data_start, w.data_koncowa, w.priorytet, w.notatka_id, w.student_id, r.nazwa AS rodzaj, p.nazwa AS powtarzanie
       FROM wydarzenie w
       LEFT JOIN rodzaj_wydarzenia r ON w.rodzaj_wydarzenia_id = r.id
       LEFT JOIN rodzaj_powtarzania p ON w.rodzaj_powtarzania_id = p.id
@@ -15,6 +15,15 @@ export const getEvents = async (_, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const getCategories = async (req, res) => {
+    try{
+        const [result] = await pool.query('SELECT id, nazwa FROM rodzaj_wydarzenia ORDER BY id asc');
+        res.json(result);
+    }catch (err){
+        res.status(500).json({ error: err.message });
+    }
+}
 
 export const addEvent = async (req, res) => {
   const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id } = req.body;
@@ -32,11 +41,11 @@ export const addEvent = async (req, res) => {
 };
 
 export const updateEvent = async (req, res) => {
-  const { tytul, opis, data_start, data_koncowa, priorytet } = req.body;
+  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id } = req.body;
   try {
     await pool.query(
-      "UPDATE wydarzenie SET tytul=?, opis=?, data_start=?, data_koncowa=?, priorytet=? WHERE id=?",
-      [tytul, opis, data_start, data_koncowa, priorytet, req.params.id]
+      "UPDATE wydarzenie SET tytul=?, opis=?, data_start=?, data_koncowa=?, priorytet=?, rodzaj_wydarzenia_id=? WHERE id=?",
+      [tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, req.params.id]
     );
     res.json({ message: "Zaktualizowano wydarzenie" });
   } catch (err) {
@@ -52,3 +61,4 @@ export const deleteEvent = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+

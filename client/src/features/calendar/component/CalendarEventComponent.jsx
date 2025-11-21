@@ -1,22 +1,57 @@
-import React, { useState } from 'react';
 import styles from '../styles/CalendarPage.module.css';
+import {useNavigate} from "react-router-dom";
 
-export default function CalendarEventComponent({ dotColor}) {
-    const [title, setTitle] = useState('');
-    const [date, setDate] = useState('');
+export default function CalendarEventComponent({ variant }) {
+    const navigate = useNavigate();
+
+    const getDotColor = (category) => {
+        const colorMap = {
+            'schedule': 'var(--dotblue)',
+            'event': 'var(--dotgreen)',
+            'new project': 'var(--dotorang)',
+            'other': 'var(--dotgrey)'
+        };
+
+        return colorMap[category?.toLowerCase()] || 'var(--dotpink)';
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    const handleArrowClick = () => {
+        const params = new URLSearchParams({
+            id: variant.id,
+            date: formatDate(variant.data_start),
+            title: variant.tytul || '',
+            describe: variant.opis || '',
+            category: variant.rodzaj || '',
+            endDate: formatDate(variant.data_koncowa) || ''
+        });
+
+
+        navigate(`/calendar/event?${params.toString()}`);
+    }
 
     return (
         <div className={styles['event-component']}>
-            <div className={styles['event-dot']} style={{ color: dotColor }}>
+            <div className={styles['event-dot']} style={{ color: getDotColor(variant.rodzaj) }}>
                 <i className="fa-solid fa-circle"></i>
             </div>
 
             <div className={styles['event-descripsion']} >
-                <p className={styles['event-descripsion-title']}>Urodziny babci</p>
-                <p className={styles['event-descripsion-date']}>8/01/2022</p>
+                <p className={styles['event-descripsion-title']}>{variant.tytul || 'Null tittle'}</p>
+                <p className={styles['event-descripsion-date']}>{variant.data_start
+                                ? new Date(variant.data_start).toLocaleDateString('pl-PL')
+                                : 'Null date'}
+                </p>
             </div>
 
-            <span className={styles['back-arrow']}>&gt;</span>
+            <span className={styles['back-arrow']} onClick={handleArrowClick}>&gt;</span>
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Calendar from 'react-calendar';
 import styles from '../styles/CalendarPage.module.css';
 import {useNavigate} from "react-router-dom";
@@ -7,16 +7,12 @@ import CalendarScheduleComponent from "../component/CalendarScheduleComponent";
 import NotificationComponent from "../../notification/component/NotificationComponent";
 
 export default function CalendarPage() {
+    const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
+
     const [date, setDate] = useState(new Date());
+    const [events, setEvents] = useState([])
     const navigate = useNavigate();
 
-    //testowy event
-    const events = [
-        {date: '2025-10-01', color: 'var(--dotorang)'}
-        ,{date: '2025-10-01', color: 'var(--dotorang)'}
-    ];
-
-    //funkcja sprawdzająca czy dany dzień ma event
     const getEventForDate = (date) => {
         const y = date.getFullYear();
         const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -56,8 +52,23 @@ export default function CalendarPage() {
         const day = String(selectedDate.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
 
-        navigate(`/calendar/newEvent?date=${formattedDate}`);
+        navigate(`/calendar/event?date=${formattedDate}`);
     }
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try{
+                const res = await fetch(`${API_URL}/api/events`);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+                const data = await res.json();
+                setEvents(data);
+            }catch (err){
+                console.error(err);
+            }
+        }
+        fetchEvents();
+    }, []);
 
     return (
         <div>
@@ -120,7 +131,9 @@ export default function CalendarPage() {
                     <div className={styles['panel-section']}>
                         <div className={styles['side-panel']}>Events</div>
                         <div className={styles['panel-content']}>
-                            <CalendarEventComponent dotColor="var(--dotblue)"/>
+                            {events.map((e) => {
+                                return <CalendarEventComponent variant={e}/>
+                            })}
                         </div>
                     </div>
 

@@ -29,7 +29,7 @@ export default function AppRouter({isAuthed = true}) {
 
                 {/* Calendar */}
                 <Route path="/calendar" element={<CalendarPage/>}/>
-                <Route path="/calendar/newEvent" element={<CalendarEventPage/>}/>
+                <Route path="/calendar/event" element={<CalendarEventPage/>}/>
 
                 {/*  Home */}
                 <Route
