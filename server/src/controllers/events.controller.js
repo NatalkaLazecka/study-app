@@ -20,16 +20,9 @@ export const getCategories = async (req, res) => {
     try{
         console.log('🔍 Fetching categories from DB...');
 
-        const [result] = await pool.query('SELECT id, nazwa FROM rodzaj_wydarzenia ORDER BY id asc');
-
-        console.log('📊 Query result:', result);
-        console.log('📊 Type:', typeof result);
-        console.log('📊 Is array?:', Array.isArray(result));
-        console.log('📊 Length:', result?.length);
-        console.log('📊 First item:', result[0]);
-        console.log('📊 All items:', JSON.stringify(result, null, 2));
-
-        res.json(result);
+        const [rows] = await pool.query('SELECT id, nazwa FROM rodzaj_wydarzenia ORDER BY id asc');
+        console.log('📊 Query result:', rows);
+        res.json(rows);
     }catch (err){
         res.status(500).json({ error: err.message });
     }
