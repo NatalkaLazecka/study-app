@@ -23,7 +23,7 @@ export const getTaskById = async (req, res) => {
       "SELECT * FROM zadanie WHERE id=?",
       [req.params.id]
     );
-    res.json(result);
+    res.json(result[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

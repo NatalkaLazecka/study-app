@@ -19,14 +19,15 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
     fetch(`${API_URL}/api/tasks/${id}`)
       .then(res => res.json())
       .then(data => {
-        const task = data[0][0];
+        const task = data[0];
         if (!task) return;
 
         setTitle(task.tytul);
         setDesc(task.tresc);
         setPriority(task.priorytet);
         setEffort(task.wysilek);
-        setDate(task.deadline);
+        setDate(task.deadline.split("T")[0]);
+
       })
       .catch(err => console.error("Error fetching task:", err));
   }
