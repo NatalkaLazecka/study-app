@@ -2,16 +2,31 @@ import { useNavigate } from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import styles from '../styles/Todo.module.css';
 import NotificationComponent from "../../notification/component/NotificationComponent";
+import {id} from "date-fns/locale";
 
 export default function TodoListPage() {
     const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
     const navigate = useNavigate();
     const [todos, setTodos] = useState([]);
 
-    const toggleDone = (id) => {
+    const toggleDone = async (id) => {
         setTodos((prev) =>
-            prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
+            prev.map((t) => (t.id === id ? {...t, done: !t.done} : t))
         );
+
+        const task = todos.find(task => task.id === id);
+        if (!task) return;
+        const newStatus = task.done ? 1 : 3;
+
+        await updateTodos(id,{
+            tytul: task.tytul,
+            tresc: task.tresc || "",
+            priorytet: task.priority,
+            deadline: task.deadline,
+            wysilek: task.effort,
+            status: newStatus
+
+        })
     };
 
     const toggleEffort = (id, index) => {
@@ -28,6 +43,7 @@ export default function TodoListPage() {
             })
         );
     };
+    }
 
     const togglePriority = (id, index) => {
         setTodos((prev) =>
@@ -66,6 +82,30 @@ export default function TodoListPage() {
         }
         fetchTodos();
     }, []);
+
+    const updateTodos = async (id, data) => {
+        try{
+             await fetch(`${API_URL}/api/tasks/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+        } catch (err) {
+            console.error("Can't update task:", err);
+        }
+
+    };
+
+    const deleteTodo = async (id) => {
+        try {
+            await fetch(`${API_URL}/api/tasks/${id}`, {method: "DELETE"});
+            setTodos(prev => prev.filter(t => t.id !== id));
+        }catch (err) {
+            console.error("Can't delete task:", err);
+        }
+    }
 
     return (
         <div>
@@ -185,6 +225,18 @@ export default function TodoListPage() {
                                         }}
                                     >
                                         <i class="fa-solid fa-arrow-right"></i>
+                                    </span>
+
+                                    <span
+                                        className={styles['delete-icon']}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteTodo(t.id);
+                                    }}
+
+                                        style={{ marginLeft: "10px", color: "#ff4d6d" }}
+                                        >
+                                        <i className={"fa-solid fa-trash"}></i>
                                     </span>
                                 </td>
                             </tr>
