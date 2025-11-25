@@ -14,6 +14,24 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
 
   const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
 
+  useEffect(() => {
+  if (mode === "edit") {
+    fetch(`${API_URL}/api/tasks/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        const task = data[0][0];
+        if (!task) return;
+
+        setTitle(task.tytul);
+        setDesc(task.tresc);
+        setPriority(task.priorytet);
+        setEffort(task.wysilek);
+        setDate(task.deadline);
+      })
+      .catch(err => console.error("Error fetching task:", err));
+  }
+}, [id, mode]);
+
   const handleSave = async () => {
   const data = {
     tytul: title,
@@ -25,10 +43,16 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
   };
 
   try {
-    const res = await fetch(`${API_URL}/api/tasks`, {
-      method: 'POST',
+    const method = mode === "edit" ? "PUT" : "POST";
+    const url =
+      mode === "edit"
+        ? `${API_URL}/api/tasks/${id}`
+        : `${API_URL}/api/tasks`;
+
+    const res = await fetch(url, {
+      method,
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(data)
     });
@@ -38,11 +62,12 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
       throw new Error(`Błąd: ${res.status} - ${errorText}`);
     }
 
-    navigate('/todo');
+    navigate("/todo");
   } catch (err) {
-    console.error('Błąd przy dodawaniu zadania:', err);
+    console.error("Błąd przy zapisie zadania:", err);
   }
 };
+
 
   return (
     <div className={styles['edit-root']}>

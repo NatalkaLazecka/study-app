@@ -16,6 +16,18 @@ export const getTasks = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+//GET JEDNO ZADANIE
+export const getTaskById = async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM zadanie WHERE id=?",
+      [req.params.id]
+    );
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 // POST dodaj zadanie
 export const addTask = async (req, res) => {
