@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import styles from '../styles/Todo.module.css';
 import NotificationComponent from "../../notification/component/NotificationComponent";
@@ -10,15 +10,19 @@ export default function TodoListPage() {
     const [todos, setTodos] = useState([]);
 
     const toggleDone = async (id) => {
+
         setTodos((prev) =>
             prev.map((t) => (t.id === id ? {...t, done: !t.done} : t))
         );
 
+
         const task = todos.find(task => task.id === id);
         if (!task) return;
-        const newStatus = task.done ? 1 : 3;
 
-        await updateTodos(id,{
+        const newDone = !task.done;
+        const newStatus = newDone ? 3 : 1;
+
+        await updateTodos(id, {
             tytul: task.tytul,
             tresc: task.tresc || "",
             priorytet: task.priority,
@@ -37,186 +41,186 @@ export default function TodoListPage() {
                         .fill(false)
                         .map((_, i) => i < t.effort);
                     newEffort[index] = !newEffort[index];
-                    return { ...t, effort: newEffort.filter(Boolean).length };
-                }
-                return t;
-            })
-        );
-    };
-    }
-
-    const togglePriority = (id, index) => {
-        setTodos((prev) =>
-            prev.map((t) => {
-                if (t.id === id) {
-                    const newPriority = Array(3)
-                        .fill(false)
-                        .map((_, i) => i < t.priority);
-                    newPriority[index] = !newPriority[index];
-                    return { ...t, priority: newPriority.filter(Boolean).length };
+                    return {...t, effort: newEffort.filter(Boolean).length};
                 }
                 return t;
             })
         );
     };
 
-    useEffect(() => {
-        const fetchTodos = async () => {
-            try{
-                const res = await fetch(`${API_URL}/api/tasks`);
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
-                const data = await res.json();
-                const mappedData = data.map(task => ({
-                    id: task.id,
-                    tytul: task.tytul,
-                    done: false, // dodaj domyślną wartość
-                    priority: task.priorytet,
-                    effort: task.wysilek
-                }));
-                console.log('✅ Todos:', mappedData);
-                setTodos(mappedData);
-            }catch (err){
-                console.error(err);
+const togglePriority = (id, index) => {
+    setTodos((prev) =>
+        prev.map((t) => {
+            if (t.id === id) {
+                const newPriority = Array(3)
+                    .fill(false)
+                    .map((_, i) => i < t.priority);
+                newPriority[index] = !newPriority[index];
+                return {...t, priority: newPriority.filter(Boolean).length};
             }
-        }
-        fetchTodos();
-    }, []);
+            return t;
+        })
+    );
+};
 
-    const updateTodos = async (id, data) => {
-        try{
-             await fetch(`${API_URL}/api/tasks/${id}`, {
-            method: "PATCH",
+useEffect(() => {
+    const fetchTodos = async () => {
+        try {
+            const res = await fetch(`${API_URL}/api/tasks`);
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+            const data = await res.json();
+            const mappedData = data.map(task => ({
+                id: task.id,
+                tytul: task.tytul,
+                done: task.status_zadania_id === 3, // dodaj domyślną wartość
+                priority: task.priorytet,
+                effort: task.wysilek
+            }));
+            console.log('✅ Todos:', mappedData);
+            setTodos(mappedData);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    fetchTodos();
+}, []);
+
+const updateTodos = async (id, data) => {
+    try {
+        await fetch(`${API_URL}/api/tasks/${id}`, {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
         });
-        } catch (err) {
-            console.error("Can't update task:", err);
-        }
-
-    };
-
-    const deleteTodo = async (id) => {
-        try {
-            await fetch(`${API_URL}/api/tasks/${id}`, {method: "DELETE"});
-            setTodos(prev => prev.filter(t => t.id !== id));
-        }catch (err) {
-            console.error("Can't delete task:", err);
-        }
+    } catch (err) {
+        console.error("Can't update task:", err);
     }
 
-    return (
-        <div>
-            <div className={styles['menu-bar']}>
-                <div className={styles['menu-icons']}>
-                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')}>
-                        <i className="fa-solid fa-list-check"></i>
-                    </button>
-                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/calendar')}>
-                        <i className="fa-regular fa-calendar-days"></i>
-                    </button>
-                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/groups')}>
-                        <i className="fa-solid fa-people-group"></i>
-                    </button>
-                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/notifications')}>
-                        <i className="fa-solid fa-question"></i>
-                    </button>
-                </div>
+};
 
-                <div className={styles['menu-user']}>
-                    <NotificationComponent/>
+const deleteTodo = async (id) => {
+    try {
+        await fetch(`${API_URL}/api/tasks/${id}`, {method: "DELETE"});
+        setTodos(prev => prev.filter(t => t.id !== id));
+    } catch (err) {
+        console.error("Can't delete task:", err);
+    }
+}
 
-                    <button className={styles['menu-icon-btn']}
-                      onClick={() => navigate('/profile')}
-                    >
-                        <i className="fa-regular fa-circle-user"></i>
-                    </button>
-                </div>
+return (
+    <div>
+        <div className={styles['menu-bar']}>
+            <div className={styles['menu-icons']}>
+                <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')}>
+                    <i className="fa-solid fa-list-check"></i>
+                </button>
+                <button className={styles['menu-icon-btn']} onClick={() => navigate('/calendar')}>
+                    <i className="fa-regular fa-calendar-days"></i>
+                </button>
+                <button className={styles['menu-icon-btn']} onClick={() => navigate('/groups')}>
+                    <i className="fa-solid fa-people-group"></i>
+                </button>
+                <button className={styles['menu-icon-btn']} onClick={() => navigate('/notifications')}>
+                    <i className="fa-solid fa-question"></i>
+                </button>
             </div>
 
-            <div className={styles['todo-root']}>
-                <div className={styles['header-section']}>
-                    <button
-                        className={styles['back-button']}
-                        onClick={() => navigate(-1)}
-                    >
+            <div className={styles['menu-user']}>
+                <NotificationComponent/>
+
+                <button className={styles['menu-icon-btn']}
+                        onClick={() => navigate('/profile')}
+                >
+                    <i className="fa-regular fa-circle-user"></i>
+                </button>
+            </div>
+        </div>
+
+        <div className={styles['todo-root']}>
+            <div className={styles['header-section']}>
+                <button
+                    className={styles['back-button']}
+                    onClick={() => navigate(-1)}
+                >
                         <span className={styles['back-text']}>stud
                             <span className={styles['back-text-y']}>y</span>
                         </span>
-                        <span className={styles['back-arrow']}>&lt;</span>
-                    </button>
-                    <h1 className={styles['todo-title']}>MY TO-DO LIST</h1>
-                    <div></div>
-                </div>
+                    <span className={styles['back-arrow']}>&lt;</span>
+                </button>
+                <h1 className={styles['todo-title']}>MY TO-DO LIST</h1>
+                <div></div>
+            </div>
 
-                <div className={styles['todo-topbar']}>
-                    <select className={styles['todo-date']}>
-                        <option>monday 24/02/2025</option>
-                        <option>tuesday 25/02/2025</option>
-                        <option>wednesday 26/02/2025</option>
-                    </select>
-                </div>
+            <div className={styles['todo-topbar']}>
+                <select className={styles['todo-date']}>
+                    <option>monday 24/02/2025</option>
+                    <option>tuesday 25/02/2025</option>
+                    <option>wednesday 26/02/2025</option>
+                </select>
+            </div>
 
-                <div className={styles['todo-headers']}>
-                    <div className={styles['todo-header-btn']}>Task</div>
-                    <div className={styles['todo-header-btn']}>Priority</div>
-                    <div className={styles['todo-header-btn']}>Effort</div>
-                </div>
+            <div className={styles['todo-headers']}>
+                <div className={styles['todo-header-btn']}>Task</div>
+                <div className={styles['todo-header-btn']}>Priority</div>
+                <div className={styles['todo-header-btn']}>Effort</div>
+            </div>
 
-                <table className={styles['todo-table']}>
-                    <tbody>
-                        {todos.map((t) => (
-                            <tr
-                                key={t.id}
-                                className={`${styles['todo-row']} ${t.done ? styles['todo-done'] : ''}`}
-                            >
-                                <td
-                                    className={styles['todo-cell']}
-                                    onClick={() => toggleDone(t.id)}
+            <table className={styles['todo-table']}>
+                <tbody>
+                {todos.map((t) => (
+                    <tr
+                        key={t.id}
+                        className={`${styles['todo-row']} ${t.done ? styles['todo-done'] : ''}`}
+                    >
+                        <td
+                            className={styles['todo-cell']}
+                            onClick={() => toggleDone(t.id)}
+                        >
+                            <input
+                                type="checkbox"
+                                className={styles['todo-checkbox']}
+                                checked={t.done}
+                                readOnly
+                            />
+                            {t.tytul}
+                        </td>
+
+                        <td className={styles['todo-cell']}>
+                            {Array(3).fill(null).map((_, i) => (
+                                <span
+                                    key={i}
+                                    onClick={() => togglePriority(t.id, i)}
+                                    className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
+                                    role="button"
+                                    aria-label={`Priority level ${i + 1}`}
                                 >
-                                    <input
-                                        type="checkbox"
-                                        className={styles['todo-checkbox']}
-                                        checked={t.done}
-                                        readOnly
-                                    />
-                                    {t.tytul}
-                                </td>
-
-                                <td className={styles['todo-cell']}>
-                                    {Array(3).fill(null).map((_, i) => (
-                                        <span
-                                            key={i}
-                                            onClick={() => togglePriority(t.id, i)}
-                                            className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
-                                            role="button"
-                                            aria-label={`Priority level ${i + 1}`}
-                                        >
-                                            <i className="fa-solid fa-fire" />
+                                            <i className="fa-solid fa-fire"/>
                                         </span>
-                                    ))}
-                                </td>
+                            ))}
+                        </td>
 
-                                <td className={styles['todo-cell']}>
-                                    {Array(4).fill(null).map((_, i) => {
-                                        const isActive = i < t.effort;
-                                        return (
-                                            <span
-                                                key={i}
-                                                onClick={() => toggleEffort(t.id, i)}
-                                                className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
-                                                role="button"
-                                                aria-label={`Effort level ${i + 1}`}
-                                            >
-                                                <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'} />
+                        <td className={styles['todo-cell']}>
+                            {Array(4).fill(null).map((_, i) => {
+                                const isActive = i < t.effort;
+                                return (
+                                    <span
+                                        key={i}
+                                        onClick={() => toggleEffort(t.id, i)}
+                                        className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
+                                        role="button"
+                                        aria-label={`Effort level ${i + 1}`}
+                                    >
+                                                <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'}/>
                                             </span>
-                                        );
-                                    })}
-                                </td>
+                                );
+                            })}
+                        </td>
 
-                                <td className={styles['todo-cell']}>
+                        <td className={styles['todo-cell']}>
                                     <span
                                         className={styles['edit-icon']}
                                         onClick={(e) => {
@@ -227,30 +231,30 @@ export default function TodoListPage() {
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </span>
 
-                                    <span
-                                        className={styles['delete-icon']}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            deleteTodo(t.id);
-                                    }}
+                            <span
+                                className={styles['delete-icon']}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteTodo(t.id);
+                                }}
 
-                                        style={{ marginLeft: "10px", color: "#ff4d6d" }}
-                                        >
+                                style={{marginLeft: "10px", color: "#ff4d6d"}}
+                            >
                                         <i className={"fa-solid fa-trash"}></i>
                                     </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
 
-                <button
-                    className={styles['todo-add-button']}
-                    onClick={() => navigate('/todo/new')}
-                >
-                    <span className={styles['plus-icon']}>＋</span> add new task
-                </button>
-            </div>
+            <button
+                className={styles['todo-add-button']}
+                onClick={() => navigate('/todo/new')}
+            >
+                <span className={styles['plus-icon']}>＋</span> add new task
+            </button>
         </div>
-    );
+    </div>
+);
 }
