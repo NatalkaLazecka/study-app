@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from '../styles/Todo.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CalendarPicker from '../components/CalendarPicker';
 
 export default function TodoDetailsPage({ mode = 'edit' }) {
