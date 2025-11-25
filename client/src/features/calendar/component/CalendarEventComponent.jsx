@@ -9,30 +9,21 @@ export default function CalendarEventComponent({ variant }) {
             'schedule': 'var(--dotblue)',
             'event': 'var(--dotgreen)',
             'new project': 'var(--dotorang)',
-            'other': 'var(--dotgrey)'
+            'other': '#AFAEAEFF'
         };
 
         return colorMap[category?.toLowerCase()] || 'var(--dotpink)';
     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
-
     const handleArrowClick = () => {
         const params = new URLSearchParams({
             id: variant.id,
-            date: formatDate(variant.data_start),
+            date: variant.data_start,
             title: variant.tytul || '',
             describe: variant.opis || '',
             category: variant.rodzaj || '',
-            endDate: formatDate(variant.data_koncowa) || ''
+            endDate: variant.data_koncowa || ''
         });
-
 
         navigate(`/calendar/event?${params.toString()}`);
     }

@@ -12,7 +12,7 @@
     --dotgreen: #8EF19D;
     --dotorang: #FF9335;
     --dotpink: #FF79CB;
-    --dotgrey: #2e2e2e;
+    --dotgrey: #afaeae;
 }
 
 /* ===== BASE STYLES ===== */
@@ -403,15 +403,18 @@ body {
 
 .tile-event-indicators {
     position: absolute;
-    top: 2px;
-    right: 4px;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    gap: 3px;
+    gap: 2px;
     pointer-events: none;
+    z-index: 10;
 }
 
 .tile-event-indicator {
-    font-size: clamp(8px, 1.2vw, 10px);
+    font-size: clamp(6px, 1vw, 8px);
+    line-height: 1;
 }
 
 .end-buttons {
@@ -493,7 +496,7 @@ body {
 
 :global(.react-calendar__navigation__label) {
     color: #f6d3f4;
-    font-size: clamp(16px, 2.6vw, 28px);
+    font-size: clamp(12px, 1.0vw, 16px);
     font-weight: bold;
     letter-spacing: clamp(0.08em, 0.12em, 0.14em);;
     text-transform: uppercase;
@@ -570,8 +573,9 @@ body {
 }
 
 :global(.react-calendar__tile--now) {
-    background: rgba(232, 91, 191, 0.46);
-    color: var(--light);
+    background: rgba(232, 91, 191, 0.46) !important;
+    border: var(--pink) solid 1px !important;
+    color: var(--white) ;
 }
 
 :global(.react-calendar__tile:enabled:hover),

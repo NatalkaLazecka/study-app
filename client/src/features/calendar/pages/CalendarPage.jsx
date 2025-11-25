@@ -13,13 +13,21 @@ export default function CalendarPage() {
     const [events, setEvents] = useState([])
     const navigate = useNavigate();
 
-    const getEventForDate = (date) => {
-        const y = date.getFullYear();
-        const m = String(date.getMonth() + 1).padStart(2, '0');
-        const d = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${y}-${m}-${d}`;
+    const getDotColor = (category) => {
+        const colorMap = {
+            'schedule': 'var(--dotblue)',
+            'event': 'var(--dotgreen)',
+            'new project': 'var(--dotorang)',
+            'other': '#AFAEAEFF'
+        };
 
-        return events.filter(event => event.date === formattedDate);
+        return colorMap[category?.toLowerCase()] || 'var(--dotpink)';
+    };
+
+    const getEventForDate = (date) => {
+        const filtered = date.toLocaleDateString('sv-SE');
+
+        return events.filter(e => e.data_start === filtered);
     }
 
     const tileContent = ({date, view}) => {
@@ -28,15 +36,18 @@ export default function CalendarPage() {
             if (dayEvents.length > 0) {
                 return (
                     <div className={styles['tile-event-indicators']}>
-                        {dayEvents.map((event, index) => (
-                            <div
-                                key={index}
-                                className={styles['tile-event-indicator']}
-                                style={{color: event.color}}
-                            >
-                                <i className="fa-solid fa-circle"></i>
-                            </div>
-                        ))}
+                        {dayEvents.map((event, index) => {
+                            const color = getDotColor(event.rodzaj);
+                            return (
+                                <div
+                                    key={index}
+                                    className={styles['tile-event-indicator']}
+                                    style={{color: color}}
+                                >
+                                    <i className="fa-solid fa-circle"></i>
+                                </div>
+                            );
+                        })}
                     </div>
                 );
             }
@@ -46,11 +57,7 @@ export default function CalendarPage() {
 
     const handleDateClick = (selectedDate) => {
         setDate(selectedDate);
-
-        const year = selectedDate.getFullYear();
-        const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-        const day = String(selectedDate.getDate()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`;
+        const formattedDate = selectedDate.toLocaleDateString('sv-SE');
 
         navigate(`/calendar/event?date=${formattedDate}`);
     }
@@ -119,9 +126,10 @@ export default function CalendarPage() {
                             onChange={handleDateClick}
                             value={date}
                             locale="en-US"
+                            calendarType="iso8601"
                             formatShortWeekday={(locale, date) => {
-                                const days = ['SU', 'M', 'T', 'W', 'TH', 'F', 'S'];
-                                return days[date.getDay()];
+                                const days = ['M', 'T', 'W', 'TH', 'F', 'S', 'SU'];
+                                return days[date.getDay() === 0 ? 6 : date.getDay() - 1];
                             }}
                             tileContent={tileContent}
                             className={styles['reactCalendar']}
