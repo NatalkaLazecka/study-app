@@ -1,0 +1,471 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --pink: #e85bbf;
+    --light: #f6d3f4;
+    --bg-dark: #160C1A;
+    --white: #fdfdfd;
+    --black: #0c0c0c;
+    --red: #FF5C5C;
+    --dotblue: #9ED7FF;
+    --dotgreen: #8EF19D;
+    --dotorang: #FF9335;
+    --dotpink: #FF79CB;
+    --dotgrey: #2e2e2e;
+}
+
+/* ===== BASE STYLES ===== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.err-message{
+    color: var(--red);
+    font-family: 'Roboto Mono', monospace;
+    font-size: clamp(14px, 1.5vw, 16px);
+    margin-top: clamp(5px, 1.5vh, 10px);
+}
+
+/* ===== MENU BAR ===== */
+.menu-bar {
+    background: var(--black);
+    height: clamp(50px, 7vh, 70px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(0.5rem, 3vw, 2rem);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.menu-icons {
+    display: flex;
+    gap: clamp(0.3rem, 1.5vw, 1.5rem);
+    align-items: center;
+}
+
+.menu-user {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.3rem, 1.5vw, 1.5rem);
+}
+
+.menu-icon-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+    cursor: pointer;
+    padding: clamp(0.25rem, 0.8vw, 0.5rem);
+    border-radius: 6px;
+    transition: color 0.3s ease, background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(28px, 4.5vw, 40px);
+    height: clamp(28px, 4.5vw, 40px);
+}
+
+.menu-icon-btn:hover {
+    color: var(--pink);
+    background: rgba(232, 91, 191, 0.1);
+}
+
+.menu-icon-btn:active {
+    transform: scale(0.95);
+}
+
+/* ===== HEADER SECTION ===== */
+.header-section {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    width: 100%;
+    margin-bottom: clamp(1rem, 3vh, 2rem);
+    padding: 0 clamp(1rem, 4vw, 3rem);
+}
+
+.header-section > div:last-child {
+    justify-self: end;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: var(--light);
+    font-family: 'Roboto Mono', monospace;
+    font-size: clamp(18px, 2.5vw, 26px);
+    cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    transition: color 0.2s;
+    justify-self: start;
+}
+
+.back-text {
+    color: var(--light);
+}
+
+.back-text-y {
+    color: var(--pink);
+}
+
+.back-arrow {
+    color: var(--pink);
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.schedule-title {
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: clamp(1rem, 3vh, 2rem);
+    color: var(--light);
+    text-shadow: 0 0 15px rgba(232, 91, 191, 0.4);
+    justify-self: center;
+}
+
+/* ===== SCHEDULE ROOT ===== */
+.schedule-root {
+    min-height: calc(100vh - clamp(50px, 7vh, 70px));
+    width: 100%;
+    background: radial-gradient(ellipse 70% 65% at 50% 50%, #b854b4 0%, #3D2A3C 60%, #160c1a 100%), #0a0610;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-family: 'Roboto Mono', monospace;
+    padding: 3rem 0;
+}
+
+/* ===== CALENDAR CONTENT ===== */
+.schedule-content {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: clamp(1rem, 1vw, 3rem);
+    width: 100%;
+    max-width: min(1400px, 95vw);
+    place-items: center;
+    align-items: start;
+}
+
+/* ===== PANEL SECTION ===== */
+.panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.side-panel {
+    background: #1E1E1E21;
+    border: clamp(2px, 0.5vw, 4px) solid var(--pink);
+    border-radius: 12px;
+    color: var(--pink);
+    font-family: 'Roboto Mono', monospace;
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 3rem);
+    box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
+    text-align: center;
+}
+
+.panel-content {
+    background: #B381B030;
+    border: 1.5px solid #A45EA1;
+    border-radius: 12px;
+    height: clamp(325px, 70vh, 615px);
+    padding: clamp(0.5rem, 1.5vw, 1rem);
+    box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ===== SXHEDULE COMPONENT ===== */
+.schedule-dot {
+    color: #9ED7FF;
+    margin-top: 3px;
+    font-size: clamp(18px, 2.5vw, 22px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: clamp(20px, 3vw, 24px);
+}
+
+.schedule-descripsion-title {
+    font-size: clamp(16px, 2vw, 20px);
+    margin: 0 0 clamp(2px, 0.5vh, 4px) 0;
+    padding: 0;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.schedule-descripsion-date {
+    font-size: clamp(12px, 1.5vw, 16px);
+    color: var(--light);
+    font-weight: lighter;
+    margin: 0;
+    padding: 0;
+    opacity: 0.85;
+}
+
+.schedule-descripsion {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    color: var(--white);
+    padding: clamp(8px, 1.5vw, 12px);
+    text-align: start;
+    gap: clamp(10px, 2vw, 20px);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.schedule-descripsion-button{
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+    cursor: pointer;
+    display: flex;
+}
+
+.schedule-descripsion-button:hover{
+    text-decoration: underline;
+}
+
+.schedule-component {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: clamp(8px, 1.5vh, 15px);
+    font-family: 'Source Code Pro', monospace;
+}
+
+.schedule-descripsion-time {
+    font-size: clamp(12px, 1.5vw, 16px);
+    color: var(--light);
+    font-weight: lighter;
+    text-align: end;
+    opacity: 0.85;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+}
+
+.tile-event-indicators {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    display: flex;
+    gap: 3px;
+    pointer-events: none;
+}
+
+.tile-event-indicator {
+    font-size: clamp(8px, 1.2vw, 10px);
+}
+
+.schedule-event-content {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid var(--pink);
+    border-radius: 16px;
+    box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
+    padding: clamp(8px, 1.5vw, 15px);
+    color: var(--light);
+    width: 100%;
+    max-width: 830px;
+    min-height: clamp(400px, 60vh, 650px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2vh, 20px);
+}
+
+.input-box{
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.input-title {
+    color: var(--white);
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.event-h3 {
+    font-size: clamp(16px, 2vw, 18px);
+    font-family: 'Source Code Pro', monospace;
+    font-weight: lighter;
+    color: var(--white);
+}
+
+.event-h2 {
+    font-weight: lighter;
+    font-size: clamp(24px, 4vw, 35px);
+    font-family: 'Source Code Pro', monospace;
+    color: var(--white);
+}
+
+.event-buttons {
+    padding: clamp(10px, 2vh, 20px);
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.event-button {
+    border: var(--pink) solid 1px;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    width: clamp(120px, 18vw, 150px);
+    height: clamp(30px, 4vh, 35px);
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-family: 'Source Code Pro', monospace;
+}
+
+.event-button:hover {
+    border: 2px solid var(--pink);
+    background: rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.event-button-active {
+    border: 3px solid var(--pink);
+    background: 0;
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.end-buttons {
+    margin-top: clamp(10px, 2vh, 20px);
+    gap: clamp(10px, 2vw, 20px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.end-button {
+    border: var(--pink) solid 2px;
+    border-radius: 12px;
+    height: clamp(30px, 4vh, 35px);
+    width: clamp(100px, 15vw, 120px);
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    font-family: 'Source Code Pro', monospace;
+    font-size: clamp(14px, 1.5vw, 16px);
+}
+
+.end-button:hover {
+    border: 2px solid var(--pink);
+    background: rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.end-button-delete{
+    border: var(--red) solid 2px;
+    border-radius: 12px;
+    height: clamp(30px, 4vh, 35px);
+    width: clamp(100px, 15vw, 120px);
+    background: rgba(255, 111, 111, 0.2);
+    color: var(--white);
+    font-family: 'Source Code Pro', monospace;
+    font-size: clamp(14px, 1.5vw, 16px);
+}
+
+.end-button-delete:hover{
+    border: 2px solid var(--red);
+    background: rgba(255, 111, 111, 0.3);
+    color: var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.import-box {
+    margin-top: clamp(5px, 1.5vh, 10px);
+    display: flex;
+    gap: clamp(10px, 2vw, 20px);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.import-icon {
+    font-size: clamp(22px, 3vw, 28px);
+}
+
+/* ===== CUSTOM SELECT STYLING ===== */
+.schedule-input{
+    border: 2px solid var(--white);
+    padding: clamp(8px, 1.5vw, 10px);
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    width: 100%;
+    height: clamp(35px, 5vh, 40px);
+}
+
+.schedule-input:hover{
+    border: 2px solid var(--pink);
+    box-shadow:
+        0 0 15px rgba(232, 91, 191, 0.6),
+        inset 0 0 10px rgba(232, 91, 191, 0.2);
+    animation: dashRotate 2s linear infinite;
+}
+
+@keyframes dashRotate {
+    0% { border-color: var(--pink); }
+    25% { border-color: #b854b4; }
+    50% { border-color: var(--dotblue); }
+    75% { border-color: #b854b4; }
+    100% { border-color: var(--pink); }
+}
+
+.schedule-input option {
+    background: var(--light);
+    color: var(--black);
+    padding: 10px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+}
+
+.schedule-input option:hover {
+    background: var(--white);
+    color: var(--black);
+}
+
+.schedule-input option:checked {
+    background: #c5c5c5;
+    color: var(--black);
+    font-weight: bold;
+}

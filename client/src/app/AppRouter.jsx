@@ -13,6 +13,8 @@ import GroupListPage from '@/features/group/pages/GroupListPage';
 import GroupCreatePage from '@/features/group/pages/GroupCreatePage';
 import GroupDetailsPage from '@/features/group/pages/GroupDetailsPage';
 import {GroupsProvider} from '@/features/group/store/groupStore';
+import ScheduleEditPage from "../features/schedule/pages/ScheduleEditPage";
+import SchedulePage from "../features/schedule/pages/SchedulePage";
 
 const ProtectedRoute = ({isAuthed, children}) =>
     isAuthed ? children : <Navigate to="/login" replace/>;
@@ -106,6 +108,10 @@ export default function AppRouter({isAuthed = true}) {
 
                 {/*  Fallback */}
                 <Route path="*" element={<Navigate to="/" replace/>}/>
+
+                {/*  Schedule  */}
+                <Route path="/schedule" element={<SchedulePage />} />
+                <Route path="/schedule/edit" element={<ScheduleEditPage />} />
             </Routes>
         </GroupsProvider>
     );
