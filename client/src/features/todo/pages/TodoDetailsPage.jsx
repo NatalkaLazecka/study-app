@@ -186,6 +186,7 @@
 //     </div>
 //   );
 // }
+
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from '../styles/CalendarPage.module.css';
 import { useState, useEffect } from 'react';
@@ -199,7 +200,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
   const [desc, setDesc] = useState("");
   const [priority, setPriority] = useState(2);
   const [effort, setEffort] = useState(3);
-  const [date, setDate] = useState("2025-02-24");
+  const [date, setDate] = useState("");
 
   const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
 
@@ -216,47 +217,37 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
           setPriority(task.priorytet);
           setEffort(task.wysilek);
           setDate(task.deadline.split("T")[0]);
-        })
-        .catch(err => console.error("Error fetching task:", err));
+        });
     }
   }, [id, mode]);
 
+
   const handleSave = async () => {
-    const data = {
+    const body = {
       tytul: title,
       tresc: desc,
       priorytet: priority,
-      deadline: date,
       wysilek: effort,
+      deadline: date,
       data_rozpoczecia: date
     };
 
-    try {
-      const method = mode === "edit" ? "PUT" : "POST";
-      const url =
-        mode === "edit"
-          ? `${API_URL}/api/tasks/${id}`
-          : `${API_URL}/api/tasks`;
+    const method = mode === "edit" ? "PUT" : "POST";
+    const url = mode === "edit" ? `${API_URL}/api/tasks/${id}` : `${API_URL}/api/tasks`;
 
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
+    await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
 
-      if (!res.ok) {
-        throw new Error(`Error saving task: ${res.status}`);
-      }
-
-      navigate("/todo");
-    } catch (err) {
-      console.error(err);
-    }
+    navigate("/todo");
   };
+
 
   return (
     <div>
-      {/* MENU BAR */}
+      {/* TOP BAR */}
       <div className={styles['menu-bar']}>
         <div className={styles['menu-icons']}>
           <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')}>
@@ -273,8 +264,8 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
         {/* HEADER */}
         <div className={styles['header-section']}>
           <button className={styles['back-button']} onClick={() => navigate(-1)}>
-            <span className={styles['back-text']}>stud
-              <span className={styles['back-text-y']}>y</span>
+            <span className={styles['back-text']}>
+              stud<span className={styles['back-text-y']}>y</span>
             </span>
             <span className={styles['back-arrow']}>&lt;</span>
           </button>
@@ -286,7 +277,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
           <div></div>
         </div>
 
-        {/* MAIN CONTENT SECTION */}
+        {/* MAIN FORM (identical layout as event page!) */}
         <div className={styles['calendar-event-content']}>
 
           {/* TITLE */}
@@ -297,7 +288,6 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
               className={styles['event-input']}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Task name..."
             />
           </div>
 
@@ -309,7 +299,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
               style={{ height: "100px" }}
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
-            />
+            ></textarea>
           </div>
 
           {/* DATE */}
@@ -321,9 +311,8 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
           {/* PRIORITY */}
           <div className={styles['input-box']}>
             <p className={styles['input-title']}>Priority</p>
-
             <div className={styles['event-buttons']}>
-              {[1, 2, 3].map((lvl) => (
+              {[1, 2, 3].map(lvl => (
                 <button
                   key={lvl}
                   className={`${styles['event-button']} ${
@@ -331,7 +320,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
                   }`}
                   onClick={() => setPriority(lvl)}
                 >
-                  <i className="fa-solid fa-fire"></i> {lvl}
+                  <i className="fa-solid fa-fire" />
                 </button>
               ))}
             </div>
@@ -340,9 +329,8 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
           {/* EFFORT */}
           <div className={styles['input-box']}>
             <p className={styles['input-title']}>Effort</p>
-
             <div className={styles['event-buttons']}>
-              {[1, 2, 3, 4].map((lvl) => (
+              {[1, 2, 3, 4].map(lvl => (
                 <button
                   key={lvl}
                   className={`${styles['event-button']} ${
@@ -350,19 +338,19 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
                   }`}
                   onClick={() => setEffort(lvl)}
                 >
-                  <i className={effort >= lvl ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i> {lvl}
+                  <i className={effort >= lvl ? "fa-solid fa-circle" : "fa-regular fa-circle"} />
                 </button>
               ))}
             </div>
           </div>
+
         </div>
 
-        {/* BUTTONS */}
+        {/* SAVE + CANCEL */}
         <div className={styles['end-buttons']}>
           <button className={styles['end-button']} onClick={handleSave}>
             SAVE
           </button>
-
           <button className={styles['end-button']} onClick={() => navigate('/todo')}>
             CANCEL
           </button>
