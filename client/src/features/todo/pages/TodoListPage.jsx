@@ -7,6 +7,7 @@ export default function TodoListPage() {
     const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
     const navigate = useNavigate();
     const [todos, setTodos] = useState([]);
+    const [selectedDate, setSelectedDate] = useState("ALL");
 
     const toggleDone = async (id) => {
 
@@ -88,6 +89,10 @@ export default function TodoListPage() {
         fetchTodos();
     }, []);
 
+    const uniqueDate = [...new Set(
+        todos.filter(t => t.deadline).map(t => new Date(t.deadline).toLocaleDateString('en-GB'))
+    )];
+
     const updateTodos = async (id, data) => {
         try {
             await fetch(`${API_URL}/api/tasks/${id}`, {
@@ -158,10 +163,32 @@ export default function TodoListPage() {
 
                 <div className={styles['todo-topbar']}>
                     <select className={styles['todo-date']}>
-                        <option>monday 24/02/2025</option>
-                        <option>tuesday 25/02/2025</option>
-                        <option>wednesday 26/02/2025</option>
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        >
+                        <option value="ALL">ALL</option>
+                        {uniqueDate.map((dateStr, index) => (
+                            <option key={index} value={dateStr}>{dateStr} (</option>
+                        ))}
                     </select>
+
+                    <button
+                        onClick={() => setSelectedDate("ALL")}
+                        style={{
+                            marginLeft: "15px",
+                            border: "1px solid var(--accent)",
+                            padding: "8px 16px",
+                            background: "rgba(255,255,255,0.05)",
+                            color: "var(--text)",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontFamily: "Roboto Mono"
+                        }}
+                    >
+                        ALL
+                    </button>
+
+
                 </div>
 
                 <div className={styles['todo-headers']}>
@@ -172,56 +199,60 @@ export default function TodoListPage() {
 
                 <table className={styles['todo-table']}>
                     <tbody>
-                    {todos.map((t) => (
-                        <tr
-                            key={t.id}
-                            className={`${styles['todo-row']} ${t.done ? styles['todo-done'] : ''}`}
-                        >
-                            <td
-                                className={styles['todo-cell']}
-                                onClick={() => toggleDone(t.id)}
+                    {todos
+                        .filter(t => selectedDate === "ALL"
+                            ? true
+                            : new Date(t.deadline).toLocaleDateString("en-GB") === selectedDate
+                        ).map((t) => (
+                            <tr
+                                key={t.id}
+                                className={`${styles['todo-row']} ${t.done ? styles['todo-done'] : ''}`}
                             >
-                                <input
-                                    type="checkbox"
-                                    className={styles['todo-checkbox']}
-                                    checked={t.done}
-                                    readOnly
-                                />
-                                {t.tytul}
-                            </td>
+                                <td
+                                    className={styles['todo-cell']}
+                                    onClick={() => toggleDone(t.id)}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        className={styles['todo-checkbox']}
+                                        checked={t.done}
+                                        readOnly
+                                    />
+                                    {t.tytul}
+                                </td>
 
-                            <td className={styles['todo-cell']}>
-                                {Array(3).fill(null).map((_, i) => (
-                                    <span
-                                        key={i}
-                                        onClick={() => togglePriority(t.id, i)}
-                                        className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
-                                        role="button"
-                                        aria-label={`Priority level ${i + 1}`}
-                                    >
-                                            <i className="fa-solid fa-fire"/>
-                                        </span>
-                                ))}
-                            </td>
-
-                            <td className={styles['todo-cell']}>
-                                {Array(4).fill(null).map((_, i) => {
-                                    const isActive = i < t.effort;
-                                    return (
+                                <td className={styles['todo-cell']}>
+                                    {Array(3).fill(null).map((_, i) => (
                                         <span
                                             key={i}
-                                            onClick={() => toggleEffort(t.id, i)}
-                                            className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
+                                            onClick={() => togglePriority(t.id, i)}
+                                            className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
                                             role="button"
-                                            aria-label={`Effort level ${i + 1}`}
+                                            aria-label={`Priority level ${i + 1}`}
                                         >
+                                            <i className="fa-solid fa-fire"/>
+                                        </span>
+                                    ))}
+                                </td>
+
+                                <td className={styles['todo-cell']}>
+                                    {Array(4).fill(null).map((_, i) => {
+                                        const isActive = i < t.effort;
+                                        return (
+                                            <span
+                                                key={i}
+                                                onClick={() => toggleEffort(t.id, i)}
+                                                className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
+                                                role="button"
+                                                aria-label={`Effort level ${i + 1}`}
+                                            >
                                                 <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'}/>
                                             </span>
-                                    );
-                                })}
-                            </td>
+                                        );
+                                    })}
+                                </td>
 
-                            <td className={styles['todo-cell']}>
+                                <td className={styles['todo-cell']}>
                                     <span
                                         className={styles['edit-icon']}
                                         onClick={(e) => {
@@ -232,20 +263,20 @@ export default function TodoListPage() {
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </span>
 
-                                <span
-                                    className={styles['delete-icon']}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        deleteTodo(t.id);
-                                    }}
+                                    <span
+                                        className={styles['delete-icon']}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteTodo(t.id);
+                                        }}
 
-                                    style={{marginLeft: "10px", color: "#ff4d6d"}}
-                                >
+                                        style={{marginLeft: "10px", color: "#ff4d6d"}}
+                                    >
                                         <i className={"fa-solid fa-trash"}></i>
                                     </span>
-                            </td>
-                        </tr>
-                    ))}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
 
