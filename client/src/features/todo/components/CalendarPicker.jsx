@@ -1,7 +1,7 @@
 import React from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import styles from '../styles/CalendarPage.module.css';
+import styles from '../../calendar/styles/CalendarPage.module.css';
 
 export default function CalendarPicker({ date, setDate }) {
   return (

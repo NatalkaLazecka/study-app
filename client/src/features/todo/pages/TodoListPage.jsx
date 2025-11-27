@@ -2,7 +2,6 @@ import {useNavigate} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import styles from '../styles/Todo.module.css';
 import NotificationComponent from "../../notification/component/NotificationComponent";
-import {id} from "date-fns/locale";
 
 export default function TodoListPage() {
     const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
@@ -80,7 +79,7 @@ export default function TodoListPage() {
                     priority: task.priorytet,
                     effort: task.wysilek
                 }));
-                console.log('✅ Todos:', mappedData);
+                console.log('Todos:', mappedData);
                 setTodos(mappedData);
             } catch (err) {
                 console.error(err);

@@ -1,198 +1,8 @@
-// import { useNavigate, useParams } from 'react-router-dom';
-//
-// import { useState, useEffect } from 'react';
-// import CalendarPicker from '../components/CalendarPicker';
-//
-// export default function TodoDetailsPage({ mode = 'edit' }) {
-//   const { id } = useParams();
-//   const navigate = useNavigate();
-//   const [title, setTitle] = useState("");
-//   const [desc, setDesc] = useState("");
-//   const [priority, setPriority] = useState(2);
-//   const [effort, setEffort] = useState(3);
-//   const [date, setDate] = useState('2025-02-24');
-//
-//   const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
-//
-//   useEffect(() => {
-//   if (mode === "edit") {
-//     fetch(`${API_URL}/api/tasks/${id}`)
-//       .then(res => res.json())
-//       .then(data => {
-//         const task = data[0];
-//         if (!task) return;
-//
-//         setTitle(task.tytul);
-//         setDesc(task.tresc);
-//         setPriority(task.priorytet);
-//         setEffort(task.wysilek);
-//         setDate(task.deadline.split("T")[0]);
-//
-//       })
-//       .catch(err => console.error("Error fetching task:", err));
-//   }
-// }, [id, mode]);
-//
-//   const handleSave = async () => {
-//   const data = {
-//     tytul: title,
-//     tresc: desc,
-//     priorytet: priority,
-//     deadline: date,
-//     wysilek: effort,
-//     data_rozpoczecia: date,
-//   };
-//
-//   try {
-//     const method = mode === "edit" ? "PUT" : "POST";
-//     const url =
-//       mode === "edit"
-//         ? `${API_URL}/api/tasks/${id}`
-//         : `${API_URL}/api/tasks`;
-//
-//     const res = await fetch(url, {
-//       method,
-//       headers: {
-//         "Content-Type": "application/json"
-//       },
-//       body: JSON.stringify(data)
-//     });
-//
-//     if (!res.ok) {
-//       const errorText = await res.text();
-//       throw new Error(`Błąd: ${res.status} - ${errorText}`);
-//     }
-//
-//     navigate("/todo");
-//   } catch (err) {
-//     console.error("Błąd przy zapisie zadania:", err);
-//   }
-// };
-//
-//
-//   return (
-//     <div className={styles['edit-root']}>
-//       <h1 className={styles['edit-title']}>
-//         {mode === 'new' ? (
-//           <>NEW TASK <i className="fa-solid fa-plus"></i></>
-//         ) : (
-//           <>EDIT TASK <i className="fa-regular fa-pen-to-square"></i></>
-//         )}
-//       </h1>
-//
-//       <div className={styles['edit-section']}>
-//         <div className={styles['edit-box']}>
-//           <p className={styles['edit-label']}>Task</p>
-//           <p className={styles['edit-sublabel']}>name task:</p>
-//
-//           <input
-//             type="text"
-//             className={styles['edit-input']}
-//             placeholder="Task name..."
-//             value={title}
-//             onChange={(e) => setTitle(e.target.value)}
-//           />
-//         </div>
-//
-//         <div className={styles['edit-box']}>
-//           <p className={styles['edit-label']}>Priority</p>
-//           <p className={styles['edit-sublabel']}>choose:</p>
-//           <div className={styles['icons-row']}>
-//             {Array(3)
-//               .fill(null)
-//               .map((_, i) => {
-//                 const isActive = i < priority;
-//                 return (
-//                   <span
-//                     key={i}
-//                     onClick={() =>
-//                       setPriority((prev) => {
-//                         const arr = Array(3)
-//                           .fill(false)
-//                           .map((_, j) => j < prev);
-//                         arr[i] = !arr[i];
-//                         return arr.filter(Boolean).length;
-//                       })
-//                     }
-//                     className={`${styles.emoji} ${isActive ? styles.activeFire : ''}`}
-//                     role="button"
-//                     aria-label={`Priority level ${i + 1}`}
-//                     tabIndex={0}
-//                   >
-//                     <i className="fa-solid fa-fire" />
-//                   </span>
-//                 );
-//               })}
-//           </div>
-//         </div>
-//
-//         <div className={styles['edit-box']}>
-//           <p className={styles['edit-label']}>Effort</p>
-//           <p className={styles['edit-sublabel']}>choose:</p>
-//           <div className={styles['icons-row']}>
-//             {Array(4)
-//               .fill(null)
-//               .map((_, i) => {
-//                 const isActive = i < effort;
-//                 return (
-//                   <span
-//                     key={i}
-//                     onClick={() =>
-//                       setEffort((prev) => {
-//                         const arr = Array(4)
-//                           .fill(false)
-//                           .map((_, j) => j < prev);
-//                         arr[i] = !arr[i];
-//                         return arr.filter(Boolean).length;
-//                       })
-//                     }
-//                     className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
-//                     role="button"
-//                     aria-label={`Effort level ${i + 1}`}
-//                     tabIndex={0}
-//                   >
-//
-//                     <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'} />
-//                   </span>
-//                 );
-//               })}
-//           </div>
-//         </div>
-//       </div>
-//
-//       <div className={styles['edit-section']}>
-//         <textarea
-//           className={styles['edit-desc']}
-//           placeholder="Example description..."
-//           value={desc}
-//           defaultValue="Example task details..."
-//           onChange={(e) => setDesc(e.target.value)}
-//         ></textarea>
-//
-//         <div className={styles["due-date"]}>
-//           <p>due date:</p>
-//           <CalendarPicker date={date} setDate={setDate} />
-//         </div>
-//
-//         <div className={styles['edit-btns']}>
-//           <button className={styles['edit-btn']} onClick={handleSave}>
-//             SAVE
-//           </button>
-//           <button className={styles['edit-btn']} onClick={() => navigate('/todo')}>
-//             CANCEL
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+import { useNavigate, useParams } from "react-router-dom";
+import styles from "../../calendar/styles/CalendarPage.module.css";
+import { useState, useEffect } from "react";
 
-import { useNavigate, useParams } from 'react-router-dom';
-import styles from '../../../styles/CalendarPage.module.css';
-import { useState, useEffect } from 'react';
-import CalendarPicker from '../components/CalendarPicker';
-
-export default function TodoDetailsPage({ mode = 'edit' }) {
+export default function TodoDetailsPage({ mode = "edit" }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -202,121 +12,199 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
   const [effort, setEffort] = useState(3);
   const [date, setDate] = useState("");
 
-  const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
+  const API_URL = import.meta.env.VITE_RAILWAY_API_URL || "http://localhost:3001";
+
+  // Ładowanie zadania przy edycji
   useEffect(() => {
-    if (mode === "edit") {
-      fetch(`${API_URL}/api/tasks/${id}`)
-        .then(res => res.json())
-        .then(data => {
-          const task = data[0];
-          if (!task) return;
+    if (mode !== "edit" || !id) return;
 
-          setTitle(task.tytul);
-          setDesc(task.tresc);
-          setPriority(task.priorytet);
-          setEffort(task.wysilek);
+    const fetchTask = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/tasks/${id}`);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+        const data = await res.json();
+        const task = data[0] || data; // w zależności od backendu
+
+        if (!task) return;
+
+        setTitle(task.tytul || "");
+        setDesc(task.tresc || "");
+        setPriority(task.priorytet ?? 2);
+        setEffort(task.wysilek ?? 3);
+        if (task.deadline) {
           setDate(task.deadline.split("T")[0]);
-        });
-    }
-  }, [id, mode]);
+        }
+      } catch (err) {
+        console.error("Error fetching task:", err);
+        setError("Failed to load task data");
+      }
+    };
 
+    fetchTask();
+  }, [id, mode, API_URL]);
 
+  // Zapis zadania
   const handleSave = async () => {
+    if (!title.trim()) {
+      setError("Title is required");
+      return;
+    }
+    if (!date) {
+      setError("Date is required");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
     const body = {
-      tytul: title,
-      tresc: desc,
+      tytul: title.trim(),
+      tresc: desc.trim(),
       priorytet: priority,
       wysilek: effort,
       deadline: date,
       data_rozpoczecia: date
     };
 
-    const method = mode === "edit" ? "PUT" : "POST";
     const url = mode === "edit" ? `${API_URL}/api/tasks/${id}` : `${API_URL}/api/tasks`;
+    const method = mode === "edit" ? "PUT" : "POST";
 
-    await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
 
-    navigate("/todo");
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || `Error ${res.status}`);
+      }
+
+      navigate("/todo");
+    } catch (err) {
+      console.error("Save error:", err);
+      setError(err.message || "Failed to save task");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const handleDelete = async () => {
+    if (mode !== "edit" || !id) {
+      navigate("/todo");
+      return;
+    }
+
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch(`${API_URL}/api/tasks/${id}`, {
+        method: "DELETE"
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || `Error ${res.status}`);
+      }
+
+      navigate("/todo");
+    } catch (err) {
+      console.error("Delete error:", err);
+      setError(err.message || "Failed to delete task");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
-      {/* TOP BAR */}
-      <div className={styles['menu-bar']}>
-        <div className={styles['menu-icons']}>
-          <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')}>
+      {/* TOP MENU BAR */}
+      <div className={styles["menu-bar"]}>
+        <div className={styles["menu-icons"]}>
+          <button className={styles["menu-icon-btn"]} onClick={() => navigate("/todo")}>
             <i className="fa-solid fa-list-check"></i>
           </button>
-          <button className={styles['menu-icon-btn']} onClick={() => navigate('/calendar')}>
+          <button className={styles["menu-icon-btn"]} onClick={() => navigate("/calendar")}>
             <i className="fa-regular fa-calendar-days"></i>
           </button>
         </div>
+
+        {/* jeśli chcesz, tu możesz dodać user icon tak jak w CalendarEventPage */}
       </div>
 
-      <div className={styles['calendar-root']}>
-
+      {/* PAGE BACKGROUND */}
+      <div className={styles["calendar-root"]}>
         {/* HEADER */}
-        <div className={styles['header-section']}>
-          <button className={styles['back-button']} onClick={() => navigate(-1)}>
-            <span className={styles['back-text']}>
-              stud<span className={styles['back-text-y']}>y</span>
+        <div className={styles["header-section"]}>
+          <button className={styles["back-button"]} onClick={() => navigate(-1)}>
+            <span className={styles["back-text"]}>
+              stud<span className={styles["back-text-y"]}>y</span>
             </span>
-            <span className={styles['back-arrow']}>&lt;</span>
+            <span className={styles["back-arrow"]}>&lt;</span>
           </button>
 
-          <h1 className={styles['calendar-title']}>
+          <h1 className={styles["calendar-title"]}>
             {mode === "new" ? "NEW TASK" : "EDIT TASK"}
           </h1>
 
           <div></div>
         </div>
 
+        {error && <div className={styles["err-message"]}>{error}</div>}
 
-        <div className={styles['calendar-event-content']}>
-
+        {/* MAIN CONTENT (FORM) */}
+        <div className={styles["calendar-event-content"]}>
           {/* TITLE */}
-          <div className={styles['input-box']}>
-            <p className={styles['input-title']}>Title *</p>
+          <div className={styles["input-box"]}>
+            <p className={styles["input-title"]}>Title *</p>
             <input
               type="text"
-              className={styles['event-input']}
+              className={styles["event-input"]}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
           {/* DESCRIPTION */}
-          <div className={styles['input-box']}>
-            <p className={styles['input-title']}>Description</p>
+          <div className={styles["input-box"]}>
+            <p className={styles["input-title"]}>Description</p>
             <textarea
-              className={styles['event-input']}
+              className={styles["event-input"]}
               style={{ height: "100px" }}
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
-            ></textarea>
+            />
           </div>
 
           {/* DATE */}
-          <div className={styles['input-box']}>
-            <p className={styles['input-title']}>Due Date *</p>
-            <CalendarPicker date={date} setDate={setDate} />
+          <div className={styles["input-box"]}>
+            <p className={styles["input-title"]}>Due Date *</p>
+            <input
+              type="date"
+              className={styles["event-input"]}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
           </div>
 
           {/* PRIORITY */}
-          <div className={styles['input-box']}>
-            <p className={styles['input-title']}>Priority</p>
-            <div className={styles['event-buttons']}>
-              {[1, 2, 3].map(lvl => (
+          <div className={styles["input-box"]}>
+            <p className={styles["input-title"]}>Priority</p>
+            <div className={styles["event-buttons"]}>
+              {[1, 2, 3].map((lvl) => (
                 <button
                   key={lvl}
-                  className={`${styles['event-button']} ${
-                    priority >= lvl ? styles['event-button-active'] : ""
+                  type="button"
+                  className={`${styles["event-button"]} ${
+                    priority >= lvl ? styles["event-button-active"] : ""
                   }`}
                   onClick={() => setPriority(lvl)}
                 >
@@ -327,33 +215,54 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
           </div>
 
           {/* EFFORT */}
-          <div className={styles['input-box']}>
-            <p className={styles['input-title']}>Effort</p>
-            <div className={styles['event-buttons']}>
-              {[1, 2, 3, 4].map(lvl => (
+          <div className={styles["input-box"]}>
+            <p className={styles["input-title"]}>Effort</p>
+            <div className={styles["event-buttons"]}>
+              {[1, 2, 3, 4].map((lvl) => (
                 <button
                   key={lvl}
-                  className={`${styles['event-button']} ${
-                    effort >= lvl ? styles['event-button-active'] : ""
+                  type="button"
+                  className={`${styles["event-button"]} ${
+                    effort >= lvl ? styles["event-button-active"] : ""
                   }`}
                   onClick={() => setEffort(lvl)}
                 >
-                  <i className={effort >= lvl ? "fa-solid fa-circle" : "fa-regular fa-circle"} />
+                  <i
+                    className={
+                      effort >= lvl ? "fa-solid fa-circle" : "fa-regular fa-circle"
+                    }
+                  />
                 </button>
               ))}
             </div>
           </div>
-
         </div>
 
-        {/* SAVE + CANCEL */}
-        <div className={styles['end-buttons']}>
-          <button className={styles['end-button']} onClick={handleSave}>
-            SAVE
+        {/* BOTTOM BUTTONS */}
+        <div className={styles["end-buttons"]}>
+          <button
+            className={styles["end-button"]}
+            onClick={handleSave}
+            disabled={loading}
+          >
+            {loading ? "SAVING..." : "SAVE"}
           </button>
-          <button className={styles['end-button']} onClick={() => navigate('/todo')}>
+          <button
+            className={styles["end-button"]}
+            onClick={() => navigate("/todo")}
+            disabled={loading}
+          >
             CANCEL
           </button>
+          {mode === "edit" && (
+            <button
+              className={styles["end-button-delete"]}
+              onClick={handleDelete}
+              disabled={loading}
+            >
+              {loading ? "DELETING..." : "DELETE"}
+            </button>
+          )}
         </div>
       </div>
     </div>
