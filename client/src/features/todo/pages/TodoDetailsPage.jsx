@@ -277,7 +277,7 @@ export default function TodoDetailsPage({ mode = 'edit' }) {
           <div></div>
         </div>
 
-        {/* MAIN FORM (identical layout as event page!) */}
+
         <div className={styles['calendar-event-content']}>
 
           {/* TITLE */}
