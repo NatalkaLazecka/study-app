@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
-import styles from "../../calendar/styles/CalendarPage.module.css";
+import calendarStyles from "../../calendar/styles/CalendarPage.module.css";
+import todoStyles from "../styles/Todo.module.css";
 import { useState, useEffect } from "react";
 
 export default function TodoDetailsPage({ mode = "edit" }) {
@@ -17,46 +18,36 @@ export default function TodoDetailsPage({ mode = "edit" }) {
 
   const API_URL = import.meta.env.VITE_RAILWAY_API_URL || "http://localhost:3001";
 
-  // Ładowanie zadania przy edycji
+  // Load task on EDIT
   useEffect(() => {
-    if (mode !== "edit" || !id) return;
+    if (mode !== "edit") return;
 
-    const fetchTask = async () => {
+    const loadTask = async () => {
       try {
         const res = await fetch(`${API_URL}/api/tasks/${id}`);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        if (!res.ok) throw new Error("Failed to fetch task");
 
         const data = await res.json();
-        const task = data[0] || data; // w zależności od backendu
-
-        if (!task) return;
+        const task = data[0] || data;
 
         setTitle(task.tytul || "");
         setDesc(task.tresc || "");
         setPriority(task.priorytet ?? 2);
         setEffort(task.wysilek ?? 3);
-        if (task.deadline) {
-          setDate(task.deadline.split("T")[0]);
-        }
+        setDate(task.deadline ? task.deadline.split("T")[0] : "");
       } catch (err) {
-        console.error("Error fetching task:", err);
-        setError("Failed to load task data");
+        console.error(err);
+        setError("Cannot load task");
       }
     };
 
-    fetchTask();
-  }, [id, mode, API_URL]);
+    loadTask();
+  }, [mode, id]);
 
-  // Zapis zadania
+  // Save Task
   const handleSave = async () => {
-    if (!title.trim()) {
-      setError("Title is required");
-      return;
-    }
-    if (!date) {
-      setError("Date is required");
-      return;
-    }
+    if (!title.trim()) return setError("Title is required");
+    if (!date) return setError("Due date is required");
 
     setLoading(true);
     setError("");
@@ -67,7 +58,7 @@ export default function TodoDetailsPage({ mode = "edit" }) {
       priorytet: priority,
       wysilek: effort,
       deadline: date,
-      data_rozpoczecia: date
+      data_rozpoczecia: date,
     };
 
     const url = mode === "edit" ? `${API_URL}/api/tasks/${id}` : `${API_URL}/api/tasks`;
@@ -77,48 +68,31 @@ export default function TodoDetailsPage({ mode = "edit" }) {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || `Error ${res.status}`);
-      }
-
+      if (!res.ok) throw new Error("Failed to save task");
       navigate("/todo");
     } catch (err) {
-      console.error("Save error:", err);
-      setError(err.message || "Failed to save task");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
+  // Delete Task
   const handleDelete = async () => {
-    if (mode !== "edit" || !id) {
-      navigate("/todo");
-      return;
-    }
-
-    if (!window.confirm("Are you sure you want to delete this task?")) return;
+    if (mode !== "edit") return navigate("/todo");
+    if (!window.confirm("Delete this task?")) return;
 
     setLoading(true);
-    setError("");
 
     try {
-      const res = await fetch(`${API_URL}/api/tasks/${id}`, {
-        method: "DELETE"
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || `Error ${res.status}`);
-      }
-
+      await fetch(`${API_URL}/api/tasks/${id}`, { method: "DELETE" });
       navigate("/todo");
     } catch (err) {
-      console.error("Delete error:", err);
-      setError(err.message || "Failed to delete task");
+      console.error(err);
+      setError("Failed to delete");
     } finally {
       setLoading(false);
     }
@@ -127,57 +101,55 @@ export default function TodoDetailsPage({ mode = "edit" }) {
   return (
     <div>
       {/* TOP MENU BAR */}
-      <div className={styles["menu-bar"]}>
-        <div className={styles["menu-icons"]}>
-          <button className={styles["menu-icon-btn"]} onClick={() => navigate("/todo")}>
+      <div className={calendarStyles["menu-bar"]}>
+        <div className={calendarStyles["menu-icons"]}>
+          <button className={calendarStyles["menu-icon-btn"]} onClick={() => navigate("/todo")}>
             <i className="fa-solid fa-list-check"></i>
           </button>
-          <button className={styles["menu-icon-btn"]} onClick={() => navigate("/calendar")}>
+          <button className={calendarStyles["menu-icon-btn"]} onClick={() => navigate("/calendar")}>
             <i className="fa-regular fa-calendar-days"></i>
           </button>
         </div>
-
-        {/* jeśli chcesz, tu możesz dodać user icon tak jak w CalendarEventPage */}
       </div>
 
-      {/* PAGE BACKGROUND */}
-      <div className={styles["calendar-root"]}>
+      {/* MAIN BACKGROUND */}
+      <div className={calendarStyles["calendar-root"]}>
         {/* HEADER */}
-        <div className={styles["header-section"]}>
-          <button className={styles["back-button"]} onClick={() => navigate(-1)}>
-            <span className={styles["back-text"]}>
-              stud<span className={styles["back-text-y"]}>y</span>
+        <div className={calendarStyles["header-section"]}>
+          <button className={calendarStyles["back-button"]} onClick={() => navigate(-1)}>
+            <span className={calendarStyles["back-text"]}>
+              stud<span className={calendarStyles["back-text-y"]}>y</span>
             </span>
-            <span className={styles["back-arrow"]}>&lt;</span>
+            <span className={calendarStyles["back-arrow"]}>&lt;</span>
           </button>
 
-          <h1 className={styles["calendar-title"]}>
+          <h1 className={calendarStyles["calendar-title"]}>
             {mode === "new" ? "NEW TASK" : "EDIT TASK"}
           </h1>
 
           <div></div>
         </div>
 
-        {error && <div className={styles["err-message"]}>{error}</div>}
+        {error && <div className={calendarStyles["err-message"]}>{error}</div>}
 
-        {/* MAIN CONTENT (FORM) */}
-        <div className={styles["calendar-event-content"]}>
+        {/* CARD CONTENT */}
+        <div className={calendarStyles["calendar-event-content"]}>
           {/* TITLE */}
-          <div className={styles["input-box"]}>
-            <p className={styles["input-title"]}>Title *</p>
+          <div className={calendarStyles["input-box"]}>
+            <p className={calendarStyles["input-title"]}>Title *</p>
             <input
               type="text"
-              className={styles["event-input"]}
+              className={calendarStyles["event-input"]}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
           {/* DESCRIPTION */}
-          <div className={styles["input-box"]}>
-            <p className={styles["input-title"]}>Description</p>
+          <div className={calendarStyles["input-box"]}>
+            <p className={calendarStyles["input-title"]}>Description</p>
             <textarea
-              className={styles["event-input"]}
+              className={calendarStyles["event-input"]}
               style={{ height: "100px" }}
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
@@ -185,78 +157,89 @@ export default function TodoDetailsPage({ mode = "edit" }) {
           </div>
 
           {/* DATE */}
-          <div className={styles["input-box"]}>
-            <p className={styles["input-title"]}>Due Date *</p>
+          <div className={calendarStyles["input-box"]}>
+            <p className={calendarStyles["input-title"]}>Due Date *</p>
             <input
               type="date"
-              className={styles["event-input"]}
+              className={calendarStyles["event-input"]}
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
 
-          {/* PRIORITY */}
-          <div className={styles["input-box"]}>
-            <p className={styles["input-title"]}>Priority</p>
-            <div className={styles["event-buttons"]}>
-              {[1, 2, 3].map((lvl) => (
-                <button
-                  key={lvl}
-                  type="button"
-                  className={`${styles["event-button"]} ${
-                    priority >= lvl ? styles["event-button-active"] : ""
-                  }`}
-                  onClick={() => setPriority(lvl)}
-                >
-                  <i className="fa-solid fa-fire" />
-                </button>
-              ))}
+          {/* PRIORITY — icons from list */}
+          <div className={calendarStyles["input-box"]}>
+            <p className={calendarStyles["input-title"]}>Priority</p>
+
+            <div style={{ display: "flex", gap: "14px", marginTop: "8px" }}>
+              {Array(3)
+                .fill(null)
+                .map((_, i) => (
+                  <span
+                    key={i}
+                    onClick={() => setPriority(i + 1)}
+                    className={`${todoStyles.emoji} ${
+                      i < priority ? todoStyles.activeFire : ""
+                    }`}
+                    role="button"
+                  >
+                    <i className="fa-solid fa-fire" />
+                  </span>
+                ))}
             </div>
           </div>
 
-          {/* EFFORT */}
-          <div className={styles["input-box"]}>
-            <p className={styles["input-title"]}>Effort</p>
-            <div className={styles["event-buttons"]}>
-              {[1, 2, 3, 4].map((lvl) => (
-                <button
-                  key={lvl}
-                  type="button"
-                  className={`${styles["event-button"]} ${
-                    effort >= lvl ? styles["event-button-active"] : ""
-                  }`}
-                  onClick={() => setEffort(lvl)}
-                >
-                  <i
-                    className={
-                      effort >= lvl ? "fa-solid fa-circle" : "fa-regular fa-circle"
-                    }
-                  />
-                </button>
-              ))}
+          {/* EFFORT — icons from list */}
+          <div className={calendarStyles["input-box"]}>
+            <p className={calendarStyles["input-title"]}>Effort</p>
+
+            <div style={{ display: "flex", gap: "14px", marginTop: "8px" }}>
+              {Array(4)
+                .fill(null)
+                .map((_, i) => {
+                  const active = i < effort;
+                  return (
+                    <span
+                      key={i}
+                      onClick={() => setEffort(i + 1)}
+                      className={`${todoStyles.emoji} ${
+                        active ? todoStyles.activeCircle : ""
+                      }`}
+                      role="button"
+                    >
+                      <i
+                        className={
+                          active ? "fa-solid fa-circle" : "fa-regular fa-circle"
+                        }
+                      />
+                    </span>
+                  );
+                })}
             </div>
           </div>
         </div>
 
-        {/* BOTTOM BUTTONS */}
-        <div className={styles["end-buttons"]}>
+        {/* BUTTONS */}
+        <div className={calendarStyles["end-buttons"]}>
           <button
-            className={styles["end-button"]}
+            className={calendarStyles["end-button"]}
             onClick={handleSave}
             disabled={loading}
           >
             {loading ? "SAVING..." : "SAVE"}
           </button>
+
           <button
-            className={styles["end-button"]}
+            className={calendarStyles["end-button"]}
             onClick={() => navigate("/todo")}
             disabled={loading}
           >
             CANCEL
           </button>
+
           {mode === "edit" && (
             <button
-              className={styles["end-button-delete"]}
+              className={calendarStyles["end-button-delete"]}
               onClick={handleDelete}
               disabled={loading}
             >
