@@ -162,13 +162,18 @@ export default function TodoListPage() {
                 </div>
 
                 <div className={styles['todo-topbar']}>
-                    <select className={styles['todo-date']}>
+
+                    <select
+                        className={styles['todo-date']}
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        >
+                    >
                         <option value="ALL">ALL</option>
+
                         {uniqueDate.map((dateStr, index) => (
-                            <option key={index} value={dateStr}>{dateStr} (</option>
+                            <option key={index} value={dateStr}>
+                                {dateStr}
+                            </option>
                         ))}
                     </select>
 
@@ -188,71 +193,73 @@ export default function TodoListPage() {
                         ALL
                     </button>
 
-
                 </div>
 
-                <div className={styles['todo-headers']}>
-                    <div className={styles['todo-header-btn']}>Task</div>
-                    <div className={styles['todo-header-btn']}>Priority</div>
-                    <div className={styles['todo-header-btn']}>Effort</div>
-                </div>
 
-                <table className={styles['todo-table']}>
-                    <tbody>
-                    {todos
-                        .filter(t => selectedDate === "ALL"
-                            ? true
-                            : new Date(t.deadline).toLocaleDateString("en-GB") === selectedDate
-                        ).map((t) => (
-                            <tr
-                                key={t.id}
-                                className={`${styles['todo-row']} ${t.done ? styles['todo-done'] : ''}`}
+            </div>
+
+            <div className={styles['todo-headers']}>
+                <div className={styles['todo-header-btn']}>Task</div>
+                <div className={styles['todo-header-btn']}>Priority</div>
+                <div className={styles['todo-header-btn']}>Effort</div>
+            </div>
+
+            <table className={styles['todo-table']}>
+                <tbody>
+                {todos
+                    .filter(t => selectedDate === "ALL"
+                        ? true
+                        : new Date(t.deadline).toLocaleDateString("en-GB") === selectedDate
+                    ).map((t) => (
+                        <tr
+                            key={t.id}
+                            className={`${styles['todo-row']} ${t.done ? styles['todo-done'] : ''}`}
+                        >
+                            <td
+                                className={styles['todo-cell']}
+                                onClick={() => toggleDone(t.id)}
                             >
-                                <td
-                                    className={styles['todo-cell']}
-                                    onClick={() => toggleDone(t.id)}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        className={styles['todo-checkbox']}
-                                        checked={t.done}
-                                        readOnly
-                                    />
-                                    {t.tytul}
-                                </td>
+                                <input
+                                    type="checkbox"
+                                    className={styles['todo-checkbox']}
+                                    checked={t.done}
+                                    readOnly
+                                />
+                                {t.tytul}
+                            </td>
 
-                                <td className={styles['todo-cell']}>
-                                    {Array(3).fill(null).map((_, i) => (
-                                        <span
-                                            key={i}
-                                            onClick={() => togglePriority(t.id, i)}
-                                            className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
-                                            role="button"
-                                            aria-label={`Priority level ${i + 1}`}
-                                        >
+                            <td className={styles['todo-cell']}>
+                                {Array(3).fill(null).map((_, i) => (
+                                    <span
+                                        key={i}
+                                        onClick={() => togglePriority(t.id, i)}
+                                        className={`${styles.emoji} ${i < t.priority ? styles.activeFire : ''}`}
+                                        role="button"
+                                        aria-label={`Priority level ${i + 1}`}
+                                    >
                                             <i className="fa-solid fa-fire"/>
                                         </span>
-                                    ))}
-                                </td>
+                                ))}
+                            </td>
 
-                                <td className={styles['todo-cell']}>
-                                    {Array(4).fill(null).map((_, i) => {
-                                        const isActive = i < t.effort;
-                                        return (
-                                            <span
-                                                key={i}
-                                                onClick={() => toggleEffort(t.id, i)}
-                                                className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
-                                                role="button"
-                                                aria-label={`Effort level ${i + 1}`}
-                                            >
+                            <td className={styles['todo-cell']}>
+                                {Array(4).fill(null).map((_, i) => {
+                                    const isActive = i < t.effort;
+                                    return (
+                                        <span
+                                            key={i}
+                                            onClick={() => toggleEffort(t.id, i)}
+                                            className={`${styles.emoji} ${isActive ? styles.activeCircle : ''}`}
+                                            role="button"
+                                            aria-label={`Effort level ${i + 1}`}
+                                        >
                                                 <i className={isActive ? 'fa-solid fa-circle' : 'fa-regular fa-circle'}/>
                                             </span>
-                                        );
-                                    })}
-                                </td>
+                                    );
+                                })}
+                            </td>
 
-                                <td className={styles['todo-cell']}>
+                            <td className={styles['todo-cell']}>
                                     <span
                                         className={styles['edit-icon']}
                                         onClick={(e) => {
@@ -263,30 +270,31 @@ export default function TodoListPage() {
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </span>
 
-                                    <span
-                                        className={styles['delete-icon']}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            deleteTodo(t.id);
-                                        }}
+                                <span
+                                    className={styles['delete-icon']}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteTodo(t.id);
+                                    }}
 
-                                        style={{marginLeft: "10px", color: "#ff4d6d"}}
-                                    >
+                                    style={{marginLeft: "10px", color: "#ff4d6d"}}
+                                >
                                         <i className={"fa-solid fa-trash"}></i>
                                     </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
 
-                <button
-                    className={styles['todo-add-button']}
-                    onClick={() => navigate('/todo/new')}
-                >
-                    <span className={styles['plus-icon']}>＋</span> add new task
-                </button>
-            </div>
+            <button
+                className={styles['todo-add-button']}
+                onClick={() => navigate('/todo/new')}
+            >
+                <span className={styles['plus-icon']}>＋</span> add new task
+            </button>
         </div>
-    );
+</div>
+)
+    ;
 }
