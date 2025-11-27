@@ -188,7 +188,7 @@
 // }
 
 import { useNavigate, useParams } from 'react-router-dom';
-import styles from '../styles/CalendarPage.module.css';
+import styles from '../../../styles/CalendarPage.module.css';
 import { useState, useEffect } from 'react';
 import CalendarPicker from '../components/CalendarPicker';
 
