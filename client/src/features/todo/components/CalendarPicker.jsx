@@ -1,8 +1,7 @@
-// components/CalendarPicker.jsx
 import React from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import styles from '../styles/Todo.module.css';
+import styles from '../styles/CalendarPage.module.css';
 
 export default function CalendarPicker({ date, setDate }) {
   return (
@@ -16,7 +15,7 @@ export default function CalendarPicker({ date, setDate }) {
         }}
         value={new Date(date)}
         locale="en-US"
-        className={styles['reactCalendar']}
+        className={styles['calendar-react']}
       />
     </div>
   );
