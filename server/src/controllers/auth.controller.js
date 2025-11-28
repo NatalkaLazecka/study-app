@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import bcrypt from 'bcrypt';
+import bcrypt from "bcryptjs";
 import { findUserByEmail, createUser, findUserById } from '../services/user.service.js';
 import { generateToken } from '../services/jwt.service.js';
 
