@@ -44,6 +44,32 @@ export default function SchedulePage() {
         return `${parts[0]}:${parts[1]}`;
     }
 
+    const handleClearSchedule = async () => {
+        const confirmClear = window.confirm("Are you sure you want to clear the entire schedule?");
+
+        if(!confirmClear) return;
+
+        setLoading(true);
+        setError('');
+
+        try{
+            const res = await fetch(`${API_URL}/api/schedule/student/${studentId}/all`, {
+                method: 'DELETE',
+            });
+
+            if(!res.ok){
+                const errorData = await res.json();
+                throw new Error(errorData.message || 'Failed to clear schedule');
+            }
+
+            setSchedule([]);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const scheduleByDay = groupByDay();
 
     return (
@@ -182,8 +208,8 @@ export default function SchedulePage() {
                 </div>
 
                 <div className={styles['end-buttons']}>
-                     <button className={styles['end-button']} >ADD</button>
-                     <button className={styles['end-button-delete']} >CLEAR</button>
+                     <button className={styles['end-button']} onClick={() => navigate(`/schedule/edit?studentId=${studentId}`)} >ADD</button>
+                     <button className={styles['end-button-delete']} onClick={handleClearSchedule} >CLEAR</button>
                 </div>
             </div>
         </div>

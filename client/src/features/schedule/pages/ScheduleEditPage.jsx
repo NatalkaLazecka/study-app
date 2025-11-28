@@ -94,6 +94,100 @@ export default function ScheduleEditPage() {
         fetchSchedule();
     }, [scheduleId, studentId]);
 
+     const validateForm = () => {
+         if(!subject){
+             setError('Please select a subject.');
+             return false;
+         }
+         if(!day){
+             setError('Please select a day.');
+             return false;
+         }
+         if(!time){
+             setError('Please select a time.');
+             return false;
+         }
+         if(!classType){
+             setError('Please select a class type.');
+             return false;
+         }
+         return true;
+     }
+
+     const handelSave = async (e) => {
+         setError('');
+         if(!validateForm()){ return; }
+         setLoading(true);
+
+         const scheduleData = {
+             student_id: studentId,
+             przedmiot_id: subject,
+             prowadzacy_id: professor || null,
+             dzien_tygodnia: day,
+             godzina: time,
+             sala: room || null,
+             typ_zajec_id: classType
+         };
+
+         try{
+             let res;
+             if(scheduleId){
+                 res = await fetch(`${API_URL}/api/schedule/${scheduleId}`, {
+                     method: 'PUT',
+                     headers: {'Content-Type': 'application/json'},
+                     body: JSON.stringify(scheduleData)
+                 });
+             }else{
+                 res = await fetch(`${API_URL}/api/schedule/`, {
+                     method: 'POST',
+                     headers: {'Content-Type': 'application/json'},
+                     body: JSON.stringify(scheduleData)
+                 });
+             }
+
+             if(!res.ok) {
+                 const errorData = await res.json();
+                 throw new Error(errorData.message || 'Failed to save schedule');
+             }
+
+             navigate('/schedule');
+         }catch (err) {
+             setError(err.message);
+         }finally {
+             setLoading(false);
+         }
+     };
+
+     const handelDelete = async (e) => {
+         if(!scheduleId){
+             setError("No schedule to delete.");
+             return;
+         }
+
+         const confirmDelete = window.confirm("Are you sure you want to delete this schedule?");
+         if(!confirmDelete){ return; }
+
+         setError('');
+         setLoading(true);
+
+         try{
+             const res = await fetch(`${API_URL}/api/schedule/${scheduleId}`, {
+                 method: 'DELETE'
+             });
+
+             if(!res.ok) {
+                 const errorData = await res.json();
+                 throw new Error(errorData.message || 'Failed to delete schedule');
+             }
+
+             navigate('/schedule');
+         }catch (err) {
+             setError(err.message);
+         }finally {
+             setLoading(false);
+         }
+     };
+
     return (
         <div>
             <div className={styles['menu-bar']}>
@@ -143,7 +237,8 @@ export default function ScheduleEditPage() {
                         <select
                             value={subject}
                             onChange={(e) => setSubject(e.target.value)}
-                            className={styles['schedule-input']}>
+                            className={styles['schedule-input']}
+                            disabled={loading}>
 
                             <option value="">-- Select Subject --</option>
                             {subjects.map((subj) => (
@@ -159,7 +254,8 @@ export default function ScheduleEditPage() {
                         <select
                             value={professor}
                             onChange={(e) => setProfessor(e.target.value)}
-                            className={styles['schedule-input']}>
+                            className={styles['schedule-input']}
+                            disabled={loading}>
 
                             <option value="">-- Select Professor --</option>
                             {professors.map((p) => (
@@ -176,7 +272,8 @@ export default function ScheduleEditPage() {
                         <select
                             value={day}
                             onChange={(e) => setDay(e.target.value)}
-                            className={styles['schedule-input']}>
+                            className={styles['schedule-input']}
+                            disabled={loading}>
 
                             <option value="">-- Select Day --</option>
                             {daysOfWeek.map((d) => (
@@ -194,6 +291,7 @@ export default function ScheduleEditPage() {
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
                             className={styles['schedule-input']}
+                            disabled={loading}
                         />
                     </div>
 
@@ -204,6 +302,7 @@ export default function ScheduleEditPage() {
                             value={room}
                             onChange={(e) => setRoom(e.target.value)}
                             className={styles['schedule-input']}
+                            disabled={loading}
                         />
                     </div>
 
@@ -212,7 +311,8 @@ export default function ScheduleEditPage() {
                         <select
                             value={classType}
                             onChange={(e) => setClassType(e.target.value)}
-                            className={styles['schedule-input']}>
+                            className={styles['schedule-input']}
+                            disabled={loading}>
 
                             <option value="">-- Select Type --</option>
                             {classTypes.map((t) => (
@@ -225,9 +325,9 @@ export default function ScheduleEditPage() {
                 </div>
 
                 <div className={styles['end-buttons']}>
-                    <button className={styles['end-button']} disabled={loading}>{loading ? 'SAVING...' : 'SAVE'}</button>
+                    <button className={styles['end-button']} onClick={handelSave} disabled={loading}>{loading ? 'SAVING...' : 'SAVE'}</button>
                     <button className={styles['end-button']} onClick={() => navigate(-1)} disabled={loading}>CANCEL</button>
-                    <button className={styles['end-button-delete']} disabled={loading}>{loading ? 'DELETING...' : 'DELETE'}</button>
+                    <button className={styles['end-button-delete']} onClick={handelDelete} disabled={loading}>{loading ? 'DELETING...' : 'DELETE'}</button>
                 </div>
             </div>
         </div>

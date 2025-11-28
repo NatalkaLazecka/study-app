@@ -122,3 +122,19 @@ export const deleteSchedule = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const deleteAllSchedulesForStudent = async (req, res) => {
+    const { student_id } = req.params;
+
+    try{
+        const result = await pool.query("DELETE FROM plan_zajec WHERE student_id=?", [student_id]);
+
+        if(result[0].affectedRows === 0){
+            return res.status(404).json({ message: "No schedules found for the student" });
+        }
+
+        res.status(200).json({ message: "All schedule deleted" });
+    }catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
