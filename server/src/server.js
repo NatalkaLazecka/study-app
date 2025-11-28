@@ -9,6 +9,7 @@ import groupsRoutes from "./routes/groups.routes.js";
 // import announcementsRoutes from "./routes/announcements.routes.js";
 import eventsRoutes from "./routes/events.routes.js";
 /// import scheduleRoutes from "./routes/schedule.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 
 const app = express()
@@ -26,6 +27,7 @@ app.use("/api/groups", groupsRoutes);
 // app.use("/api/announcements", announcementsRoutes);
 app.use("/api/events", eventsRoutes);
 // app.use("/api/schedule", scheduleRoutes);
+app.use('/api/auth', authRoutes);
 
 
 // Start serwera
