@@ -1,14 +1,27 @@
 import { useNavigate } from 'react-router-dom';
 import RegistrationForm from '../components/RegistrationForm';
+import { register } from '../api/authApi';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
 
-  const handleRegister = (data) => {
-    console.log('Registration data:', data);
-    // tu możesz dodać logikę wysyłania do backendu
-    navigate('/home');
+  const handleRegister = async ({ email, password }) => {
+    try {
+      // imię i nazwisko możesz dorobić w formularzu
+      await register({
+        email,
+        password,
+        imie: "",        // ustaw jeśli dodasz pola
+        nazwisko: ""    // ustaw jeśli dodasz pola
+      });
+
+      alert('Account created successfully! You can now log in.');
+      navigate('/login');
+    } catch (err) {
+      alert("Registration failed. Maybe email already exists.");
+    }
   };
+
 
   return (
     <RegistrationForm
