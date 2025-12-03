@@ -34,15 +34,33 @@ export async function login(req, res) {
     }
 
     try{
+            console.log('🔍 Login attempt for:', email);
+
         const user = await findUserByEmail(email);
+
+            console.log('👤 User object:', user);  // ✅ Zobacz cały obiekt
+            console.log('👤 User type:', typeof user);  // ✅ Zobacz typ
+            console.log('👤 User is null? ', user === null);  // ✅ Sprawdź null
+            console.log('👤 User is array?', Array.isArray(user));  // ✅ Sprawdź czy tablica
+
         if (!user) {
+            console.log('❌ User not found');
             return res.status(401).json({error: 'Invalid credentials'});
         }
 
+            console.log('🔑 Stored hash:', user.haslo);  // ✅ Zobacz hash
+            console.log('🔑 Email from DB:', user.e_mail);  // ✅ Zobacz email
+
         const isValid = await bcrypt.compare(password, user.haslo);
+
+            console.log('✅ Password comparison result:', isValid);
+
         if (!isValid) {
+            console. log('❌ Invalid password');
             return res.status(401).json({error: 'Invalid credentials'});
         }
+
+            console.log('🎉 Login successful! ');
 
         const token = generateToken(user);
 

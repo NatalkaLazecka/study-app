@@ -10,20 +10,21 @@ export async function findUserByEmail(email) {
 
         return rows[0] || null;
     } catch (err) {
-        console.error('Log in fail. Database query error:', err);
+        console.log('Log in fail. Database query error:', err);
         throw err;
     }
 }
 
 export async function findUserById(id) {
     try {
-        const [rows] = await db.query(
+        const rows = await db.query(
             "SELECT * FROM student WHERE id = ?",
             [id]
         );
 
         return rows[0] || null;
     } catch (err) {
+        console.log('Log in fail. Database query error:', err);
         throw err;
     }
 }
