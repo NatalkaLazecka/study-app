@@ -2,11 +2,18 @@ import bcrypt from "bcryptjs";
 import db from '../database/db.js';
 
 export async function findUserByEmail(email) {
-    const rows = await db.query(
-        "SELECT * FROM student WHERE email = ?",
-        [email]
-    );
-    return rows[0];
+    try{
+        const rows = await db.query(
+            "SELECT * FROM student WHERE email = ?",
+            [email]
+        );
+
+
+        return rows[0];
+    } catch (err) {
+        console.error('Log in fail. Database query error:', err);
+        throw err;
+    }
 }
 
 export async function findUserById(id) {
