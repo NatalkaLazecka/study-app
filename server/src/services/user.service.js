@@ -29,7 +29,7 @@ export async function findUserById(id) {
     }
 }
 
-export async function createUser({id, email, password, imie, nazwisko}) {
+export async function createUser({id, email, password, imie="", nazwisko=""}) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.query(

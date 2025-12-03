@@ -15,7 +15,7 @@ export default function RegisterPage() {
       //   nazwisko: ""    // ustaw jeśli dodasz pola
       // });
 
-        await register({ email, password });
+        await register({ email, password, imie: "", nazwisko: "" });
 
       alert('Account created successfully! You can now log in.');
       navigate('/login');
