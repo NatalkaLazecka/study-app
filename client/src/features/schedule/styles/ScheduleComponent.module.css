@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --pink: #e85bbf;
+    --light: #f6d3f4;
+    --bg-dark: #160C1A;
+    --white: #fdfdfd;
+    --black: #0c0c0c;
+    --red: #FF5C5C;
+}
+
+.custom-option-wrapper{
+    position: relative;
+}
+
+.custom-option-content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.custom-option-menu-container{
+    position: relative;
+}
+
+.custom-option-menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 8px;
+    color: var(--black);
+    transition: background 0.2s ease;
+    border-radius: 4px;
+}
+
+.custom-option-menu-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.custom-option-menu-btn:active {
+    transform: scale(0.95);
+}
+
+.custom-option-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--white);
+    border: 1px solid var(--pink);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    min-width: 100px;
+    overflow: hidden;
+    animation: dropdownSlideIn 0.15s ease-out;
+}
+
+.custom-option-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    font-family: 'Source Code Pro', monospace;
+    color: var(--black);
+    transition: background 0.2s ease;
+}
+
+.custom-option-dropdown-item:hover {
+    background: var(--light);
+}
+
+.custom-option-dropdown-item-delete {
+    color: var(--red);
+}
+
+.custom-option-dropdown-item-delete:hover {
+    background: var(--light);
+}
+
+.custom-option-dropdown-item:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@keyframes dropdownSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-option-content:hover .custom-option-menu-btn {
+    opacity: 1;
+}

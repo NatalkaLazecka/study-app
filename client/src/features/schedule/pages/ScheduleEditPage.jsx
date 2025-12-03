@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import CustomSelect from "../component/CustomSelect";
 import styles from '../styles/SchedulePage.module.css';
 import {useNavigate, useSearchParams} from "react-router-dom";
 
@@ -188,6 +189,223 @@ export default function ScheduleEditPage() {
          }
      };
 
+     const handleCreateSubject = async (inputVal) => {
+        setLoading(true);
+        setError('');
+
+        try {
+            const res = await fetch(`${API_URL}/api/schedule/subject`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({nazwa: inputVal})
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || 'Failed to create subject');
+            }
+
+            const newSubject = await res.json();
+
+            setSubjects(prev => [...prev, newSubject]);
+            setSubject(newSubject.id);
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleEditSubject = async (option) => {
+        const newName = prompt(`Edit subject name:`, option.label);
+
+        if (!newName || newName.trim() === '' || newName === option.label) {
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const res = await fetch(`${API_URL}/api/schedule/subject/${option.value}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({nazwa: newName.trim()})
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Failed to update subject');
+            }
+
+            const updatedSubject = await res.json();
+
+            setSubjects(prev => prev.map(subj =>
+                subj.id === option.value
+                    ? {...subj, nazwa: updatedSubject.nazwa}
+                    : subj
+            ));
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleDeleteSubject = async (option) => {
+        const confirmDelete = window.confirm(
+            `Are you sure you want to delete "${option.label}"?\n\nThis action cannot be undone.`
+        );
+
+        if (!confirmDelete) {
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const res = await fetch(`${API_URL}/api/schedule/subject/${option.value}`, {
+                method: 'DELETE'
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Failed to delete subject');
+            }
+
+            setSubjects(prev => prev.filter(subj => subj.id !== option.value));
+
+            if (subject === option.value) {
+                setSubject('');
+            }
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleCreateProfessor = async (inputVal) => {
+        const parts = inputVal.trim().split(' ');
+        if (parts.length < 2) {
+            alert('Please enter both first and last name (e.g.  "John Smith")');
+            return;
+        }
+
+        const imie = parts[0];
+        const nazwisko = parts. slice(1).join(' ');
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const res = await fetch(`${API_URL}/api/schedule/subject`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ imie, nazwisko })
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || 'Failed to create professor');
+            }
+
+            const newProfessor = await res.json();
+            setProfessors(prev => [...prev, newProfessor]);
+            setProfessor(newProfessor.id);
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleEditProfessor = async (option) => {
+        const newName = prompt(`Edit professor name:`, option.label);
+
+        if (!newName || newName.trim() === '' || newName === option.label) {
+            return;
+        }
+
+        const parts = newName.trim().split(' ');
+        if (parts.length < 2) {
+            alert('Please enter both first and last name (e.g.  "John Smith")');
+            return;
+        }
+
+        const imie = parts[0];
+        const nazwisko = parts. slice(1).join(' ');
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const res = await fetch(`${API_URL}/api/schedule/professor/${option.value}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({imie, nazwisko})
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Failed to update professor');
+            }
+
+            const updatedProfessor = await res.json();
+
+            setProfessors(prev => prev.map(prof =>
+                prof.id === option.value
+                    ? {...prof, imie: updatedProfessor.imie, nazwisko: updatedProfessor.nazwisko}
+                    : prof
+            ));
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleDeletProfessor = async (option) => {
+        const confirmDelete = window.confirm(
+            `Are you sure you want to delete "${option.label}"?\n\nThis action cannot be undone.`
+        );
+
+        if (!confirmDelete) {
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const res = await fetch(`${API_URL}/api/schedule/professor/${option.value}`, {
+                method: 'DELETE'
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Failed to delete professor');
+            }
+
+            setProfessors(prev => prev.filter(prof => prof.id !== option.value));
+
+            if (professor === option.value) {
+                setProfessor('');
+            }
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const subjectOptions = subjects.map(subj => ({value: subj.id, label: subj.nazwa}));
+    const professorOptions = professors.map(prof => ({value: prof.id, label: `${prof.imie} ${prof.nazwisko}`}));
+    const daysOptions = daysOfWeek.map(day => ({value: day, label: day}));
+    const classTypeOptions = classTypes.map(type => ({value: type.id, label: type.nazwa}));
+
+
     return (
         <div>
             <div className={styles['menu-bar']}>
@@ -233,55 +451,51 @@ export default function ScheduleEditPage() {
 
                 <div className={styles['schedule-event-content']}>
                     <div className={styles['input-box']}>
-                        <p className={styles['input-title']}>Subject</p>
-                        <select
+                        <p className={styles['input-title']}>Subject *</p>
+                        <CustomSelect
                             value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                            className={styles['schedule-input']}
-                            disabled={loading}>
-
-                            <option value="">-- Select Subject --</option>
-                            {subjects.map((subj) => (
-                                <option key={subj.id} value={subj.id}>
-                                    {subj.nazwa}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={setSubject}
+                            onCreateOption={handleCreateSubject}
+                            onEditOption={handleEditSubject}
+                            onDeleteOption={handleDeleteSubject}
+                            options={subjectOptions}
+                            placeholder="-- Select Subject --"
+                            isDisabled={loading}
+                            isSearchable={true}
+                            isClearable={true}
+                            isEditable={true}
+                        />
                     </div>
 
                     <div className={styles['input-box']}>
-                        <p className={styles['input-title']}>Profesor</p>
-                        <select
+                        <p className={styles['input-title']}>Professor</p>
+                        <CustomSelect
                             value={professor}
-                            onChange={(e) => setProfessor(e.target.value)}
-                            className={styles['schedule-input']}
-                            disabled={loading}>
-
-                            <option value="">-- Select Professor --</option>
-                            {professors.map((p) => (
-                                <option key={p.id} value={p.id}>
-                                    {p.imie} {p.nazwisko}
-                                </option>
-                            ))}
-                        </select>
-
+                            onChange={setProfessor}
+                            onCreateOption={handleCreateProfessor}
+                            onEditOption={handleEditProfessor}
+                            onDeleteOption={handleDeletProfessor}
+                            options={professorOptions}
+                            placeholder="-- Select Professor --"
+                            isDisabled={loading}
+                            isSearchable={true}
+                            isClearable={true}
+                            isEditable={true}
+                        />
                     </div>
 
                     <div className={styles['input-box']}>
                         <p className={styles['input-title']}>Day</p>
-                        <select
+                        <CustomSelect
                             value={day}
-                            onChange={(e) => setDay(e.target.value)}
-                            className={styles['schedule-input']}
-                            disabled={loading}>
-
-                            <option value="">-- Select Day --</option>
-                            {daysOfWeek.map((d) => (
-                                <option key={d} value={d}>
-                                    {d}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={setDay}
+                            options={daysOptions}
+                            placeholder="-- Select Day --"
+                            isDisabled={loading}
+                            isSearchable={true}
+                            isClearable={true}
+                            isEditable={false}
+                        />
                     </div>
 
                     <div className={styles['input-box']}>
@@ -308,19 +522,16 @@ export default function ScheduleEditPage() {
 
                     <div className={styles['input-box']}>
                         <p className={styles['input-title']}>Type</p>
-                        <select
+                        <CustomSelect
                             value={classType}
-                            onChange={(e) => setClassType(e.target.value)}
-                            className={styles['schedule-input']}
-                            disabled={loading}>
-
-                            <option value="">-- Select Type --</option>
-                            {classTypes.map((t) => (
-                                <option key={t.id} value={t.id}>
-                                    {t.nazwa}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={setClassType}
+                            options={classTypeOptions}
+                            placeholder="-- Select Type --"
+                            isDisabled={loading}
+                            isSearchable={true}
+                            isClearable={true}
+                            isEditable={false}
+                        />
                     </div>
                 </div>
 

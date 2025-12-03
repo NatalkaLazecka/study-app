@@ -1,13 +1,30 @@
 import express from "express";
-import {addSchedule, deleteSchedule, getAllProwadzacy, getAllPrzedmioty, getScheduleForStudent, updateSchedule, deleteAllSchedulesForStudent} from "../controllers/schedule.controller.js";
+import {
+    addProfessor, addSchedule, addSubject,
+    deleteAllSchedulesForStudent, deleteSchedule, deleteSubject, deleteProfessor,
+    getAllProfessor, getAllSubject, getScheduleForStudent,
+    updateSchedule, updateSubject, updateProfessor
+} from "../controllers/schedule.controller.js";
 
 const router = express.Router();
+
+// Subjects //
+router.get("/subjects/", getAllSubject);
+router.post('/subject', addSubject);
+router.put('/subject/:id', updateSubject);
+router.delete('/subject/:id', deleteSubject);
+
+// Professors //
+router.get("/professors/", getAllProfessor);
+router.post('/professor', addProfessor);
+router.put('/professor/:id', updateProfessor);
+router.delete('/professor/:id', deleteProfessor);
+
+// Schedule //
 router.get("/student/:student_id", getScheduleForStudent);
-router.get("/przedmiot/", getAllPrzedmioty);
-router.get("/prowadzacy/", getAllProwadzacy);
 router.post("/", addSchedule);
 router.put("/:id", updateSchedule);
-router.delete("/:id", deleteSchedule);
 router.delete("/student/:student_id/all", deleteAllSchedulesForStudent);
+router.delete("/:id", deleteSchedule);
 
 export default router;
