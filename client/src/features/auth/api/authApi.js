@@ -1,7 +1,7 @@
-// const API = import.meta.env.VITE_API_URL || '/api'
+const API = import.meta.env.VITE_API_URL;
 
 export const sendResetEmail = async (email) => {
-  const res = await fetch(`${API}/emails`, {
+  const res = await fetch(`${API}/api/emails`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
@@ -11,13 +11,13 @@ export const sendResetEmail = async (email) => {
 }
 
 export const verifyToken = async (token) => {
-  const res = await fetch(`${API}/emails/verify-token/${token}`)
+  const res = await fetch(`${API}/api/emails/verify-token/${token}`)
   if (!res.ok) return { valid: false }
   return res.json()
 }
 
 export const resetPassword = async ({ token, newPassword }) => {
-  const res = await fetch(`${API}/emails/reset-password`, {
+  const res = await fetch(`${API}/api/emails/reset-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token, newPassword }),
@@ -27,7 +27,6 @@ export const resetPassword = async ({ token, newPassword }) => {
 }
 
 
-const API = import.meta.env.VITE_API_URL;
 
 export async function login(email, password) {
   const res = await fetch(`${API}/api/auth/login`, {
