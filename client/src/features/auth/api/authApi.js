@@ -30,7 +30,7 @@ export const resetPassword = async ({ token, newPassword }) => {
 const API = import.meta.env.VITE_API_URL;
 
 export async function login(email, password) {
-  const res = await fetch(`${API}/auth/login`, {
+  const res = await fetch(`${API}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
@@ -42,7 +42,7 @@ export async function login(email, password) {
 }
 
 export async function register(data) {
-  const res = await fetch(`${API}/auth/register`, {
+  const res = await fetch(`${API}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
