@@ -9,7 +9,7 @@ export default function RegisterPage() {
     try {
       // imię i nazwisko możesz dorobić w formularzu
       await register({
-        email,
+        e_mail,
         password,
         imie: "",        // ustaw jeśli dodasz pola
         nazwisko: ""    // ustaw jeśli dodasz pola

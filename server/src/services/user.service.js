@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import db from '../database/db.js';
 
 export async function findUserByEmail(email) {
-    const [rows] = await db.query(
+    const rows = await db.query(
         "SELECT * FROM student WHERE email = ?",
         [email]
     );
@@ -10,7 +10,7 @@ export async function findUserByEmail(email) {
 }
 
 export async function findUserById(id) {
-    const [rows] = await db.query(
+    const rows = await db.query(
         "SELECT * FROM student WHERE id = ?",
         [id]
     );
