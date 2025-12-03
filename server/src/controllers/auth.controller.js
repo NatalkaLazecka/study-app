@@ -6,41 +6,55 @@ import { generateToken } from '../services/jwt.service.js';
 export async function register(req, res) {
     const { email, password, imie, nazwisko } = req.body;
 
-    const existingUser = await findUserByEmail(email);
-    if (existingUser) {
-        return res.status(400).json({ error: 'User already exists' });
+    try {
+        const existingUser = await findUserByEmail(email);
+        if (existingUser) {
+            return res.status(400).json({error: 'User already exists'});
+        }
+
+        const id = uuid();
+        await createUser({id, email, password, imie, nazwisko});
+
+        res.json({ok: true});
+    } catch (err) {
+        console.error('Registration error:', err);
+        res.status(500).json({ error: 'Registration failed' });
     }
-
-    const id = uuid();
-    await createUser({ id, email, password, imie, nazwisko });
-
-    res.json({ ok: true });
 }
 
 export async function login(req, res) {
     const { email, password } = req.body;
 
-    const user = await findUserByEmail(email);
-    if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    const token = generateToken(user);
-
-    res.json({
-        token,
-        user: {
-            id: user.id,
-            email: user.e_mail,
-            imie: user.imie,
-            nazwisko: user.nazwisko
+    try{
+        const user = await findUserByEmail(email);
+        if (!user) {
+            return res.status(401).json({error: 'Invalid credentials'});
         }
-    });
+
+        const isValid = await bcrypt.compare(password, user.haslo);
+        if (!isValid) {
+            return res.status(401).json({error: 'Invalid credentials'});
+        }
+
+        const token = generateToken(user);
+
+        res.json({
+            token,
+            user: {
+                id: user.id,
+                email: user.e_mail,
+                imie: user.imie,
+                nazwisko: user.nazwisko
+            }
+        });
+    } catch (err) {
+        console.error('Login error:', err);
+        res.status(500).json({ error: 'Login failed' });
+    }
 }
 
 export async function me(req, res) {
