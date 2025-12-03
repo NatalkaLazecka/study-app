@@ -17,7 +17,7 @@ export async function register(req, res) {
         }
 
         const id = uuid();
-        await createUser({id, email, password, imie, nazwisko});
+        await createUser({id, email, password, imie: imie || null, nazwisko: nazwisko || null});
 
         res.json({ok: true});
     } catch (err) {
