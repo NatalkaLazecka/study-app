@@ -6,6 +6,10 @@ import { generateToken } from '../services/jwt.service.js';
 export async function register(req, res) {
     const { email, password, imie, nazwisko } = req.body;
 
+    if (!email || !password ) {
+        return res. status(400).json({ error: 'Email and password fields are required' });
+    }
+
     try {
         const existingUser = await findUserByEmail(email);
         if (existingUser) {
@@ -25,8 +29,8 @@ export async function register(req, res) {
 export async function login(req, res) {
     const { email, password } = req.body;
 
-        if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
+    if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
     }
 
     try{

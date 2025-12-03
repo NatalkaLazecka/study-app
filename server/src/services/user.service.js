@@ -8,7 +8,6 @@ export async function findUserByEmail(email) {
             [email]
         );
 
-
         return rows[0] || null;
     } catch (err) {
         console.error('Log in fail. Database query error:', err);
@@ -17,11 +16,16 @@ export async function findUserByEmail(email) {
 }
 
 export async function findUserById(id) {
-    const rows = await db.query(
-        "SELECT * FROM student WHERE id = ?",
-        [id]
-    );
-    return rows[0] || null;
+    try {
+        const [rows] = await db.query(
+            "SELECT * FROM student WHERE id = ?",
+            [id]
+        );
+
+        return rows[0] || null;
+    } catch (err) {
+        throw err;
+    }
 }
 
 export async function createUser({id, email, password, imie, nazwisko}) {
