@@ -18,6 +18,7 @@ export default function RegisterPage() {
       alert('Account created successfully! You can now log in.');
       navigate('/login');
     } catch (err) {
+        console.log("Registration error:", err);
       alert("Registration failed. Maybe email already exists.");
     }
   };
