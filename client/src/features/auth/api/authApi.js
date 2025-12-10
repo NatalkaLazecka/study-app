@@ -2,16 +2,16 @@ const API = import.meta.env.VITE_API_URL;
 import axios from "axios";
 
 export async function sendResetEmail(email) {
-  return axios.post(`${API_URL}/emails/reset`, { email });
+  return axios.post(`${API}/emails/reset`, { email });
 }
 
 export async function verifyToken(token) {
-  const res = await axios.get(`${API_URL}/emails/verify/${token}`);
+  const res = await axios.get(`${API}/emails/verify/${token}`);
   return res.data;
 }
 
 export async function resetPassword({ token, newPassword }) {
-  return axios.post(`${API_URL}/emails/reset-password`, {
+  return axios.post(`${API}/emails/reset-password`, {
     token,
     newPassword
   });
