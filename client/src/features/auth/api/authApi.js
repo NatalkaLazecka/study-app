@@ -1,29 +1,20 @@
 const API = import.meta.env.VITE_API_URL;
+import axios from "axios";
 
-export const sendResetEmail = async (email) => {
-  const res = await fetch(`${API}/api/emails`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
-  })
-  if (!res.ok) throw new Error('Błąd wysyłania emaila')
-  return res.json()
+export async function sendResetEmail(email) {
+  return axios.post(`${API_URL}/emails/reset`, { email });
 }
 
-export const verifyToken = async (token) => {
-  const res = await fetch(`${API}/api/emails/verify-token/${token}`)
-  if (!res.ok) return { valid: false }
-  return res.json()
+export async function verifyToken(token) {
+  const res = await axios.get(`${API_URL}/emails/verify/${token}`);
+  return res.data;
 }
 
-export const resetPassword = async ({ token, newPassword }) => {
-  const res = await fetch(`${API}/api/emails/reset-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, newPassword }),
-  })
-  if (!res.ok) throw new Error('Błąd podczas zmiany hasła')
-  return res.json()
+export async function resetPassword({ token, newPassword }) {
+  return axios.post(`${API_URL}/emails/reset-password`, {
+    token,
+    newPassword
+  });
 }
 
 

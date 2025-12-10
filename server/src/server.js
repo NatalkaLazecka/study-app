@@ -32,5 +32,6 @@ app.use("/api/events", eventsRoutes);
 app.use('/api/auth', authRoutes);
 
 
+
 // Start serwera
 app.listen(PORT, () => console.log(`Server działa na porcie ${PORT}`))
