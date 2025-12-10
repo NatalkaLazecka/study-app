@@ -10,7 +10,9 @@ import groupsRoutes from "./routes/groups.routes.js";
 import eventsRoutes from "./routes/events.routes.js";
 /// import scheduleRoutes from "./routes/schedule.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 const app = express()
 
