@@ -4,7 +4,7 @@ import {
   verifyToken,
   consumeToken
 } from "../services/token.service.js";
-import { sendResetEmail } from "../services/token.service.js";
+import { sendResetEmail } from "../services/email.service.js";
 import db from "../database/db.js";
 import bcrypt from "bcryptjs";
 
