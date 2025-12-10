@@ -3,8 +3,8 @@ import {
   issueToken,
   verifyToken,
   consumeToken
-} from "../services/reset-token.service.js";
-import { sendResetEmail } from "../services/email.service.js";
+} from "../services/token.service.js";
+import { sendResetEmail } from "../services/token.service.js";
 import db from "../database/db.js";
 import bcrypt from "bcryptjs";
 
