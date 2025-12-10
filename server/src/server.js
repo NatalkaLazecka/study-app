@@ -31,6 +31,7 @@ app.use("/api/events", eventsRoutes);
 // app.use("/api/schedule", scheduleRoutes);
 app.use('/api/auth', authRoutes);
 
+console.log("Ładuję router: /api/emails →", !!emailRoutes);
 
 
 // Start serwera

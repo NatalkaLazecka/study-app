@@ -1,3 +1,5 @@
+console.log("emails.routes.js ZAŁADOWANY");
+
 import { Router } from "express";
 import {
   issueToken,
@@ -12,6 +14,7 @@ const router = Router();
 
 //  Wysyłanie linku resetu
 router.post("/reset", async (req, res) => {
+    console.log("ODEBRANO POST /api/emails/reset");
   try {
     const { email } = req.body;
 
@@ -37,6 +40,7 @@ router.post("/reset", async (req, res) => {
 
 // Walidacja tokenu
 router.get("/verify/:token", (req, res) => {
+   console.log("ODEBRANO GET /api/emails/verify");
   const token = req.params.token;
   const data = verifyToken(token);
 
@@ -49,6 +53,7 @@ router.get("/verify/:token", (req, res) => {
 
 // Ustawianie nowego hasła
 router.post("/reset-password", async (req, res) => {
+ console.log("ODEBRANO POST /api/emails/reset-password");
   try {
     const { token, newPassword } = req.body;
     const data = verifyToken(token);
