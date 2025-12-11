@@ -1,8 +1,8 @@
 import styles from '../styles/SchedulePage.module.css';
 import {useNavigate} from "react-router-dom";
-import NotificationComponent from "../../notification/component/NotificationComponent";
 import React, {useEffect, useState} from "react";
 import ScheduleViewComponent from "../component/ScheduleViewComponent";
+import MenuBar from "../../../components/MenuBar";
 
 export default function SchedulePage() {
     const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
@@ -74,32 +74,7 @@ export default function SchedulePage() {
 
     return (
         <div>
-            <div className={styles['menu-bar']}>
-                <div className={styles['menu-icons']}>
-                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')}>
-                        <i className="fa-solid fa-list-check"></i>
-                    </button>
-                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/calendar')}>
-                        <i className="fa-regular fa-calendar-days"></i>
-                    </button>
-                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/groups')}>
-                        <i className="fa-solid fa-people-group"></i>
-                    </button>
-                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/notifications')}>
-                        <i className="fa-solid fa-question"></i>
-                    </button>
-                </div>
-
-                <div className={styles['menu-user']}>
-                    <NotificationComponent/>
-
-                    <button className={styles['menu-icon-btn']}
-                            onClick={() => navigate('/profile')}
-                    >
-                        <i className="fa-regular fa-circle-user"></i>
-                    </button>
-                </div>
-            </div>
+            <MenuBar />
 
             <div className={styles['schedule-root']}>
                 <div className={styles['header-section']}>

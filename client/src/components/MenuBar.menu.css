@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --pink: #e85bbf;
+    --light: #f6d3f4;
+    --bg-dark: #160C1A;
+    --white: #fdfdfd;
+    --black: #0c0c0c;
+    --red: #FF5C5C;
+    --dotblue: #9ED7FF;
+    --dotgreen: #8EF19D;
+    --dotorang: #FF9335;
+    --dotpink: #FF79CB;
+    --dotgrey: #2e2e2e;
+}
+
+/* ===== MENU BAR ===== */
+.menu-bar {
+    background: var(--black);
+    height: clamp(50px, 7vh, 70px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(0.5rem, 3vw, 2rem);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.menu-icons {
+    display: flex;
+    gap: clamp(0.3rem, 1.5vw, 1.5rem);
+    align-items: center;
+}
+
+.menu-user {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.3rem, 1.5vw, 1.5rem);
+}
+
+.menu-icon-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+    cursor: pointer;
+    padding: clamp(0.25rem, 0.8vw, 0.5rem);
+    border-radius: 6px;
+    transition: color 0.3s ease, background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(28px, 4.5vw, 40px);
+    height: clamp(28px, 4.5vw, 40px);
+}
+
+.menu-icon-btn:hover {
+    color: var(--pink);
+    background: rgba(232, 91, 191, 0.1);
+}
+
+.menu-icon-btn:active {
+    transform: scale(0.95);
+}
