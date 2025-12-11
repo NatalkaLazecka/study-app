@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import calendarStyles from "../../calendar/styles/CalendarPage.module.css";
 import todoStyles from "../styles/Todo.module.css";
 import { useState, useEffect } from "react";
+import MenuBar from "../../../components/MenuBar";
 
 export default function TodoDetailsPage({ mode = "edit" }) {
   const { id } = useParams();
@@ -100,17 +101,7 @@ export default function TodoDetailsPage({ mode = "edit" }) {
 
   return (
     <div>
-      {/* TOP MENU BAR */}
-      <div className={calendarStyles["menu-bar"]}>
-        <div className={calendarStyles["menu-icons"]}>
-          <button className={calendarStyles["menu-icon-btn"]} onClick={() => navigate("/todo")}>
-            <i className="fa-solid fa-list-check"></i>
-          </button>
-          <button className={calendarStyles["menu-icon-btn"]} onClick={() => navigate("/calendar")}>
-            <i className="fa-regular fa-calendar-days"></i>
-          </button>
-        </div>
-      </div>
+      <MenuBar />
 
       {/* MAIN BACKGROUND */}
       <div className={calendarStyles["calendar-root"]}>
