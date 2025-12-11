@@ -472,6 +472,7 @@ body {
     cursor: pointer;
     user-select: none;
     transition: opacity 0.2s ease;
+    pointer-events: auto;
 }
 
 .import-box:hover {

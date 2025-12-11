@@ -251,6 +251,7 @@ export default function CalendarEventPage(){
             setLoading(false);
         }
     }
+    console.log('🔄 Component render - eventId:', eventId);
 
     return (
         <div>
@@ -336,7 +337,12 @@ export default function CalendarEventPage(){
                         />
                     </div>
 
-                    <div className={styles['import-box']} onClick={handleFileClick}>
+                    <div className={styles['import-box']}  onClick={(e) => {
+                                                            console. log('🖱️ import-box CLICKED');
+                                                            console.log('📌 eventId at click:', eventId);
+                                                            handleFileClick();
+                                                        }}
+                                                        style={{ border: '2px solid red' }}>
                         <div className={styles['import-icon']}>
                             <i className="fa-solid fa-file-import" />
                         </div>
