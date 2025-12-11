@@ -34,14 +34,23 @@ export default function CalendarEventPage(){
     }, []);
 
     useEffect(() => {
+        console.log('🔄 searchParams changed');
         const id = searchParams.get('id');
         const dateFromUrl = searchParams.get('date');
         const titleFromUrl = searchParams.get('title');
         const describeFromUrl = searchParams.get('describe');
-        const categoryFromUrl = searchParams.get('category');
+        const categoryFromUrl = searchParams. get('category');
         const endDateFromUrl = searchParams.get('endDate');
 
-        if (id) setEventId(id);
+        console.log('📥 URL params:', { id, dateFromUrl, titleFromUrl, describeFromUrl, categoryFromUrl, endDateFromUrl });
+
+        if (id) {
+            console.log('✅ Setting eventId to:', id);
+            setEventId(id);
+        } else {
+            console.log('❌ No id in URL');
+        }
+
         if (dateFromUrl) setDate(dateFromUrl);
         if (endDateFromUrl) setEndDate(endDateFromUrl);
         if (!endDateFromUrl) setEndDate(dateFromUrl);
@@ -49,6 +58,14 @@ export default function CalendarEventPage(){
         if (describeFromUrl) setDescribe(describeFromUrl);
         if (categoryFromUrl) setActiveCategory(categoryFromUrl);
     }, [searchParams]);
+
+    useEffect(() => {
+        console.log('🎯 eventId state updated to:', eventId);
+        if(eventId){
+            console.log('📂 Fetching files for eventId:', eventId);
+            fetchFiles();
+        }
+    }, [eventId]);
 
     const toggleCategory = (category) => {
         setActiveCategory(category);
@@ -76,10 +93,18 @@ export default function CalendarEventPage(){
     }, [eventId]);
 
     const handleFileClick = () => {
+        console.log('🔍 handleFileClick called');
+        console.log('📌 Current eventId:', eventId);
+        console.log('📌 eventId type:', typeof eventId);
+        console.log('📌 ! eventId evaluates to:', !eventId);
+
         if(!eventId){
+            console.log('❌ Blocked - no eventId');
             setError('Save the event first before uploading files.');
             return;
         }
+
+        console. log('✅ Opening file picker');
         setError('');
         document.getElementById('file-input').click();
     }
