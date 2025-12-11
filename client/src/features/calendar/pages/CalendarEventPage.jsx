@@ -3,31 +3,29 @@ import styles from '../styles/CalendarPage.module.css';
 import {useNavigate, useSearchParams} from "react-router-dom";
 
 export default function CalendarEventPage(){
-    const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
-
     const [eventId, setEventId] = useState('');
     const [title, setTitle] = useState('');
     const [describe, setDescribe] = useState('');
     const [date, setDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [activeCategory, setActiveCategory] = useState('');
-    const [categories, setCategories] = useState([]);
+    const [categories, setACategories] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
+    const [files, setFiles] = useState([]);
+    const [uploadingFile, setUploadingFile] = useState(false);
+
     useEffect(() => {
         const fetchCategories = async () => {
             try{
-                const res = await fetch(`${API_URL}/api/events/categories`);
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const res = await fetch(`http://localhost:3001/api/events/categories`);
                 const data = await res.json();
-
-                console.log('✅ Otrzymane dane:', data);
-                setCategories(data);
+                setACategories(data);
             }catch (err){
-                setError(`Failed to load categories: ${err.message}`);
+                setError(err.message);
             }
         };
         fetchCategories();
@@ -44,6 +42,7 @@ export default function CalendarEventPage(){
         if (id) setEventId(id);
         if (dateFromUrl) setDate(dateFromUrl);
         if (endDateFromUrl) setEndDate(endDateFromUrl);
+        if (!endDateFromUrl) setEndDate(dateFromUrl);
         if (titleFromUrl) setTitle(titleFromUrl);
         if (describeFromUrl) setDescribe(describeFromUrl);
         if (categoryFromUrl) setActiveCategory(categoryFromUrl);
@@ -57,6 +56,99 @@ export default function CalendarEventPage(){
         const category = categories.find(cat => cat.nazwa.toLowerCase() === name.toLowerCase());
         return category ? category.id : null;
     };
+
+    const fetchFiles = async () => {
+        try{
+            const res = await fetch(`http://localhost:3001/api/events/${eventId}/files`);
+            const data = await res.json();
+            setFiles(data);
+        } catch (err){
+            setError(err.message);
+        }
+    }
+
+    useEffect(() => {
+        if(eventId){
+            fetchFiles();
+        }
+    }, [eventId]);
+
+    const handleFileClick = () => {
+        if(!eventId){
+            setError('Save the event first before uploading files.');
+            return;
+        }
+        document.getElementById('file-input').click();
+    }
+
+    const handleFileSelect = async (e) =>{
+        const file = e.target.files[0];
+        if(!file) return;
+
+        setUploadingFile(true);
+        setError('');
+
+        try{
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const res = await fetch(`http://localhost:3001/api/events/${eventId}/files`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if(!res.ok){
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Upload failed');
+            }
+
+            e.target.value = '';
+            await fetchFiles();
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setUploadingFile(false);
+        }
+    }
+
+    const handleFileDownload = async (fileId, fileName) => {
+        try{
+            const res = await fetch(`http://localhost:3001/api/events/files/${fileId}/download`);
+            if(!res.ok){
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Download failed');
+            }
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (err) {
+            setError(err.message);
+        }
+    }
+
+    const handleFileDelete = async (fileId) => {
+        if(!window.confirm("Are you sure you want to delete this file?")){return;}
+
+        try{
+            const res = await fetch(`http://localhost:3001/api/events/files/${fileId}`, {
+                method: 'DELETE'
+            });
+            if(!res.ok){
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Delete failed');
+            }
+            await fetchFiles();
+        } catch (err) {
+            setError(err.message);
+        }
+    }
 
     const handleSave = async () => {
         if(!title.trim()){setError("Title is required"); return;}
@@ -81,13 +173,13 @@ export default function CalendarEventPage(){
 
             let res;
             if(eventId){
-                res = await fetch(`${API_URL}/api/events/${eventId}`, {
+                res = await fetch(`http://localhost:3001/api/events/${eventId}`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(eventData)
                 });
             }else{
-                res = await fetch(`${API_URL}/api/events`, {
+                res = await fetch(`http://localhost:3001/api/events`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(eventData)
@@ -115,7 +207,7 @@ export default function CalendarEventPage(){
         setError('');
 
         try{
-            const res = await fetch(`${API_URL}/api/events/${eventId}`, {
+            const res = await fetch(`http://localhost:3001/api/events/${eventId}`, {
                 method: 'DELETE'
             });
 
@@ -216,10 +308,56 @@ export default function CalendarEventPage(){
                         />
                     </div>
 
-                    <div className={styles['import-box']}>
-                        <div className={styles['import-icon']}><i className="fa-solid fa-file-import" /></div>
-                        <h3 className={styles['event-h3']}>import notes/files/etc.</h3>
+                    <div className={styles['import-box']} onClick={handleFileClick}>
+                        <div className={styles['import-icon']}>
+                            <i className="fa-solid fa-file-import" />
+                        </div>
+                        <h3 className={styles['event-h3']}>
+                            {uploadingFile ? 'uploading...' : 'import notes/files/etc.'}
+                        </h3>
+                        <input
+                            id="file-input"
+                            type="file"
+                            onChange={handleFileSelect}
+                            style={{ display: 'none' }}
+                            disabled={!eventId || uploadingFile}
+                        />
                     </div>
+
+                    {files.length > 0 && (
+                        <div className={styles['files-list']}>
+                            {files.map((file) => (
+                                <div key={file.id} className={styles['file-item']}>
+                                    <div className={styles['file-icon']}>
+                                        <i className="fa-solid fa-file"></i>
+                                    </div>
+                                    <span className={styles['file-name']}>{file.nazwa}</span>
+                                    <div className={styles['file-actions']}>
+                                        <button
+                                            className={styles['file-btn-download']}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleFileDownload(file.id, file.nazwa);
+                                            }}
+                                            title="Download"
+                                        >
+                                            <i className="fa-solid fa-download"></i>
+                                        </button>
+                                        <button
+                                            className={styles['file-btn-delete']}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleFileDelete(file.id);
+                                            }}
+                                            title="Delete"
+                                        >
+                                            <i className="fa-solid fa-x"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
                     <h2 className={styles['event-h2']}>choose category: *</h2>
 
@@ -241,9 +379,7 @@ export default function CalendarEventPage(){
                 <div className={styles['end-buttons']}>
                     <button className={styles['end-button']} onClick={handleSave} disabled={loading}>{loading ? 'SAVING...' : 'SAVE'}</button>
                     <button className={styles['end-button']} onClick={() => navigate(-1)} disabled={loading}>CANCEL</button>
-                    {eventId && (
-                        <button className={styles['end-button-delete']} onClick={handleDelete} disabled={loading}>{loading ? 'DELETING...' : 'DELETE'}</button>
-                    )}
+                    <button className={styles['end-button-delete']} onClick={handleDelete} disabled={loading}>{loading ? 'DELETING...' : 'DELETE'}</button>
                 </div>
             </div>
         </div>

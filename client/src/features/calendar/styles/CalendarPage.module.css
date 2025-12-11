@@ -4,7 +4,7 @@
 :root {
     --pink: #e85bbf;
     --light: #f6d3f4;
-    --bg-dark: #160c1a;
+    --bg-dark: #160C1AFF;
     --white: #fdfdfd;
     --black: #0c0c0c;
     --red: #FF5C5C;
@@ -110,10 +110,6 @@ body {
     transition: color 0.2s;
     justify-self: start;
 }
-
-/*.back-button:hover {*/
-/*    color: var(--pink);*/
-/*}*/
 
 .back-text {
     color: var(--light);
@@ -222,16 +218,18 @@ body {
     border: 1.5px solid var(--pink);
     border-radius: 16px;
     box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
-    padding: clamp(8px, 1.5vw, 15px);
+    padding: clamp(15px, 1.5vw, 30px) clamp(10px, 2vw, 20px);
     color: var(--light);
     width: 100%;
     max-width: 830px;
     min-height: clamp(400px, 60vh, 650px);
+    max-height: 70vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(10px, 2vh, 20px);
+    gap: clamp(8px, 2vh, 12px);
+    overflow-y: auto;
 }
 
 .input-box{
@@ -269,18 +267,18 @@ body {
 
 .event-h2 {
     font-weight: lighter;
-    font-size: clamp(24px, 4vw, 35px);
+    font-size: clamp(24px, 4vw, 30px);
     font-family: 'Source Code Pro', monospace;
     color: var(--white);
 }
 
 .event-buttons {
-    padding: clamp(10px, 2vh, 20px);
+    padding: clamp(4px, 3vh, 12px);
     display: flex;
     justify-content: space-between;
     width: 90%;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: clamp(6px, 1vh, 10px);
 }
 
 .event-button {
@@ -471,6 +469,14 @@ body {
     gap: clamp(10px, 2vw, 20px);
     align-items: center;
     flex-wrap: wrap;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s ease;
+}
+
+.import-box:hover {
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .import-icon {
@@ -674,4 +680,124 @@ body {
     .event-button {
         width: 100%;
     }
+}
+
+
+/* ===== FILES LIST ===== */
+.files-list {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3px, 1vh, 6px);
+    height: clamp(120px, 10vh, 200px);
+    /*max-height: clamp(120px, 20vh, 200px);*/
+    overflow-y: auto;
+    padding-right: 5px;
+
+    /* firefox */
+    scrollbar-width: thin;
+    scrollbar-color:  var(--pink) rgba(255, 255, 255, 0.05);
+}
+
+.files-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.files-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.files-list::-webkit-scrollbar-thumb {
+    background: var(--pink);
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+
+.files-list::-webkit-scrollbar-thumb:hover {
+    background: var(--light);
+}
+
+.file-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: clamp(0.3rem, 1.5vw, 0.8rem);
+    align-items: center;
+    width: 100%;
+    padding: clamp(3px, 1vw, 6px);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(232, 91, 191, 0.3);
+    border-radius: 8px;
+    transition: background 0.2s ease, border 0.2s ease;
+}
+
+.file-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(232, 91, 191, 0.5);
+}
+
+.file-icon {
+    color: var(--pink);
+    font-size: clamp(12px, 1.8vw, 14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: clamp(18px, 2.5vw, 22px);
+}
+
+.file-name {
+    font-family: 'Source Code Pro', monospace;
+    font-size:  clamp(12px, 1.3vw, 14px);
+    color: var(--white);
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.file-actions {
+    display: flex;
+    gap: clamp(4px, 1vw, 8px);
+    align-items: center;
+}
+
+.file-btn-download,
+.file-btn-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: clamp(12px, 1.5vw, 16px);
+    padding: clamp(3px, 0.6vw, 5px);
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: clamp(20px, 3vw, 26px);
+    height: clamp(20px, 3vw, 26px);
+}
+
+.file-btn-download {
+    color: var(--dotgreen);
+}
+
+.file-btn-download:hover {
+    color: var(--light);
+    transform: scale(1.15);
+}
+
+.file-btn-delete {
+    color: var(--red);
+}
+
+.file-btn-delete:hover {
+    color: var(--light);
+    transform: scale(1.15);
+}
+
+.file-btn-download:active,
+.file-btn-delete:active {
+    transform: scale(0.95);
 }
