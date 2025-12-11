@@ -88,11 +88,6 @@ export default function CalendarEventPage(){
         const file = e.target.files[0];
         if(!file) return;
 
-        if(!eventId){
-        setError('Save the event first before uploading files.');
-        return;
-    }
-
         setUploadingFile(true);
         setError('');
 
