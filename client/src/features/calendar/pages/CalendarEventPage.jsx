@@ -80,12 +80,18 @@ export default function CalendarEventPage(){
             setError('Save the event first before uploading files.');
             return;
         }
+        setError('');
         document.getElementById('file-input').click();
     }
 
     const handleFileSelect = async (e) =>{
         const file = e.target.files[0];
         if(!file) return;
+
+        if(!eventId){
+        setError('Save the event first before uploading files.');
+        return;
+    }
 
         setUploadingFile(true);
         setError('');
