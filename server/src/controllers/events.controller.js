@@ -1,5 +1,9 @@
 import pool from "../database/db.js";
 import { v4 as uuidv4 } from "uuid";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import {fileURLToPath} from "url";
 
 export const getEvents = async (req, res) => {
   try {
@@ -70,3 +74,123 @@ export const deleteEvent = async (req, res) => {
   }
 };
 
+
+
+// upload file controller
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadPath = path.join(__dirname, '../uploads/event-files');
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+        const uniqueName = `${uuidv4()}-${file.originalname}`;
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+export const uploadMiddleware = upload.single('file');
+
+export const getEventFiles = async (req, res) => {
+  try {
+    const result = await pool. query(
+      `SELECT id, nazwa, sciezka, DATE_FORMAT(data_dodania, '%Y-%m-%d %H:%i:%s') AS data_dodania
+       FROM plik_wydarzenie
+       WHERE wydarzenie_id = ? 
+       ORDER BY data_dodania DESC`,
+      [req.params.eventId]
+    );
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const uploadEventFile = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'Nie przesłano pliku' });
+    }
+
+    const id = uuidv4();
+    const { eventId } = req.params;
+    const fileName = req.file.originalname;
+    const filePath = req.file.filename;
+    const dateAdded = new Date();
+
+    await pool.query(
+      `INSERT INTO plik_wydarzenie (id, nazwa, sciezka, data_dodania, wydarzenie_id)
+       VALUES (?, ?, ?, ?, ?)`,
+      [id, fileName, filePath, dateAdded, eventId]
+    );
+
+    res.status(201).json({
+      message: 'Plik przesłany pomyślnie',
+      file: {
+        id,
+        nazwa: fileName,
+        sciezka: filePath,
+        data_dodania: dateAdded
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const downloadEventFile = async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT nazwa, sciezka FROM plik_wydarzenie WHERE id = ?',
+      [req.params.fileId]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'Plik nie znaleziony' });
+    }
+
+    const file = result[0];
+    const filePath = path.join(__dirname, '../uploads/event-files', file.sciezka);
+
+    if (! fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Plik nie istnieje na serwerze' });
+    }
+
+    res.download(filePath, file. nazwa);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const deleteEventFile = async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT sciezka FROM plik_wydarzenie WHERE id = ?',
+      [req.params.fileId]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'Plik nie znaleziony' });
+    }
+
+    const file = result[0];
+    const filePath = path.join(__dirname, '../uploads/event-files', file.sciezka);
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    await pool.query('DELETE FROM plik_wydarzenie WHERE id = ?', [req.params.fileId]);
+
+    res.json({ message: 'Plik usunięty pomyślnie' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
