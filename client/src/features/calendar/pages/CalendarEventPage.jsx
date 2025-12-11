@@ -3,6 +3,8 @@ import styles from '../styles/CalendarPage.module.css';
 import {useNavigate, useSearchParams} from "react-router-dom";
 
 export default function CalendarEventPage(){
+    const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
+
     const [eventId, setEventId] = useState('');
     const [title, setTitle] = useState('');
     const [describe, setDescribe] = useState('');
@@ -21,7 +23,7 @@ export default function CalendarEventPage(){
     useEffect(() => {
         const fetchCategories = async () => {
             try{
-                const res = await fetch(`http://localhost:3001/api/events/categories`);
+                const res = await fetch(`${API_URL}/api/events/categories`);
                 const data = await res.json();
                 setACategories(data);
             }catch (err){
@@ -59,7 +61,7 @@ export default function CalendarEventPage(){
 
     const fetchFiles = async () => {
         try{
-            const res = await fetch(`http://localhost:3001/api/events/${eventId}/files`);
+            const res = await fetch(`${API_URL}/api/events/${eventId}/files`);
             const data = await res.json();
             setFiles(data);
         } catch (err){
@@ -92,7 +94,7 @@ export default function CalendarEventPage(){
             const formData = new FormData();
             formData.append('file', file);
 
-            const res = await fetch(`http://localhost:3001/api/events/${eventId}/files`, {
+            const res = await fetch(`${API_URL}/api/events/${eventId}/files`, {
                 method: 'POST',
                 body: formData
             });
@@ -113,7 +115,7 @@ export default function CalendarEventPage(){
 
     const handleFileDownload = async (fileId, fileName) => {
         try{
-            const res = await fetch(`http://localhost:3001/api/events/files/${fileId}/download`);
+            const res = await fetch(`${API_URL}/api/events/files/${fileId}/download`);
             if(!res.ok){
                 const errorData = await res.json();
                 throw new Error(errorData.error || 'Download failed');
@@ -137,7 +139,7 @@ export default function CalendarEventPage(){
         if(!window.confirm("Are you sure you want to delete this file?")){return;}
 
         try{
-            const res = await fetch(`http://localhost:3001/api/events/files/${fileId}`, {
+            const res = await fetch(`${API_URL}/api/events/files/${fileId}`, {
                 method: 'DELETE'
             });
             if(!res.ok){
@@ -173,13 +175,13 @@ export default function CalendarEventPage(){
 
             let res;
             if(eventId){
-                res = await fetch(`http://localhost:3001/api/events/${eventId}`, {
+                res = await fetch(`${API_URL}/api/events/${eventId}`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(eventData)
                 });
             }else{
-                res = await fetch(`http://localhost:3001/api/events`, {
+                res = await fetch(`${API_URL}/api/events`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(eventData)
@@ -207,7 +209,7 @@ export default function CalendarEventPage(){
         setError('');
 
         try{
-            const res = await fetch(`http://localhost:3001/api/events/${eventId}`, {
+            const res = await fetch(`${API_URL}/api/events/${eventId}`, {
                 method: 'DELETE'
             });
 
