@@ -66,27 +66,10 @@ export default function CalendarPage() {
         navigate(`/calendar/event?date=${formattedDate}`);
     }
 
-    // const formatTime = (time) => {
-    //     if(!time) return '';
-    //     const parts = time.split(':');
-    //     return `${parts[0]}:${parts[1]}`;
-    // }
-
     const formatTime = (time) => {
-        console.log('⏰ formatTime called with:', time, 'Type:', typeof time);
-
-        if(!time) {
-            console.log('⏰ time is falsy, returning empty string');
-            return '';
-        }
-
+        if(!time) return '';
         const parts = time.split(':');
-        console.log('⏰ Split parts:', parts);
-
-        const result = `${parts[0]}:${parts[1]}`;
-        console.log('⏰ Result:', result);
-
-        return result;
+        return `${parts[0]}:${parts[1]}`;
     }
 
     useEffect(() => {
@@ -171,40 +154,16 @@ export default function CalendarPage() {
                         <div className={styles['panel-section']}>
                             <div className={styles['side-panel']}>Schedule</div>
                             <div className={styles['panel-content']}>
-                                {/*{todaySchedule.length > 0 ?  (*/}
-                                {/*    todaySchedule.map((item) => (*/}
-                                {/*        <CalendarScheduleComponent*/}
-                                {/*            key={item.id}*/}
-                                {/*            time={formatTime(item.godzina)}*/}
-                                {/*            subject={item.przedmiot_nazwa}*/}
-                                {/*            room={item.sala}*/}
-                                {/*            dotColor="var(--dotpink)"*/}
-                                {/*        />*/}
-                                {/*    ))*/}
-                                {/*) : (*/}
-                                {/*    <p style={{color: 'var(--white)', padding: '1rem'}}>*/}
-                                {/*        No classes today*/}
-                                {/*    </p>*/}
-                                {/*)}*/}
-
                                 {todaySchedule.length > 0 ?  (
-                                    todaySchedule.map((item) => {
-                                        const formattedTime = formatTime(item.godzina);
-
-                                        console.log('📅 Raw item:', item);
-                                        console.log('📅 item.godzina:', item.godzina, 'Type:', typeof item.godzina);
-                                        console.log('📅 Formatted time:', formattedTime, 'Type:', typeof formattedTime);
-
-                                        return (
-                                            <CalendarScheduleComponent
-                                                key={item.id}
-                                                time={formattedTime}
-                                                subject={item.przedmiot_nazwa}
-                                                room={item.sala}
-                                                dotColor="var(--dotpink)"
-                                            />
-                                        );
-                                    })
+                                    todaySchedule.map((item) => (
+                                        <CalendarScheduleComponent
+                                            key={item.id}
+                                            time={formatTime(item.godzina)}
+                                            subject={item.przedmiot_nazwa}
+                                            room={item.sala}
+                                            dotColor="var(--dotpink)"
+                                        />
+                                    ))
                                 ) : (
                                     <p style={{color: 'var(--white)', padding: '1rem'}}>
                                         No classes today
