@@ -80,7 +80,7 @@ export default function CalendarPage() {
             return '';
         }
 
-        const parts = time.split(': ');
+        const parts = time.split(':');
         console.log('⏰ Split parts:', parts);
 
         const result = `${parts[0]}:${parts[1]}`;
