@@ -165,6 +165,7 @@ export default function CalendarEventPage(){
 
         try{
             const studentId = getStudentId();
+            console.log('🔍 Student ID from token:', studentId);
 
             if (!studentId) {
                 navigate('/login');
@@ -183,6 +184,8 @@ export default function CalendarEventPage(){
                 student_id: studentId
             };
 
+            console.log('📤 Sending event data:', eventData);
+
             let res;
             if(eventId){
                 res = await fetch(`${API_URL}/api/events/${eventId}`, {
@@ -200,8 +203,12 @@ export default function CalendarEventPage(){
 
             if(!res.ok){
                 const errorData = await res.json();
+                console.error('❌ Backend error:', errorData);
                 throw new Error(errorData.error || 'Something went wrong');
             }
+
+            const responseData = await res.json();
+            console.log('✅ Backend response:', responseData);
 
             navigate('/calendar');
         }catch (err){

@@ -56,6 +56,10 @@ export const getCategories = async (req, res) => {
 
 export const addEvent = async (req, res) => {
   const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id } = req.body;
+
+  console.log('📥 Received request body:', req.body);  // ✅ Debug
+  console.log('🔍 Student ID from body:', student_id);  // ✅ Debug
+
   try {
     const id = uuidv4();
     await pool.query(
@@ -63,6 +67,8 @@ export const addEvent = async (req, res) => {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id]
     );
+    console.log('✅ Event created with ID:', id, 'for student:', student_id);
+
     res.status(201).json({ message: "Wydarzenie dodane" });
   } catch (err) {
     res.status(500).json({ error: err.message });
