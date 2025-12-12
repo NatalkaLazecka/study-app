@@ -23,7 +23,6 @@ export async function sendResetEmail(email, token) {
   const html = tpl({ resetLink });
 
   try {
-    console.log("Sending email to:", email);
 
     const res = await resend.emails.send({
       from: 'Study <noreply@study-app.pl>',
