@@ -10,8 +10,8 @@ import {
 } from "../controllers/events.controller.js";
 
 const router = express.Router();
-router.get("/", getEvents);
 router.get("/student/:studentId", getEventsByStudent);
+router.get("/", getEvents);
 router.get("/categories", getCategories);
 router.post("/", addEvent);
 router.put("/:id", updateEvent);

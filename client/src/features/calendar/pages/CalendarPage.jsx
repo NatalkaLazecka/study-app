@@ -76,7 +76,7 @@ export default function CalendarPage() {
                     return;
                 }
 
-                const res = await fetch(`${API_URL}/api/events.student/${studentId}`);
+                const res = await fetch(`${API_URL}/api/events/student/${studentId}`);
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
                 const data = await res.json();
