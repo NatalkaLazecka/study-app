@@ -23,6 +23,28 @@ export const getEvents = async (req, res) => {
   }
 };
 
+export const getEventsByStudent = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+
+    const result = await pool. query(`
+      SELECT w.id, w.tytul, w. opis, 
+             DATE_FORMAT(w.data_start, '%Y-%m-%d') AS data_start, 
+             DATE_FORMAT(w.data_koncowa, '%Y-%m-%d') AS data_koncowa, 
+             w.priorytet, w.notatka_id, w.student_id, r. nazwa AS rodzaj, p.nazwa AS powtarzanie
+      FROM wydarzenie w
+      LEFT JOIN rodzaj_wydarzenia r ON w.rodzaj_wydarzenia_id = r.id
+      LEFT JOIN rodzaj_powtarzania p ON w.rodzaj_powtarzania_id = p.id
+      WHERE w.student_id = ?
+      ORDER BY data_start ASC
+    `, [studentId]);
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 export const getCategories = async (req, res) => {
     try{
         const result = await pool.query('SELECT id, nazwa FROM rodzaj_wydarzenia ORDER BY id asc');

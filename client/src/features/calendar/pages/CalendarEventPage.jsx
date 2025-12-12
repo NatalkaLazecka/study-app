@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styles from '../styles/CalendarPage.module.css';
 import {useNavigate, useSearchParams} from "react-router-dom";
 import MenuBar from "../../../components/MenuBar";
+import { getStudentId } from '../../../utils/auth';
 
 export default function CalendarEventPage(){
     const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
@@ -163,6 +164,13 @@ export default function CalendarEventPage(){
         setError('');
 
         try{
+            const studentId = getStudentId();
+
+            if (!studentId) {
+                navigate('/login');
+                return;
+            }
+
             const categoryId = getCategoryIdByName(activeCategory);
             const eventData = {
                 tytul: title.trim(),
@@ -172,7 +180,7 @@ export default function CalendarEventPage(){
                 priorytet: 'normal',
                 rodzaj_wydarzenia_id: categoryId,
                 rodzaj_powtarzania_id: null,
-                student_id: null
+                student_id: studentId
             };
 
             let res;

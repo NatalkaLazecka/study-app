@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    getEvents, getCategories, getEventFiles,
+    getEvents, getCategories, getEventFiles, getEventsByStudent,
     addEvent,
     updateEvent,
     deleteEvent,
@@ -11,6 +11,7 @@ import {
 
 const router = express.Router();
 router.get("/", getEvents);
+router.get("/student/:studentId", getEventsByStudent);
 router.get("/categories", getCategories);
 router.post("/", addEvent);
 router.put("/:id", updateEvent);

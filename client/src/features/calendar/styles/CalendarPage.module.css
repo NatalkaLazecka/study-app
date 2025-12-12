@@ -33,6 +33,14 @@ body {
     margin-top: clamp(5px, 1.5vh, 10px);
 }
 
+.loading-p{
+    color: var(--light);
+    font-family: 'Roboto Mono', monospace;
+    font-size: clamp(14px, 1.5vw, 16px);
+    margin-top: clamp(5px, 1.5vh, 10px);
+    text-align: center;
+}
+
 /* ===== HEADER SECTION ===== */
 .header-section {
     display: grid;
