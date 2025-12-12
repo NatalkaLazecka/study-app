@@ -2,9 +2,6 @@ import React, {useState} from 'react';
 import styles from '../styles/CalendarPage.module.css';
 
 export default function CalendarScheduleComponent({ time, subject, room, dotColor}) {
-    const [title, setTitle] = useState('');
-    const [date, setDate] = useState('');
-
     return (
         <div className={styles['schedule-component']}>
             <div className={styles['schedule-descripsion']}>
