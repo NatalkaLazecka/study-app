@@ -37,20 +37,41 @@ export default function ScheduleEditPage() {
         const fetchSubjects = async () => {
             try {
                 const res = await fetch(`${API_URL}/api/schedule/subjects/`);
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
                 const data = await res.json();
-                setSubjects(data);
+
+                if (Array.isArray(data)) {
+                    setSubjects(data);
+                } else {
+                    console.error('Subjects is not an array:', data);
+                    setSubjects([]);
+                }
             } catch (err) {
                 console.error('Error fetching subjects:', err);
+                setSubjects([]);
             }
         };
 
         const fetchProfessors = async () => {
             try {
                 const res = await fetch(`${API_URL}/api/schedule/professors/`);
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+
                 const data = await res.json();
-                setProfessors(data);
+
+                if (Array.isArray(data)) {
+                    setProfessors(data);
+                } else {
+                    console.error('Professors is not an array:', data);
+                    setProfessors([]);
+                }
             } catch (err) {
                 console.error('Error fetching professors:', err);
+                setProfessors([]);
             }
         };
 
@@ -401,11 +422,10 @@ export default function ScheduleEditPage() {
         }
     }
 
-    const subjectOptions = subjects.map(subj => ({value: subj.id, label: subj.nazwa}));
-    const professorOptions = professors.map(prof => ({value: prof.id, label: `${prof.imie} ${prof.nazwisko}`}));
+    const subjectOptions = Array.isArray(subjects) ? subjects.map(subj => ({value: subj. id, label: subj.nazwa})) : [];
+    const professorOptions = Array.isArray(professors) ? professors.map(prof => ({value: prof.id, label: `${prof.imie} ${prof.nazwisko}`})) : [];
     const daysOptions = daysOfWeek.map(day => ({value: day, label: day}));
     const classTypeOptions = classTypes.map(type => ({value: type.id, label: type.nazwa}));
-
 
     return (
         <div>
