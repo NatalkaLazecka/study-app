@@ -24,7 +24,7 @@ export async function sendResetEmail(email, token) {
   const html = tpl({ resetLink })
 
   return resend.emails.send({
-    from: 'Study <onboarding@resend.dev>',
+    from: 'Study <noreply@resend.dev>',
     to: email,
     subject: 'Reset hasła',
     html
