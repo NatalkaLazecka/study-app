@@ -26,7 +26,7 @@ export async function sendResetEmail(email, token) {
     console.log("Sending email to:", email);
 
     const res = await resend.emails.send({
-      from: 'Study <noreply@resend.dev>',
+      from: 'Study <noreply@study-app.pl>',
       to: email,
       subject: 'Reset hasła',
       html,
