@@ -36,6 +36,7 @@ export const getScheduleForStudent = async (req, res) => {
 
         res.status(200).json(result);
     } catch (err) {
+        console.error('❌ getScheduleForStudent error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -72,6 +73,7 @@ export const getTodayScheduleForStudent = async (req, res) => {
 
         res.status(200).json(result);
     } catch (err) {
+        console.error('❌ getTodayScheduleForStudent error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -108,6 +110,7 @@ export const updateSchedule = async (req, res) => {
 
         res.status(200).json({ message: "Schedule updated" });
     } catch (err) {
+        console.error('❌ addSchedule error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -124,6 +127,7 @@ export const deleteSchedule = async (req, res) => {
 
         res.status(200).json({ message: "Schedule deleted" });
     } catch (err) {
+        console.error('❌ deleteSchedule error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -140,6 +144,7 @@ export const deleteAllSchedulesForStudent = async (req, res) => {
 
         res.status(200).json({ message: "All schedule deleted" });
     }catch (err) {
+        console.error('❌ deleteAllScheduleForStudent error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -148,16 +153,24 @@ export const deleteAllSchedulesForStudent = async (req, res) => {
 // ---- PROFESOR CONTROLLERS ---- //
 export const getAllProfessor = async (req, res) => {
     try {
+        console.log('🔌 Querying database for professors...');
         const result = await pool.query(
             `SELECT id, imie, nazwisko, e_mail FROM prowadzacy ORDER BY nazwisko, imie`
         );
+
+         console.log('✅ getAllProfessor - Type:', typeof result, 'Is Array:', Array.isArray(result));
+        console.log('✅ getAllProfessor - Length:', result?. length);
+        console.log('✅ getAllProfessor - First item:', result?.[0]);
 
         if(result.length === 0){
             return res.status(404).json({ message: "No instructors found" });
         }
 
+        console.log('✅ Returning', result.length, 'professors');
         res.status(200).json(result);
     } catch (err) {
+        console.error('❌ getAllProfessor error:', err. message);
+        console.error('❌ Full error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -167,17 +180,22 @@ export const addProfessor = async (req, res) => {
     const id = uuidv4();
 
     if((!imie || imie.trim() === '') || (!nazwisko || nazwisko.trim() === '')){
+        console.log('⚠️ Validation failed - missing name');
         return res.status(400).json({ message: "Subject name and last name is required" });
     }
 
     try{
+        console.log('🔌 Inserting professor:', imie. trim(), nazwisko.trim());
        await pool.query(
           "INSERT INTO prowadzacy (id, imie, nazwisko) VALUES (?, ?, ?)",
           [id, imie.trim(), nazwisko.trim()]
         );
-
+        console.log('✅ Professor created:', id);
         res.status(201).json({ id: id, imie: imie.trim(), nazwisko: nazwisko.trim() });
     }catch (err) {
+        console.error('❌ addProfessor error:', err.message);
+        console.error('❌ Full error:', err);
+
         if(err.code === 'ER_DUP_ENTRY'){
             return res.status(400).json({ message: "Professor already exists" });
         }
@@ -205,6 +223,7 @@ export const updateProfessor = async (req, res) => {
 
         res.status(200).json({ id: id, imie: imie.trim(), nazwisko: nazwisko.trim() });
     } catch (err) {
+        console.error('❌ updateProfessor error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -233,6 +252,7 @@ export const deleteProfessor = async (req, res) => {
 
         res.status(200).json({ message: "Professor deleted successfully" });
     } catch (err) {
+        console.error('❌ deleteProfessor error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -241,38 +261,64 @@ export const deleteProfessor = async (req, res) => {
 // ---- SUBJECT CONTROLLERS ---- //
 export const getAllSubject = async (req, res) => {
     try {
+        console.log('🔌 Querying database for subjects...');
         const result = await pool. query(
             `SELECT id, nazwa FROM przedmiot ORDER BY nazwa`
         );
 
+        console.log('✅ getAllSubject - Type:', typeof result, 'Is Array:', Array.isArray(result));
+        console.log('✅ getAllSubject - Length:', result?.length);
+        console.log('✅ getAllSubject - First item:', result?.[0]);
+        console.log('✅ getAllSubject - Full result:', JSON.stringify(result));
+
+
         if(result.length === 0){
+            cnsole.log('⚠️ No subjects found, returning empty array');
             return res. status(404).json({ message: "No subjects found" });
         }
 
-
-
+        console.log('✅ Returning', result.length, 'subjects');
         res.status(200).json(result);
     } catch (err) {
+         console.error('❌ getAllSubject error:', err.message);
+        console.error('❌ Full error:', err);
         res.status(500).json({ error: err.message });
     }
 }
 
 export const addSubject = async (req, res) => {
+    console.log('📥 addSubject called');
+    console.log('📥 Request body:', req.body);
+    console.log('📥 Request headers:', req.headers);
+
     const { nazwa } = req.body;
     const id = uuidv4();
 
+    console.log('📥 Parsed nazwa:', nazwa);
+
     if(!nazwa || nazwa.trim() === ''){
+        console.log('⚠️ Validation failed - subject name is empty');
         return res.status(400).json({ message: "Subject name is required" });
     }
 
     try{
+        console. log('🔌 Inserting subject:', nazwa. trim(), 'with ID:', id);
+
         await pool.query(
           "INSERT INTO przedmiot (id, nazwa) VALUES (?, ?)",
-          [id, nazwa]
+          [id, nazwa.trim()]
         );
+
+        console.log('✅ Subject created successfully');
+        const response = { id: id, nazwa: nazwa.trim() };
+        console.log('✅ Sending response:', response);
 
         res.status(201).json({ id: id, nazwa: nazwa.trim() });
     }catch (err) {
+        console.error('❌ addSubject error:', err.message);
+        console.error('❌ Error code:', err.code);
+        console.error('❌ Full error:', err);
+
         if(err.code === 'ER_DUP_ENTRY'){
             return res.status(400).json({ message: "Subject already exists" });
         }
@@ -291,7 +337,7 @@ export const updateSubject = async (req, res) => {
     try{
         const result = await pool.query(
             "UPDATE przedmiot SET nazwa=? WHERE id=?",
-            [nazwa, id]
+            [nazwa.trim(), id]
         );
 
         if(result.affectedRows === 0){
@@ -300,6 +346,7 @@ export const updateSubject = async (req, res) => {
 
         res.status(200).json({ id: id, nazwa: nazwa.trim() });
     } catch (err) {
+        console.error('❌ updateSubject error:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -328,6 +375,7 @@ export const deleteSubject = async (req, res) => {
 
         res.status(200).json({ message: "Subject deleted successfully" });
     } catch (err) {
+        console.error('❌ deleteSubject error:', err);
         res.status(500).json({ error: err.message });
     }
 }
