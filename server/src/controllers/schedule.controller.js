@@ -40,6 +40,42 @@ export const getScheduleForStudent = async (req, res) => {
     }
 }
 
+export const getTodayScheduleForStudent = async (req, res) => {
+    const { student_id } = req.params;
+
+    try {
+        const daysMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const today = daysMap[new Date().getDay()];
+
+        const result = await pool. query(
+            `SELECT 
+                pz.id, 
+                pz.student_id, 
+                pz.przedmiot_id,
+                pr. nazwa as przedmiot_nazwa,
+                pz. prowadzacy_id,
+                p.imie as prowadzacy_imie,
+                p.nazwisko as prowadzacy_nazwisko,
+                pz.dzien_tygodnia, 
+                pz. godzina, 
+                pz.sala, 
+                pz.typ_zajec_id,
+                tz.nazwa as typ_zajec
+             FROM plan_zajec pz
+             LEFT JOIN prowadzacy p ON pz.prowadzacy_id = p.id
+             LEFT JOIN przedmiot pr ON pz.przedmiot_id = pr.id
+             LEFT JOIN typ_zajec tz ON pz.typ_zajec_id = tz.id
+             WHERE pz.student_id = ? AND pz.dzien_tygodnia = ? 
+             ORDER BY pz.godzina`,
+            [student_id, today]
+        );
+
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 export const addSchedule = async (req, res) => {
     const { student_id, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id } = req.body;
     const id = uuidv4();

@@ -2,7 +2,7 @@ import express from "express";
 import {
     addProfessor, addSchedule, addSubject,
     deleteAllSchedulesForStudent, deleteSchedule, deleteSubject, deleteProfessor,
-    getAllProfessor, getAllSubject, getScheduleForStudent,
+    getAllProfessor, getAllSubject, getScheduleForStudent, getTodayScheduleForStudent,
     updateSchedule, updateSubject, updateProfessor
 } from "../controllers/schedule.controller.js";
 
@@ -21,6 +21,7 @@ router.put('/professor/:id', updateProfessor);
 router.delete('/professor/:id', deleteProfessor);
 
 // Schedule //
+router.get("/student/:student_id/today", getTodayScheduleForStudent);
 router.get("/student/:student_id", getScheduleForStudent);
 router.post("/", addSchedule);
 router.put("/:id", updateSchedule);

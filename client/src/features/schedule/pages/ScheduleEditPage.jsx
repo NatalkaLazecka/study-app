@@ -116,7 +116,7 @@ export default function ScheduleEditPage() {
          return true;
      }
 
-     const handelSave = async (e) => {
+     const handelSave = async () => {
          setError('');
          if(!validateForm()){ return; }
          setLoading(true);
@@ -160,7 +160,7 @@ export default function ScheduleEditPage() {
          }
      };
 
-     const handelDelete = async (e) => {
+     const handelDelete = async () => {
          if(!scheduleId){
              setError("No schedule to delete.");
              return;
@@ -427,91 +427,95 @@ export default function ScheduleEditPage() {
 
                 {error && (<div className={styles['err-message']}>{error}</div>)}
 
-                <div className={styles['schedule-event-content']}>
-                    <div className={styles['input-box']}>
-                        <p className={styles['input-title']}>Subject *</p>
-                        <CustomSelect
-                            value={subject}
-                            onChange={setSubject}
-                            onCreateOption={handleCreateSubject}
-                            onEditOption={handleEditSubject}
-                            onDeleteOption={handleDeleteSubject}
-                            options={subjectOptions}
-                            placeholder="-- Select Subject --"
-                            isDisabled={loading}
-                            isSearchable={true}
-                            isClearable={true}
-                            isEditable={true}
-                        />
-                    </div>
+                {loading ? (
+                    <p className={styles['loading-p']}>Loading calendar...</p>
+                ) : (
+                    <div className={styles['schedule-event-content']}>
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Subject *</p>
+                            <CustomSelect
+                                value={subject}
+                                onChange={setSubject}
+                                onCreateOption={handleCreateSubject}
+                                onEditOption={handleEditSubject}
+                                onDeleteOption={handleDeleteSubject}
+                                options={subjectOptions}
+                                placeholder="-- Select Subject --"
+                                isDisabled={loading}
+                                isSearchable={true}
+                                isClearable={true}
+                                isEditable={true}
+                            />
+                        </div>
 
-                    <div className={styles['input-box']}>
-                        <p className={styles['input-title']}>Professor</p>
-                        <CustomSelect
-                            value={professor}
-                            onChange={setProfessor}
-                            onCreateOption={handleCreateProfessor}
-                            onEditOption={handleEditProfessor}
-                            onDeleteOption={handleDeletProfessor}
-                            options={professorOptions}
-                            placeholder="-- Select Professor --"
-                            isDisabled={loading}
-                            isSearchable={true}
-                            isClearable={true}
-                            isEditable={true}
-                        />
-                    </div>
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Professor</p>
+                            <CustomSelect
+                                value={professor}
+                                onChange={setProfessor}
+                                onCreateOption={handleCreateProfessor}
+                                onEditOption={handleEditProfessor}
+                                onDeleteOption={handleDeletProfessor}
+                                options={professorOptions}
+                                placeholder="-- Select Professor --"
+                                isDisabled={loading}
+                                isSearchable={true}
+                                isClearable={true}
+                                isEditable={true}
+                            />
+                        </div>
 
-                    <div className={styles['input-box']}>
-                        <p className={styles['input-title']}>Day</p>
-                        <CustomSelect
-                            value={day}
-                            onChange={setDay}
-                            options={daysOptions}
-                            placeholder="-- Select Day --"
-                            isDisabled={loading}
-                            isSearchable={true}
-                            isClearable={true}
-                            isEditable={false}
-                        />
-                    </div>
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Day</p>
+                            <CustomSelect
+                                value={day}
+                                onChange={setDay}
+                                options={daysOptions}
+                                placeholder="-- Select Day --"
+                                isDisabled={loading}
+                                isSearchable={true}
+                                isClearable={true}
+                                isEditable={false}
+                            />
+                        </div>
 
-                    <div className={styles['input-box']}>
-                        <p className={styles['input-title']}>Time</p>
-                        <input
-                            type="time"
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
-                            className={styles['schedule-input']}
-                            disabled={loading}
-                        />
-                    </div>
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Time</p>
+                            <input
+                                type="time"
+                                value={time}
+                                onChange={(e) => setTime(e.target.value)}
+                                className={styles['schedule-input']}
+                                disabled={loading}
+                            />
+                        </div>
 
-                    <div className={styles['input-box']}>
-                        <p className={styles['input-title']}>Room</p>
-                        <input
-                            type="text"
-                            value={room}
-                            onChange={(e) => setRoom(e.target.value)}
-                            className={styles['schedule-input']}
-                            disabled={loading}
-                        />
-                    </div>
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Room</p>
+                            <input
+                                type="text"
+                                value={room}
+                                onChange={(e) => setRoom(e.target.value)}
+                                className={styles['schedule-input']}
+                                disabled={loading}
+                            />
+                        </div>
 
-                    <div className={styles['input-box']}>
-                        <p className={styles['input-title']}>Type</p>
-                        <CustomSelect
-                            value={classType}
-                            onChange={setClassType}
-                            options={classTypeOptions}
-                            placeholder="-- Select Type --"
-                            isDisabled={loading}
-                            isSearchable={true}
-                            isClearable={true}
-                            isEditable={false}
-                        />
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Type</p>
+                            <CustomSelect
+                                value={classType}
+                                onChange={setClassType}
+                                options={classTypeOptions}
+                                placeholder="-- Select Type --"
+                                isDisabled={loading}
+                                isSearchable={true}
+                                isClearable={true}
+                                isEditable={false}
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <div className={styles['end-buttons']}>
                     <button className={styles['end-button']} onClick={handelSave} disabled={loading}>{loading ? 'SAVING...' : 'SAVE'}</button>

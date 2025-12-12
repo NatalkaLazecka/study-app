@@ -12,6 +12,7 @@ export default function CalendarPage() {
 
     const [date, setDate] = useState(new Date());
     const [events, setEvents] = useState([])
+    const [todaySchedule, setTodaySchedule] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -76,12 +77,16 @@ export default function CalendarPage() {
                     return;
                 }
 
-                const res = await fetch(`${API_URL}/api/events/student/${studentId}`);
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const eventsRes = await fetch(`${API_URL}/api/events/student/${studentId}`);
+                if (!eventsRes.ok) throw new Error(`Events error!  status: ${eventsRes.status}`);
+                const eventsData = await eventsRes.json();
+                setEvents(eventsData);
 
-                const data = await res.json();
-                setEvents(data);
-                setLoading(false);
+                const scheduleRes = await fetch(`${API_URL}/api/schedule/student/${studentId}/today`);
+                if (!scheduleRes.ok) throw new Error(`Schedule error! status: ${scheduleRes.status}`);
+                const scheduleData = await scheduleRes.json();
+                setTodaySchedule(scheduleData);
+
             }catch (err) {
                 console.error(err);
                 setError(err.message);
@@ -109,6 +114,8 @@ export default function CalendarPage() {
                     <h1 className={styles['calendar-title']}>CALENDAR</h1>
                     <div></div>
                 </div>
+
+                {error && (<div className={styles['err-message']}>{error}</div>)}
 
                 {loading ? (
                     <p className={styles['loading-p']}>Loading calendar...</p>
@@ -141,7 +148,21 @@ export default function CalendarPage() {
                         <div className={styles['panel-section']}>
                             <div className={styles['side-panel']}>Schedule</div>
                             <div className={styles['panel-content']}>
-                                <CalendarScheduleComponent dotColor="var(--dotpink)"/>
+                                {todaySchedule.length > 0 ?  (
+                                    todaySchedule.map((item) => (
+                                        <CalendarScheduleComponent
+                                            key={item.id}
+                                            time={formatTime(item.godzina)}
+                                            subject={item.przedmiot_nazwa}
+                                            room={item.sala}
+                                            dotColor="var(--dotblue)"
+                                        />
+                                    ))
+                                ) : (
+                                    <p style={{color: 'var(--white)', padding: '1rem'}}>
+                                        No classes today
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>

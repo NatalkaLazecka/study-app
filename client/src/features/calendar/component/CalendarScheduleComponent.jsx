@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import styles from '../styles/CalendarPage.module.css';
 
-export default function CalendarScheduleComponent({dotColor}) {
+export default function CalendarScheduleComponent({ time, subject, room, dotColor}) {
     const [title, setTitle] = useState('');
     const [date, setDate] = useState('');
 
@@ -11,10 +11,10 @@ export default function CalendarScheduleComponent({dotColor}) {
                 <div className={styles['event-dot']} style={{color: dotColor}}>
                     <i className="fa-solid fa-circle"></i>
                 </div>
-                <p className={styles['event-descripsion-title']}>MAD A/160</p>
+                <p className={styles['event-descripsion-title']}>{subject} {room}</p>
             </div>
 
-            <p className={styles['event-descripsion-time']}>10:15 - 11:45</p>
+            <p className={styles['event-descripsion-time']}>{time}</p>
         </div>
 
     );
