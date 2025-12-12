@@ -16,15 +16,21 @@ dotenv.config();
 
 const app = express()
 
-// Dodaj tymczasowo na początku server.js
-const https = require('https');
+// Na początku server.js
+import https from 'https';
+
+// Sprawdzenie IP Railway (tymczasowo)
 https.get('https://api.ipify.org?format=json', (resp) => {
   let data = '';
   resp.on('data', (chunk) => { data += chunk; });
   resp.on('end', () => {
-    console.log('Railway IP:', JSON.parse(data).ip);
+    console.log('🌍 Railway IP:', JSON.parse(data).ip);
   });
+}).on('error', (err) => {
+  console.log('Error getting IP:', err.message);
 });
+
+// ...  reszta twojego kodu
 
 // Middleware
 app.use(cors({ origin: FRONTEND_URL, methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true }))
