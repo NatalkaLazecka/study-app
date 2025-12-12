@@ -22,11 +22,14 @@ const tpl = handlebars.compile(templateSource)
 export async function sendResetEmail(email, token) {
   const resetLink = `${FRONTEND_URL}/reset-password?token=${token}`
   const html = tpl({ resetLink })
-
-  return resend.emails.send({
+try{
+     return resend.emails.send({
     from: 'Study <noreply@resend.dev>',
     to: email,
     subject: 'Reset hasła',
     html
-  })
+  });
+}catch (err){
+    console.log("resend err:", err);
+}
 }
