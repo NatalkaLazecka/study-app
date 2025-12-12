@@ -17,7 +17,7 @@ export default function SchedulePage() {
         const fetchSchedule = async () => {
             try{
                 const res = await fetch(`${API_URL}/api/schedule/student/${studentId}`);
-                if(!res.ok){throw new Error('Failed to fetch schedule');}
+                if(!res.ok){throw new Error('Schedule is empty');}
                 const data = await res.json();
                 setSchedule(data);
                 setLoading(false)
