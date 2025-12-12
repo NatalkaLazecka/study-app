@@ -195,7 +195,7 @@ export const updateProfessor = async (req, res) => {
 
     try{
         const result = await pool.query(
-            "UPDATE przedmiot SET imie=?, nazwisko=? WHERE id=?",
+            "UPDATE prowadzacy SET imie=?, nazwisko=? WHERE id=?",
             [imie.trim(), nazwisko.trim(), id]
         );
 

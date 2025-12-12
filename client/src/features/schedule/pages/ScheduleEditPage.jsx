@@ -36,7 +36,7 @@ export default function ScheduleEditPage() {
     useEffect(() => {
         const fetchSubjects = async () => {
             try {
-                const res = await fetch(`${API_URL}/api/schedule/przedmiot/`);
+                const res = await fetch(`${API_URL}/api/schedule/subjects/`);
                 const data = await res.json();
                 setSubjects(data);
             } catch (err) {
@@ -46,7 +46,7 @@ export default function ScheduleEditPage() {
 
         const fetchProfessors = async () => {
             try {
-                const res = await fetch(`${API_URL}/api/schedule/prowadzacy/`);
+                const res = await fetch(`${API_URL}/api/schedule/professors/`);
                 const data = await res.json();
                 setProfessors(data);
             } catch (err) {
@@ -301,7 +301,7 @@ export default function ScheduleEditPage() {
         setError('');
 
         try {
-            const res = await fetch(`${API_URL}/api/schedule/subject`, {
+            const res = await fetch(`${API_URL}/api/schedule/professor`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ imie, nazwisko })
