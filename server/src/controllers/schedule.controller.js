@@ -30,11 +30,11 @@ export const getScheduleForStudent = async (req, res) => {
             [student_id]
         );
 
-        if(result[0].length === 0){
+        if(result.length === 0){
             return res.status(404).json({ message: "Schedule not found" });
         }
 
-        res.status(200).json(result[0]);
+        res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -102,7 +102,7 @@ export const updateSchedule = async (req, res) => {
           [student_id, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id, id]
         );
 
-        if(result[0].affectedRows === 0){
+        if(result.affectedRows === 0){
             return res.status(404).json({ message: "Schedule not found" });
         }
 
@@ -118,7 +118,7 @@ export const deleteSchedule = async (req, res) => {
     try {
         const result = await pool.query("DELETE FROM plan_zajec WHERE id=?", [id]);
 
-        if(result[0].affectedRows === 0){
+        if(result.affectedRows === 0){
             return res.status(404).json({ message: "Schedule not found" });
         }
 
@@ -134,7 +134,7 @@ export const deleteAllSchedulesForStudent = async (req, res) => {
     try{
         const result = await pool.query("DELETE FROM plan_zajec WHERE student_id=?", [student_id]);
 
-        if(result[0].affectedRows === 0){
+        if(result.affectedRows === 0){
             return res.status(404).json({ message: "No schedules found for the student" });
         }
 
@@ -152,7 +152,7 @@ export const getAllProfessor = async (req, res) => {
             `SELECT id, imie, nazwisko, e_mail FROM prowadzacy ORDER BY nazwisko, imie`
         );
 
-        if(result[0].length === 0){
+        if(result.length === 0){
             return res.status(404).json({ message: "No instructors found" });
         }
 
@@ -166,7 +166,7 @@ export const addProfessor = async (req, res) => {
     const { imie, nazwisko } = req.body;
     const id = uuidv4();
 
-    if((!imie || imie.trim() === '') && (!nazwisko || nazwisko.trim() === '')){
+    if((!imie || imie.trim() === '') || (!nazwisko || nazwisko.trim() === '')){
         return res.status(400).json({ message: "Subject name and last name is required" });
     }
 
@@ -189,7 +189,7 @@ export const updateProfessor = async (req, res) => {
     const { id } = req.params;
     const { imie, nazwisko } = req.body;
 
-    if((!imie || imie.trim() === '') && (!nazwisko || nazwisko.trim() === '')){
+    if((!imie || imie.trim() === '') || (!nazwisko || nazwisko.trim() === '')){
         return res.status(400).json({ message: "Subject name and last name is required" });
     }
 
@@ -199,7 +199,7 @@ export const updateProfessor = async (req, res) => {
             [imie.trim(), nazwisko.trim(), id]
         );
 
-        if(result[0].affectedRows === 0){
+        if(result.affectedRows === 0){
             return res.status(404).json({ message: "Professor not found" });
         }
 
@@ -227,7 +227,7 @@ export const deleteProfessor = async (req, res) => {
             [id]
         );
 
-        if(result[0].affectedRows === 0){
+        if(result.affectedRows === 0){
             return res.status(404).json({ message: "Professor not found" });
         }
 
@@ -245,9 +245,11 @@ export const getAllSubject = async (req, res) => {
             `SELECT id, nazwa FROM przedmiot ORDER BY nazwa`
         );
 
-        if(result[0].length === 0){
+        if(result.length === 0){
             return res. status(404).json({ message: "No subjects found" });
         }
+
+
 
         res.status(200).json(result);
     } catch (err) {
@@ -292,7 +294,7 @@ export const updateSubject = async (req, res) => {
             [nazwa, id]
         );
 
-        if(result[0].affectedRows === 0){
+        if(result.affectedRows === 0){
             return res.status(404).json({ message: "Subject not found" });
         }
 
@@ -320,7 +322,7 @@ export const deleteSubject = async (req, res) => {
             [id]
         );
 
-        if(result[0].affectedRows === 0){
+        if(result.affectedRows === 0){
             return res.status(404).json({ message: "Subject not found" });
         }
 
