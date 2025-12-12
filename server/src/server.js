@@ -6,9 +6,9 @@ import studentsRoute from "./routes/students.route.js";
 import notesRoutes from "./routes/notes.routes.js";
 import tasksRoutes from "./routes/tasks.routes.js";
 import groupsRoutes from "./routes/groups.routes.js";
-// import announcementsRoutes from "./routes/announcements.routes.js";
+import announcementsRoutes from "./routes/announcements.routes.js";
 import eventsRoutes from "./routes/events.routes.js";
-/// import scheduleRoutes from "./routes/schedule.routes.js";
+import scheduleRoutes from "./routes/schedule.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import dotenv from "dotenv";
 
@@ -26,9 +26,9 @@ app.use("/api/students", studentsRoute);
 app.use("/api/notes", notesRoutes);
 app.use("/api/tasks", tasksRoutes);
 app.use("/api/groups", groupsRoutes);
-// app.use("/api/announcements", announcementsRoutes);
+app.use("/api/announcements", announcementsRoutes);
 app.use("/api/events", eventsRoutes);
-// app.use("/api/schedule", scheduleRoutes);
+app.use("/api/schedule", scheduleRoutes);
 app.use('/api/auth', authRoutes);
 
 console.log("Ładuję router: /api/emails →", !!emailRoutes);

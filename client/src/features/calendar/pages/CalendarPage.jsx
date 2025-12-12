@@ -66,6 +66,12 @@ export default function CalendarPage() {
         navigate(`/calendar/event?date=${formattedDate}`);
     }
 
+    const formatTime = (time) => {
+        if(!time) return '';
+        const parts = time.split(': ');
+        return `${parts[0]}:${parts[1]}`;
+    }
+
     useEffect(() => {
         const fetchEvents = async () => {
             try{
