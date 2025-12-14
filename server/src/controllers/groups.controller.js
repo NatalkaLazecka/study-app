@@ -6,19 +6,24 @@ export const getGroups = async (req, res) => {
   try {
     const studentId = req.user.id;
 
-    const [groups] = await pool.query(`
+    const [rows] = await pool.query(
+      `
       SELECT g.id, g.nazwa, g.administrator
       FROM grupa g
       JOIN grupa_student gs ON g.id = gs.grupa_id
       WHERE gs.student_id = ?
-    `, [studentId]);
+      `,
+      [studentId]
+    );
 
-    res.json(groups); // ZAWSZE TABLICA
+    res.json(rows);
   } catch (err) {
     console.error("getGroups error:", err);
-    res.status(500).json([]); // ⬅️ WAŻNE
+
+    res.status(200).json([]);
   }
 };
+
 
 
 export const createGroup = async (req, res) => {
@@ -52,47 +57,42 @@ export const createGroup = async (req, res) => {
 
 
 export const getGroupDetails = async (req, res) => {
-  try {
+   try {
     const groupId = req.params.id;
     const studentId = req.user.id;
 
     const [[group]] = await pool.query(
-      `SELECT * FROM grupa WHERE id = ?`,
+      "SELECT * FROM grupa WHERE id = ?",
       [groupId]
     );
 
     if (!group) {
-      return res.status(404).json({ message: "Group not found" });
+      return res.status(404).json(null);
     }
 
-    const [membership] = await pool.query(
-      `SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?`,
-      [groupId, studentId]
-    );
-
-    if (!membership.length) {
-      return res.status(403).json({ message: "Not a member" });
-    }
-
-    const [members] = await pool.query(`
+    const [members] = await pool.query(
+      `
       SELECT s.id, s.imie, s.nazwisko, s.e_mail
       FROM grupa_student gs
       JOIN student s ON s.id = gs.student_id
       WHERE gs.grupa_id = ?
-    `, [groupId]);
+      `,
+      [groupId]
+    );
 
     res.json({
       id: group.id,
-      name: group.nazwa,
-      adminId: group.administrator,
+      nazwa: group.nazwa,
+      administrator: group.administrator,
       members,
     });
   } catch (err) {
-    console.error("getGroupDetails error:", err);
-    res.status(500).json({
+    console.error("getGroupById error:", err);
+
+    res.status(200).json({
       id: null,
-      name: "",
-      adminId: null,
+      nazwa: "",
+      administrator: null,
       members: [],
     });
   }
@@ -158,3 +158,4 @@ export const deleteGroup = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+

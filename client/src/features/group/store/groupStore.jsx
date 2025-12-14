@@ -14,9 +14,12 @@ export function GroupsProvider({ children }) {
     "Content-Type": "application/json",
   };
 
- const fetchGroups = async () => {
+const fetchGroups = async () => {
   try {
-    const res = await fetch(`${API}/api/groups`, { headers });
+    const res = await fetch(`${API}/api/groups`, {
+      credentials: "include",
+    });
+
     const data = await res.json();
 
     if (!Array.isArray(data)) {
@@ -31,6 +34,7 @@ export function GroupsProvider({ children }) {
     setGroups([]);
   }
 };
+
 
 
   const fetchGroupDetails = async (id) => {
