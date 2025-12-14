@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 
 
 export const getGroups = async (req, res) => {
-  const studentId = req.user.id;
-
   try {
+    const studentId = req.user.id;
+
     const [groups] = await pool.query(`
       SELECT g.id, g.nazwa, g.administrator
       FROM grupa g
@@ -13,9 +13,10 @@ export const getGroups = async (req, res) => {
       WHERE gs.student_id = ?
     `, [studentId]);
 
-    res.json(groups);
+    res.json(groups); // ZAWSZE TABLICA
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("getGroups error:", err);
+    res.status(500).json([]); // ⬅️ WAŻNE
   }
 };
 
@@ -51,24 +52,27 @@ export const createGroup = async (req, res) => {
 
 
 export const getGroupDetails = async (req, res) => {
-  const groupId = req.params.id;
-  const studentId = req.user.id;
-
   try {
+    const groupId = req.params.id;
+    const studentId = req.user.id;
+
     const [[group]] = await pool.query(
       `SELECT * FROM grupa WHERE id = ?`,
       [groupId]
     );
 
-    if (!group) return res.sendStatus(404);
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
 
-    // sprawdź czy user należy do grupy
-    const [member] = await pool.query(
+    const [membership] = await pool.query(
       `SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?`,
       [groupId, studentId]
     );
 
-    if (!member.length) return res.sendStatus(403);
+    if (!membership.length) {
+      return res.status(403).json({ message: "Not a member" });
+    }
 
     const [members] = await pool.query(`
       SELECT s.id, s.imie, s.nazwisko, s.e_mail
@@ -84,7 +88,13 @@ export const getGroupDetails = async (req, res) => {
       members,
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("getGroupDetails error:", err);
+    res.status(500).json({
+      id: null,
+      name: "",
+      adminId: null,
+      members: [],
+    });
   }
 };
 
