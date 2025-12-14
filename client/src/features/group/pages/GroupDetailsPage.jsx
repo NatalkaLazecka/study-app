@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+
 import styles from "../styles/Group.module.css";
 import { useGroups } from "../store/groupStore";
 import { getStudentId } from "../../../utils/auth";
@@ -25,7 +26,11 @@ export default function GroupDetailsPage() {
     clearCurrentGroup,
   } = useGroups();
 
-  const [layout, setLayout] = useState(DEFAULT_LAYOUT);
+  const [layout, setLayout] = useState(() => {
+    if (!id) return DEFAULT_LAYOUT;
+    const saved = localStorage.getItem(`layout_${id}`);
+    return saved ? JSON.parse(saved) : DEFAULT_LAYOUT;
+  });
 
   useEffect(() => {
     if (id) fetchGroupDetails(id);
@@ -61,6 +66,7 @@ export default function GroupDetailsPage() {
       </div>
 
       <ResponsiveGridLayout
+        key={currentGroup.id}
         className="layout"
         layouts={{ lg: layout }}
         cols={{ lg: 12 }}
@@ -70,29 +76,31 @@ export default function GroupDetailsPage() {
         onLayoutChange={onLayoutChange}
         draggableHandle=".widget-drag-handle"
       >
+        {/* MEMBERS */}
         <div key="members">
           <Widget title="Members">
             <div className={styles.avatars}>
-              {Array.isArray(currentGroup.members) &&
-                currentGroup.members.map((m) => (
-                  <div
-                    key={m.id}
-                    className={styles.avatar}
-                    title={`${m.imie} ${m.nazwisko}`}
-                  >
-                    <i className="fa-regular fa-user" />
-                  </div>
-                ))}
+              {currentGroup.members.map((m) => (
+                <div
+                  key={m.id}
+                  className={styles.avatar}
+                  title={`${m.imie} ${m.nazwisko}`}
+                >
+                  <i className="fa-regular fa-user" />
+                </div>
+              ))}
             </div>
           </Widget>
         </div>
 
+        {/* NOTES */}
         <div key="notes">
           <Widget title="Notes">
             <p className={styles.muted}>Notes coming soon…</p>
           </Widget>
         </div>
 
+        {/* ANNOUNCEMENTS */}
         <div key="ann">
           <Widget title="Announcements">
             <p className={styles.muted}>Announcements coming soon…</p>

@@ -8,90 +8,78 @@ export const useGroups = create((set) => ({
   groups: [],
   currentGroup: null,
 
+  // ===== LISTA GRUP STUDENTA =====
   fetchGroups: async () => {
     try {
       const studentId = getStudentId();
       if (!studentId) {
-        console.warn("No studentId in localStorage");
         set({ groups: [] });
         return;
       }
 
-      const res = await fetch(
-        `${API}/api/groups/student/${studentId}`
-      );
-
+      const res = await fetch(`${API}/api/groups/student/${studentId}`);
       if (!res.ok) {
-        console.error("fetchGroups HTTP error:", res.status);
         set({ groups: [] });
         return;
       }
 
       const data = await res.json();
-
-      if (!Array.isArray(data)) {
-        console.error("fetchGroups: expected array, got:", data);
-        set({ groups: [] });
-        return;
-      }
-
-      set({ groups: data });
+      set({ groups: Array.isArray(data) ? data : [] });
     } catch (err) {
       console.error("fetchGroups error:", err);
       set({ groups: [] });
     }
   },
 
-fetchGroupDetails: async (groupId) => {
-  try {
-    const res = await fetch(`${API}/api/groups/${groupId}`);
+  // ===== SZCZEGÓŁY JEDNEJ GRUPY =====
+  fetchGroupDetails: async (groupId) => {
+    try {
+      const res = await fetch(`${API}/api/groups/${groupId}`);
+      if (!res.ok) return;
 
-    if (!res.ok) {
-      console.error("fetchGroupDetails HTTP error:", res.status);
-      set({ currentGroup: null });
-      return;
+      const data = await res.json();
+
+      set({
+        currentGroup: {
+          ...data,
+          members: Array.isArray(data.members) ? data.members : [],
+        },
+      });
+    } catch (err) {
+      console.error("fetchGroupDetails error:", err);
     }
+  },
 
-    const data = await res.json();
+  // ===== CZYŚCZENIE STANU (WAŻNE!) =====
+  clearCurrentGroup: () => set({ currentGroup: null }),
 
-    if (!data || !data.id) {
-      set({ currentGroup: null });
-      return;
-    }
-
-    set({ currentGroup: data });
-  } catch (err) {
-    console.error("fetchGroupDetails error:", err);
-    set({ currentGroup: null });
-  }
-},
-
-
-
+  // ===== TWORZENIE GRUPY =====
   createGroup: async ({ name }) => {
-    const studentId = getStudentId();
-    if (!studentId) return null;
+    try {
+      const studentId = getStudentId();
+      if (!studentId) return null;
 
-    const res = await fetch(
-      `${API}/api/groups/student/${studentId}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nazwa: name }),
-      }
-    );
+      const res = await fetch(
+        `${API}/api/groups/student/${studentId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nazwa: name }),
+        }
+      );
 
-    if (!res.ok) {
-      console.error("createGroup failed:", res.status);
+      if (!res.ok) return null;
+
+      const group = await res.json();
+
+      set((state) => ({
+        groups: [...state.groups, group],
+      }));
+
+      return group;
+    } catch (err) {
+      console.error("createGroup error:", err);
       return null;
     }
-
-    const group = await res.json();
-
-    set((state) => ({
-      groups: [...state.groups, group],
-    }));
-
-    return group;
   },
 }));

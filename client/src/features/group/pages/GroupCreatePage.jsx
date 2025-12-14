@@ -13,23 +13,16 @@ export default function GroupCreatePage() {
   const [category, setCategory] = useState("other");  // UI-only
   const [saving, setSaving] = useState(false);
 
-  const save = async () => {
-    if (!name.trim()) return;
+const save = async () => {
+  if (!name.trim()) return;
 
-    setSaving(true);
+  const g = await createGroup({ name });
+  if (!g) return;
 
-    const g = await createGroup({ name });
+  navigate(`/groups/${g.id}`);
+};
 
-    setSaving(false);
 
-    // 🔒 ZABEZPIECZENIE
-    if (!g || !g.id) {
-      alert("Failed to create group. Try again.");
-      return;
-    }
-
-    navigate(`/groups/${g.id}`);
-  };
 
   return (
     <div>
