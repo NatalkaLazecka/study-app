@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../calendar/styles/CalendarPage.module.css";
 import { useGroups } from "../store/groupStore";
@@ -6,17 +6,22 @@ import MenuBar from "../../../components/MenuBar";
 
 export default function GroupListPage() {
   const navigate = useNavigate();
-    const { groups, fetchGroups } = useGroups();
+  const { groups, fetchGroups } = useGroups();
 
   useEffect(() => {
     fetchGroups();
-  }, []);
+  }, [fetchGroups]);
+
+
+  const safeGroups = useMemo(
+    () => (Array.isArray(groups) ? groups : []),
+    [groups]
+  );
 
   return (
     <div>
       <MenuBar />
 
-      {/* ROOT + HEADER */}
       <div className={styles["calendar-root"]}>
         <div className={styles["header-section"]}>
           <button
@@ -32,7 +37,6 @@ export default function GroupListPage() {
           <div />
         </div>
 
-        {/* CONTENT */}
         <div className={styles["calendar-event-content"]}>
           <div
             className={styles["input-box"]}
@@ -48,7 +52,6 @@ export default function GroupListPage() {
           >
             <p className={styles["input-title"]}>My groups</p>
 
-            {/* LISTA */}
             <div
               style={{
                 flex: 1,
@@ -72,11 +75,9 @@ export default function GroupListPage() {
                   }}
                 >
                   <i className="fa-solid fa-people-group" />
-
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 700 }}>{g.nazwa}</div>
                   </div>
-
                   <button
                     className={`${styles["event-button"]} ${styles["event-button-small"]}`}
                     onClick={() => navigate(`/groups/${g.id}`)}
@@ -86,7 +87,6 @@ export default function GroupListPage() {
                 </div>
               ))}
 
-              {/* EMPTY STATE */}
               {safeGroups.length === 0 && (
                 <div
                   onClick={() => navigate("/groups/new")}
@@ -119,7 +119,6 @@ export default function GroupListPage() {
           </div>
         </div>
 
-        {/* FOOTER */}
         <div className={styles["end-buttons"]}>
           <button
             className={styles["end-button"]}
