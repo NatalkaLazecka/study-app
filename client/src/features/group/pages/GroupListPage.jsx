@@ -8,9 +8,9 @@ export default function GroupListPage() {
   const navigate = useNavigate();
   const { groups, fetchGroups } = useGroups();
 
-  useEffect(() => {
-    fetchGroups();
-  }, [fetchGroups]);
+useEffect(() => {
+  fetchGroups();
+}, []);
 
   const safeGroups = useMemo(
     () => (Array.isArray(groups) ? groups : []),
