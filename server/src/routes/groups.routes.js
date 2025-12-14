@@ -6,14 +6,15 @@ import {
   addUserToGroup,
   deleteGroup,
 } from "../controllers/groups.controller.js";
-import { requireAuth } from "../middleware/requireAuth.js";
 
 const router = express.Router();
 
-router.get("/", requireAuth, getGroups);
-router.post("/", requireAuth, createGroup);
-router.get("/:id", requireAuth, getGroupDetails);
-router.post("/:id/add-user", requireAuth, addUserToGroup);
-router.delete("/:id", requireAuth, deleteGroup);
+
+router.get("/student/:studentId", getGroups);
+router.post("/student/:studentId", createGroup);
+
+router.get("/:id", getGroupDetails);
+router.post("/:id/add-user", addUserToGroup);
+router.delete("/:id", deleteGroup);
 
 export default router;

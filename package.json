@@ -19,7 +19,8 @@
     "react-datepicker": "^8.7.0",
     "react-grid-layout": "^1.5.2",
     "react-resizable": "^3.0.5",
-    "vite": "^7.1.9"
+    "vite": "^7.1.9",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.10",

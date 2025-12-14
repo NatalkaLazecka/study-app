@@ -12,11 +12,12 @@ export default function GroupCreatePage() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("other");
 
-  const save = async () => {
-    if (!name.trim()) return alert("Group name is required");
-    const g = await createGroup({ name });
-    navigate(`/groups/${g.id}`);
-  };
+const save = async () => {
+  if (!name.trim()) return;
+  const g = await createGroup({ name });
+  navigate(`/groups/${g.id}`);
+};
+
 
   return (
     <div>

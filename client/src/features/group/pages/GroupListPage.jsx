@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../calendar/styles/CalendarPage.module.css";
 import { useGroups } from "../store/groupStore";
@@ -6,9 +6,11 @@ import MenuBar from "../../../components/MenuBar";
 
 export default function GroupListPage() {
   const navigate = useNavigate();
-  const { groups } = useGroups();
+    const { groups, fetchGroups } = useGroups();
 
-  const safeGroups = Array.isArray(groups) ? groups : [];
+  useEffect(() => {
+    fetchGroups();
+  }, []);
 
   return (
     <div>

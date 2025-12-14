@@ -5,6 +5,7 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "../styles/Group.module.css";
 import { useGroups } from "../store/groupStore";
+import {getStudentId} from "../../../utils/auth";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -20,9 +21,12 @@ export default function GroupDetailsPage() {
   const { currentGroup, fetchGroupDetails } = useGroups();
   const [layout, setLayout] = useState(DEFAULT_LAYOUT);
 
-  useEffect(() => {
-    fetchGroupDetails(id);
-  }, [id]);
+ useEffect(() => {
+  fetchGroupDetails(id);
+}, [id]);
+
+const isAdmin = currentGroup?.administrator === getStudentId();
+
 
   if (!currentGroup) {
     return <div className={styles.groupsRoot}>Loading…</div>;

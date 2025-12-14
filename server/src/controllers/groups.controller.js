@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 
 
 export const getGroups = async (req, res) => {
-  try {
-    const studentId = req.user.id;
+  const { studentId } = req.params;
 
+  try {
     const [rows] = await pool.query(
       `
       SELECT g.id, g.nazwa, g.administrator
@@ -19,25 +19,29 @@ export const getGroups = async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error("getGroups error:", err);
-
-    res.status(200).json([]);
+    res.json([]);
   }
 };
 
 
-
 export const createGroup = async (req, res) => {
+  const { studentId } = req.params;
   const { nazwa } = req.body;
-  const studentId = req.user.id;
+
+  if (!nazwa || !nazwa.trim()) {
+    return res.status(400).json({ message: "Group name required" });
+  }
 
   try {
     const groupId = uuidv4();
 
+    // grupa
     await pool.query(
       `INSERT INTO grupa (id, nazwa, administrator)
        VALUES (?, ?, ?)`,
-      [groupId, nazwa, studentId]
+      [groupId, nazwa.trim(), studentId]
     );
+
 
     await pool.query(
       `INSERT INTO grupa_student (id, student_id, grupa_id)
@@ -47,22 +51,22 @@ export const createGroup = async (req, res) => {
 
     res.status(201).json({
       id: groupId,
-      nazwa,
+      nazwa: nazwa.trim(),
       administrator: studentId,
     });
   } catch (err) {
+    console.error("createGroup error:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
 
 export const getGroupDetails = async (req, res) => {
-   try {
-    const groupId = req.params.id;
-    const studentId = req.user.id;
+  const groupId = req.params.id;
 
+  try {
     const [[group]] = await pool.query(
-      "SELECT * FROM grupa WHERE id = ?",
+      `SELECT id, nazwa, administrator FROM grupa WHERE id = ?`,
       [groupId]
     );
 
@@ -87,9 +91,8 @@ export const getGroupDetails = async (req, res) => {
       members,
     });
   } catch (err) {
-    console.error("getGroupById error:", err);
-
-    res.status(200).json({
+    console.error("getGroupDetails error:", err);
+    res.json({
       id: null,
       nazwa: "",
       administrator: null,
@@ -102,18 +105,8 @@ export const getGroupDetails = async (req, res) => {
 export const addUserToGroup = async (req, res) => {
   const groupId = req.params.id;
   const { email } = req.body;
-  const adminId = req.user.id;
 
   try {
-    const [[group]] = await pool.query(
-      `SELECT administrator FROM grupa WHERE id = ?`,
-      [groupId]
-    );
-
-    if (!group || group.administrator !== adminId) {
-      return res.sendStatus(403);
-    }
-
     const [[student]] = await pool.query(
       `SELECT id FROM student WHERE e_mail = ?`,
       [email]
@@ -131,6 +124,7 @@ export const addUserToGroup = async (req, res) => {
 
     res.json({ message: "Student added" });
   } catch (err) {
+    console.error("addUserToGroup error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -138,24 +132,14 @@ export const addUserToGroup = async (req, res) => {
 
 export const deleteGroup = async (req, res) => {
   const groupId = req.params.id;
-  const studentId = req.user.id;
 
   try {
-    const [[group]] = await pool.query(
-      `SELECT administrator FROM grupa WHERE id = ?`,
-      [groupId]
-    );
-
-    if (!group || group.administrator !== studentId) {
-      return res.sendStatus(403);
-    }
-
     await pool.query(`DELETE FROM grupa_student WHERE grupa_id = ?`, [groupId]);
     await pool.query(`DELETE FROM grupa WHERE id = ?`, [groupId]);
 
     res.json({ message: "Group deleted" });
   } catch (err) {
+    console.error("deleteGroup error:", err);
     res.status(500).json({ error: err.message });
   }
 };
-
