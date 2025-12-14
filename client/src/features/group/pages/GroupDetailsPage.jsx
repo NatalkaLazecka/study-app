@@ -59,7 +59,8 @@ export default function GroupDetailsPage() {
         <div key="members">
           <Widget title="Members">
             <div className={styles.avatars}>
-              {currentGroup.members.map((m) => (
+              {Array.isArray(currentGroup.members) &&
+              currentGroup.members.map((m) => (
                 <div
                   key={m.id}
                   className={styles.avatar}

@@ -8,13 +8,19 @@ export default function GroupListPage() {
   const navigate = useNavigate();
   const { groups } = useGroups();
 
+  const safeGroups = Array.isArray(groups) ? groups : [];
+
   return (
     <div>
       <MenuBar />
 
+      {/* ROOT + HEADER */}
       <div className={styles["calendar-root"]}>
         <div className={styles["header-section"]}>
-          <button className={styles["back-button"]} onClick={() => navigate(-1)}>
+          <button
+            className={styles["back-button"]}
+            onClick={() => navigate(-1)}
+          >
             <span className={styles["back-text"]}>
               stud<span className={styles["back-text-y"]}>y</span>
             </span>
@@ -24,6 +30,7 @@ export default function GroupListPage() {
           <div />
         </div>
 
+        {/* CONTENT */}
         <div className={styles["calendar-event-content"]}>
           <div
             className={styles["input-box"]}
@@ -39,6 +46,7 @@ export default function GroupListPage() {
           >
             <p className={styles["input-title"]}>My groups</p>
 
+            {/* LISTA */}
             <div
               style={{
                 flex: 1,
@@ -48,7 +56,7 @@ export default function GroupListPage() {
                 paddingRight: 6,
               }}
             >
-              {groups.map((g) => (
+              {safeGroups.map((g) => (
                 <div
                   key={g.id}
                   style={{
@@ -62,6 +70,7 @@ export default function GroupListPage() {
                   }}
                 >
                   <i className="fa-solid fa-people-group" />
+
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 700 }}>{g.nazwa}</div>
                   </div>
@@ -75,7 +84,8 @@ export default function GroupListPage() {
                 </div>
               ))}
 
-              {groups.length === 0 && (
+              {/* EMPTY STATE */}
+              {safeGroups.length === 0 && (
                 <div
                   onClick={() => navigate("/groups/new")}
                   style={{
@@ -107,6 +117,7 @@ export default function GroupListPage() {
           </div>
         </div>
 
+        {/* FOOTER */}
         <div className={styles["end-buttons"]}>
           <button
             className={styles["end-button"]}

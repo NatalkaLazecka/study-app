@@ -14,10 +14,24 @@ export function GroupsProvider({ children }) {
     "Content-Type": "application/json",
   };
 
-  const fetchGroups = async () => {
+ const fetchGroups = async () => {
+  try {
     const res = await fetch(`${API}/api/groups`, { headers });
-    setGroups(await res.json());
-  };
+    const data = await res.json();
+
+    if (!Array.isArray(data)) {
+      console.error("fetchGroups: expected array, got:", data);
+      setGroups([]);
+      return;
+    }
+
+    setGroups(data);
+  } catch (err) {
+    console.error("fetchGroups error:", err);
+    setGroups([]);
+  }
+};
+
 
   const fetchGroupDetails = async (id) => {
     const res = await fetch(`${API}/api/groups/${id}`, { headers });
