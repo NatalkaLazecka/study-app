@@ -42,17 +42,30 @@ export const useGroups = create((set) => ({
     }
   },
 
-  fetchGroupDetails: async (groupId) => {
-    try {
-      const res = await fetch(`${API}/api/groups/${groupId}`);
-      if (!res.ok) return;
+fetchGroupDetails: async (groupId) => {
+  try {
+    const res = await fetch(`${API}/api/groups/${groupId}`);
 
-      const data = await res.json();
-      set({ currentGroup: data });
-    } catch (err) {
-      console.error("fetchGroupDetails error:", err);
+    if (!res.ok) {
+      console.error("fetchGroupDetails HTTP error:", res.status);
+      set({ currentGroup: null });
+      return;
     }
-  },
+
+    const data = await res.json();
+
+    if (!data || !data.id) {
+      set({ currentGroup: null });
+      return;
+    }
+
+    set({ currentGroup: data });
+  } catch (err) {
+    console.error("fetchGroupDetails error:", err);
+    set({ currentGroup: null });
+  }
+},
+
 
 
   createGroup: async ({ name }) => {

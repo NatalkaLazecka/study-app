@@ -5,7 +5,7 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "../styles/Group.module.css";
 import { useGroups } from "../store/groupStore";
-import {getStudentId} from "../../../utils/auth";
+import { getStudentId } from "../../../utils/auth";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -18,19 +18,24 @@ const DEFAULT_LAYOUT = [
 export default function GroupDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { currentGroup, fetchGroupDetails } = useGroups();
+
+  const {
+    currentGroup,
+    fetchGroupDetails,
+    clearCurrentGroup,
+  } = useGroups();
+
   const [layout, setLayout] = useState(DEFAULT_LAYOUT);
 
- useEffect(() => {
-  fetchGroupDetails(id);
-}, [id]);
-
-const isAdmin = currentGroup?.administrator === getStudentId();
-
+  useEffect(() => {
+    if (id) fetchGroupDetails(id);
+  }, [id, fetchGroupDetails]);
 
   if (!currentGroup) {
     return <div className={styles.groupsRoot}>Loading…</div>;
   }
+
+  const isAdmin = currentGroup.administrator === getStudentId();
 
   const onLayoutChange = (lgLayout) => {
     setLayout(lgLayout);
@@ -43,10 +48,16 @@ const isAdmin = currentGroup?.administrator === getStudentId();
   return (
     <div className={styles.groupsRoot}>
       <div className={styles.headerBar}>
-        <button className={styles.backBtn} onClick={() => navigate("/groups")}>
+        <button
+          className={styles.backBtn}
+          onClick={() => {
+            clearCurrentGroup();
+            navigate("/groups");
+          }}
+        >
           &lt; back
         </button>
-        <h1 className={styles.title}>{currentGroup.name}</h1>
+        <h1 className={styles.title}>{currentGroup.nazwa}</h1>
       </div>
 
       <ResponsiveGridLayout
@@ -63,15 +74,15 @@ const isAdmin = currentGroup?.administrator === getStudentId();
           <Widget title="Members">
             <div className={styles.avatars}>
               {Array.isArray(currentGroup.members) &&
-              currentGroup.members.map((m) => (
-                <div
-                  key={m.id}
-                  className={styles.avatar}
-                  title={`${m.imie} ${m.nazwisko}`}
-                >
-                  <i className="fa-regular fa-user" />
-                </div>
-              ))}
+                currentGroup.members.map((m) => (
+                  <div
+                    key={m.id}
+                    className={styles.avatar}
+                    title={`${m.imie} ${m.nazwisko}`}
+                  >
+                    <i className="fa-regular fa-user" />
+                  </div>
+                ))}
             </div>
           </Widget>
         </div>

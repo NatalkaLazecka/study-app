@@ -12,7 +12,6 @@ export default function GroupListPage() {
     fetchGroups();
   }, [fetchGroups]);
 
-
   const safeGroups = useMemo(
     () => (Array.isArray(groups) ? groups : []),
     [groups]

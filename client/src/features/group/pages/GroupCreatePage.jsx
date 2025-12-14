@@ -9,15 +9,27 @@ export default function GroupCreatePage() {
   const { createGroup } = useGroups();
 
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("other");
+  const [description, setDescription] = useState(""); // UI-only
+  const [category, setCategory] = useState("other");  // UI-only
+  const [saving, setSaving] = useState(false);
 
-const save = async () => {
-  if (!name.trim()) return;
-  const g = await createGroup({ name });
-  navigate(`/groups/${g.id}`);
-};
+  const save = async () => {
+    if (!name.trim()) return;
 
+    setSaving(true);
+
+    const g = await createGroup({ name });
+
+    setSaving(false);
+
+    // 🔒 ZABEZPIECZENIE
+    if (!g || !g.id) {
+      alert("Failed to create group. Try again.");
+      return;
+    }
+
+    navigate(`/groups/${g.id}`);
+  };
 
   return (
     <div>
@@ -25,28 +37,36 @@ const save = async () => {
 
       <div className={styles["calendar-root"]}>
         <div className={styles["header-section"]}>
-          <button className={styles["back-button"]} onClick={() => navigate(-1)}>
+          <button
+            className={styles["back-button"]}
+            onClick={() => navigate(-1)}
+            disabled={saving}
+          >
             <span className={styles["back-text"]}>
               stud<span className={styles["back-text-y"]}>y</span>
             </span>
             <span className={styles["back-arrow"]}>&lt;</span>
           </button>
+
           <h1 className={styles["calendar-title"]}>NAME GROUP</h1>
           <div />
         </div>
 
         <div className={styles["calendar-event-content"]}>
+          {/* GROUP NAME */}
           <div className={styles["input-box"]}>
-            <p className={styles["input-title"]}>Group name</p>
+            <p className={styles["input-title"]}>Group name *</p>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={styles["event-input"]}
               placeholder="Type group name..."
+              disabled={saving}
             />
           </div>
 
+          {/* DESCRIPTION (UI-ONLY) */}
           <div className={styles["input-box"]}>
             <p className={styles["input-title"]}>Description</p>
             <input
@@ -55,9 +75,11 @@ const save = async () => {
               onChange={(e) => setDescription(e.target.value)}
               className={styles["event-input"]}
               placeholder="Optional..."
+              disabled={saving}
             />
           </div>
 
+          {/* CATEGORY (UI-ONLY) */}
           <h2 className={styles["event-h2"]}>choose category:</h2>
           <div className={styles["event-buttons"]}>
             {[
@@ -68,11 +90,12 @@ const save = async () => {
             ].map(({ key, label }) => (
               <button
                 key={key}
+                type="button"
+                disabled={saving}
                 className={`${styles["event-button"]} ${
                   category === key ? styles["event-button-active"] : ""
                 }`}
                 onClick={() => setCategory(key)}
-                type="button"
               >
                 {label}
               </button>
@@ -81,12 +104,18 @@ const save = async () => {
         </div>
 
         <div className={styles["end-buttons"]}>
-          <button className={styles["end-button"]} onClick={save}>
-            SAVE
+          <button
+            className={styles["end-button"]}
+            onClick={save}
+            disabled={saving}
+          >
+            {saving ? "SAVING..." : "SAVE"}
           </button>
+
           <button
             className={styles["end-button"]}
             onClick={() => navigate(-1)}
+            disabled={saving}
           >
             CANCEL
           </button>
