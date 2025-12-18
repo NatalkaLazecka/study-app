@@ -13,6 +13,7 @@ export default function TodoDetailsPage({ mode = "edit" }) {
   const [priority, setPriority] = useState(2);
   const [effort, setEffort] = useState(3);
   const [date, setDate] = useState("");
+  const [autoNotify, setAutoNotify] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,6 +37,7 @@ export default function TodoDetailsPage({ mode = "edit" }) {
         setPriority(task.priorytet ?? 2);
         setEffort(task.wysilek ?? 3);
         setDate(task.deadline ? task.deadline.split("T")[0] : "");
+        setAutoNotify(task.automatyczne_powiadomienie === 1);
       } catch (err) {
         console.error(err);
         setError("Cannot load task");
@@ -53,6 +55,12 @@ export default function TodoDetailsPage({ mode = "edit" }) {
     setLoading(true);
     setError("");
 
+    const studentId = getStudentId();
+    if (!studentId) {
+      navigate("/login");
+      return;
+    }
+
     const body = {
       tytul: title.trim(),
       tresc: desc.trim(),
@@ -60,6 +68,9 @@ export default function TodoDetailsPage({ mode = "edit" }) {
       wysilek: effort,
       deadline: date,
       data_rozpoczecia: date,
+      student_id: studentId,
+      status_zadania_id: "1",
+      automatyczne_powiadomienie: autoNotify ?  1 : 0
     };
 
     const url = mode === "edit" ? `${API_URL}/api/tasks/${id}` : `${API_URL}/api/tasks`;
@@ -156,6 +167,22 @@ export default function TodoDetailsPage({ mode = "edit" }) {
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
+          </div>
+
+           <div className={calendarStyles["notify-toggle"]}>
+            <label className={calendarStyles["notify-label"]}>Automatic notifications</label>
+            <div className={calendarStyles["toggle-switch"]}>
+              <input
+                type="checkbox"
+                id="task-notify"
+                checked={autoNotify}
+                onChange={(e) => setAutoNotify(e.target.checked)}
+                className={calendarStyles["toggle-input"]}
+              />
+              <label htmlFor="task-notify" className={calendarStyles["toggle-label"]}>
+                <span className={calendarStyles["toggle-slider"]}></span>
+              </label>
+            </div>
           </div>
 
           {/* PRIORITY — icons from list */}
