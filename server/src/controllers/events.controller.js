@@ -11,7 +11,9 @@ export const getEvents = async (req, res) => {
       SELECT w.id, w.tytul, w.opis, 
              DATE_FORMAT(w.data_start, '%Y-%m-%d') AS data_start, 
              DATE_FORMAT(w.data_koncowa, '%Y-%m-%d') AS data_koncowa, 
-             w.priorytet, w.notatka_id, w.student_id, r.nazwa AS rodzaj, p.nazwa AS powtarzanie
+             w.priorytet, w.notatka_id, w.student_id,
+             CAST(w.automatyczne_powiadomienia AS UNSIGNED) AS automatyczne_powiadomienia,
+             r.nazwa AS rodzaj, p.nazwa AS powtarzanie
       FROM wydarzenie w
       LEFT JOIN rodzaj_wydarzenia r ON w.rodzaj_wydarzenia_id = r.id
       LEFT JOIN rodzaj_powtarzania p ON w.rodzaj_powtarzania_id = p.id
@@ -54,35 +56,107 @@ export const getCategories = async (req, res) => {
     }
 }
 
+const createNotifications = async (eventId, eventTitle, startDate, studentId) => {
+  try {
+    await pool.query(
+      'DELETE FROM aktywnosc_w_ramach_wydarzenia WHERE wydarzenie_id = ?',
+      [eventId]
+    );
+
+    const startDateTime = new Date(startDate);
+
+    if (isNaN(startDateTime.getTime())) {
+      console.error('Invalid start date:', startDate);
+      return;
+    }
+
+    const notifications = [
+      {
+        id: uuidv4(),
+        wydarzenie_id: eventId,
+        student_id: studentId,
+        data_stworzenia: new Date(startDateTime. getTime() - 7 * 24 * 60 * 60 * 1000),
+        tresc:  `EVENT name '${eventTitle}' starts in 7 days`,
+        przeczytane: 0
+      },
+      {
+        id: uuidv4(),
+        wydarzenie_id: eventId,
+        student_id: studentId,
+        data_stworzenia: new Date(startDateTime. getTime() - 3 * 24 * 60 * 60 * 1000),
+        tresc: `EVENT name '${eventTitle}' starts in 3 days`,
+        przeczytane: 0
+      },
+      {
+        id: uuidv4(),
+        wydarzenie_id:  eventId,
+        student_id: studentId,
+        data_stworzenia: startDateTime,
+        tresc: `EVENT name '${eventTitle}' starts today`,
+        przeczytane: 0
+      }
+    ];
+
+    for (const notif of notifications) {
+      await pool.query(
+        `INSERT INTO aktywnosc_w_ramach_wydarzenia (id, wydarzenie_id, student_id, data_stworzenia, tresc, przeczytane)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [notif.id, notif.wydarzenie_id, notif.student_id, notif.data_stworzenia, notif.tresc, notif.przeczytane]
+      );
+    }
+
+  } catch (err) {
+    console.error('❌ Error creating notifications:', err. message);
+    throw err;
+  }
+};
+
 export const addEvent = async (req, res) => {
   const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id } = req.body;
-
-  console.log('📥 Received request body:', req.body);  // ✅ Debug
-  console.log('🔍 Student ID from body:', student_id);  // ✅ Debug
 
   try {
     const id = uuidv4();
     await pool.query(
-      `INSERT INTO wydarzenie (id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id]
+      `INSERT INTO wydarzenie (id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia]
     );
-    console.log('✅ Event created with ID:', id, 'for student:', student_id);
 
-    res.status(201).json({ message: "Wydarzenie dodane" });
+    if(automatyczne_powiadomienia === 1 && data_start){
+        await createNotifications(id, tytul, data_start, student_id);
+    }
+
+    res.status(201).json({
+        message: "Wydarzenie dodane",
+        id: id,
+        notifications_created: automatyczne_powiadomienia === 1
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 export const updateEvent = async (req, res) => {
-  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id } = req.body;
+  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, automatyczne_powiadomienia, student_id } = req.body;
   try {
     await pool.query(
-      "UPDATE wydarzenie SET tytul=?, opis=?, data_start=?, data_koncowa=?, priorytet=?, rodzaj_wydarzenia_id=? WHERE id=?",
-      [tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, req.params.id]
+      "UPDATE wydarzenie SET tytul=?, opis=?, data_start=?, data_koncowa=?, priorytet=?, rodzaj_wydarzenia_id=?, automatyczne_powiadomienia=? WHERE id=?",
+      [tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, automatyczne_powiadomienia || 0, req.params.id]
     );
-    res.json({ message: "Zaktualizowano wydarzenie" });
+
+    if(automatyczne_powiadomienia === 1 && data_start){
+        await createNotifications(req.params.id, tytul, data_start, student_id);
+    }else{
+        await pool.query(
+          'DELETE FROM aktywnosc_w_ramach_wydarzenia WHERE wydarzenie_id = ?',
+          [req.params.id]
+        );
+    }
+
+    res.json({
+        message: "Zaktualizowano wydarzenie",
+        notifications_updated: automatyczne_powiadomienia === 1
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -90,11 +164,20 @@ export const updateEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
   try {
-    const result = await pool.query("DELETE FROM wydarzenie WHERE id=?", [req.params.id]);
+    await pool.query(
+      'DELETE FROM aktywnosc_w_ramach_wydarzenia WHERE wydarzenie_id = ?',
+      [req.params.id]
+    );
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Event not found" });
-    }
+    await pool.query(
+      'DELETE FROM plik_wydarzenie WHERE wydarzenie_id = ?',
+      [req.params.id]
+    );
+
+    await pool.query(
+        "DELETE FROM wydarzenie WHERE id=?",
+        [req.params.id]
+    );
 
     res.json({ message: "Usunięto wydarzenie" });
   } catch (err) {

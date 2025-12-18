@@ -33,14 +33,6 @@ body {
     margin-top: clamp(5px, 1.5vh, 10px);
 }
 
-.loading-p{
-    color: var(--light);
-    font-family: 'Roboto Mono', monospace;
-    font-size: clamp(14px, 1.5vw, 16px);
-    margin-top: clamp(5px, 1.5vh, 10px);
-    text-align: center;
-}
-
 /* ===== HEADER SECTION ===== */
 .header-section {
     display: grid;
@@ -429,7 +421,6 @@ body {
     cursor: pointer;
     user-select: none;
     transition: opacity 0.2s ease;
-    pointer-events: auto;
 }
 
 .import-box:hover {
@@ -758,4 +749,67 @@ body {
 .file-btn-download:active,
 .file-btn-delete:active {
     transform: scale(0.95);
+}
+
+.notify-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.notify-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    margin:  0;
+    padding: 0 5px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+}
+
+.toggle-input {
+    display: none;
+}
+
+.toggle-label {
+    display: block;
+    width: 35px;
+    height: 17px;
+    background-color:  #ccc;
+    border-radius:  34px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 13px;
+    height: 13px;
+    background-color:  white;
+    border-radius:  50%;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-input:checked + .toggle-label {
+    background-color: #4CAF50;
+}
+
+.toggle-input:checked + .toggle-label .toggle-slider {
+    transform: translateX(18px);
+}
+
+.toggle-label:hover {
+    opacity: 0.9;
+}
+
+.toggle-input:focus + .toggle-label {
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
 }

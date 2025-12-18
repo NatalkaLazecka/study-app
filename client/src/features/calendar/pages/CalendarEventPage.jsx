@@ -21,6 +21,7 @@ export default function CalendarEventPage(){
 
     const [files, setFiles] = useState([]);
     const [uploadingFile, setUploadingFile] = useState(false);
+    const [autoNotify, setAutoNotify] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -42,6 +43,7 @@ export default function CalendarEventPage(){
         const describeFromUrl = searchParams.get('describe');
         const categoryFromUrl = searchParams.get('category');
         const endDateFromUrl = searchParams.get('endDate');
+        const autoNotifyFromUrl = searchParams. get('autoNotify');
 
         if (id) setEventId(id);
         if (dateFromUrl) setDate(dateFromUrl);
@@ -50,6 +52,9 @@ export default function CalendarEventPage(){
         if (titleFromUrl) setTitle(titleFromUrl);
         if (describeFromUrl) setDescribe(describeFromUrl);
         if (categoryFromUrl) setActiveCategory(categoryFromUrl);
+        if(autoNotifyFromUrl){
+            setAutoNotify(autoNotifyFromUrl === '1' || autoNotifyFromUrl === 'true');
+        }
     }, [searchParams]);
 
     const toggleCategory = (category) => {
@@ -180,7 +185,8 @@ export default function CalendarEventPage(){
                 priorytet: 'normal',
                 rodzaj_wydarzenia_id: categoryId,
                 rodzaj_powtarzania_id: null,
-                student_id: studentId
+                student_id: studentId,
+                automatyczne_powiadomienia: autoNotify ? 1 : 0
             };
 
             let res;
@@ -296,6 +302,22 @@ export default function CalendarEventPage(){
                             onChange={(e) => setEndDate(e.target.value)}
                             className={styles['event-input']}
                         />
+                    </div>
+
+                    <div className={styles['notify-toggle']}>
+                        <label className={styles['notify-label']}>Automatic notifications</label>
+                        <div className={styles['toggle-switch']}>
+                            <input
+                                type="checkbox"
+                                id="event-notify"
+                                checked={autoNotify}
+                                onChange={(e) => setAutoNotify(e.target.checked)}
+                                className={styles['toggle-input']}
+                            />
+                            <label htmlFor="event-notify" className={styles['toggle-label']}>
+                                <span className={styles['toggle-slider']}></span>
+                            </label>
+                        </div>
                     </div>
 
                     <div className={styles['import-box']} onClick={handleFileClick}>

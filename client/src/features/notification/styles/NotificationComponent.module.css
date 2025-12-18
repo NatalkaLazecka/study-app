@@ -1,5 +1,5 @@
 /* Przycisk powiadomień */
-.notificationButton {
+.notification-button {
   position: relative;
   background: none;
   border: none;
@@ -16,16 +16,16 @@
   height: 40px;
 }
 
-.notificationButton:hover {
+.notification-button:hover {
   color: #e85bbf;
   background: rgba(232, 91, 191, 0.1);
 }
 
-.notificationButton:active {
+.notification-button:active {
   transform: scale(0.95);
 }
 
-.bellIcon {
+.bell-icon {
   display: block;
 }
 
@@ -118,7 +118,7 @@
   text-shadow: 0 0 10px rgba(232, 91, 191, 0.4);
 }
 
-.closeButton {
+.close-button {
   background: none;
   border: none;
   font-size: 1.8rem;
@@ -134,7 +134,7 @@
   font-family: 'Roboto Mono', monospace;
 }
 
-.closeButton:hover {
+.close-button:hover {
   color: #e85bbf;
   background: rgba(232, 91, 191, 0.15);
 }
@@ -161,7 +161,7 @@
   background: transparent;
 }
 
-.notificationItem {
+.notification-item {
   position: relative;
   padding: 1.2rem 1.5rem;
   padding-left: 2.5rem;
@@ -171,19 +171,19 @@
   font-family: 'Source Code Pro', monospace;
 }
 
-.notificationItem:hover {
+.notification-item:hover {
   background: rgba(232, 91, 191, 0.08);
 }
 
-.notificationItem.unread {
+.notification-item.unread {
   background: rgba(232, 91, 191, 0.12);
 }
 
-.notificationItem.unread:hover {
+.notification-item.unread:hover {
   background: rgba(232, 91, 191, 0.18);
 }
 
-.notificationHeader {
+.notification-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -191,7 +191,7 @@
   gap: 1rem;
 }
 
-.notificationTitle {
+.notification-title {
   font-weight: 600;
   color: #fdfdfd;
   font-size: 1rem;
@@ -206,6 +206,13 @@
   opacity: 0.8;
 }
 
+.message-row {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(0.5rem, 0.8vw, 0.7rem);
+  justify-content: space-between;
+}
+
 .message {
   margin: 0;
   font-size: 0.9rem;
@@ -214,7 +221,29 @@
   font-weight: 300;
 }
 
-.unreadDot {
+.delete-button {
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  font-size: clamp(1. 1rem, 1.3vw, 1.2rem);
+  cursor: pointer;
+  padding: 0;
+  width: clamp(24px, 2. 5vw, 28px);
+  height: clamp(24px, 2.5vw, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.delete-button:hover {
+  color: #ff4444;
+  background:  rgba(255, 68, 68, 0.1);
+}
+
+.unread-dot {
   position: absolute;
   top: 1.4rem;
   left: 0.9rem;
@@ -225,7 +254,7 @@
   box-shadow: 0 0 8px #9ED7FF;
 }
 
-.emptyState {
+.empty-state {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -243,7 +272,7 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
-.footerButton {
+.footer-button {
   width: 100%;
   padding: 0.75rem;
   background: rgba(255, 255, 255, 0.1);
@@ -258,7 +287,7 @@
   letter-spacing: 0.04em;
 }
 
-.footerButton:hover {
+.footer-button:hover {
   background: rgba(232, 91, 191, 0.2);
   border-color: #e85bbf;
   box-shadow: 0 0 12px rgba(232, 91, 191, 0.3);

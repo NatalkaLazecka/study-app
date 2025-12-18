@@ -1,113 +1,133 @@
 import React, {useState, useEffect} from 'react';
 import styles from '../styles/NotificationComponent.module.css';
+import { getStudentId } from '../../../utils/auth';
 
 export default function NotificationComponent() {
+    const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
+
     const [isOpen, setIsOpen] = useState(false);
-    const [currentTime, setCurrentTime] = useState(new Date());
+    const [notifications, setNotifications] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const unreadCount = notifications.filter(n => n.unread === 0).length;
+    const studentId = getStudentId();
 
-    // Przykładowe dane powiadomień
-    const notifications = [
-        {id: 1, title: 'Test 1', message: 'You have received a new order #12345', time: '2025-10-22 10:00:09', unread: true},
-        {id: 2, title: 'Test 2', message: 'The system has been updated to version 2.0', time: '2025-10-22 13:40:09', unread: true},
-        {id: 3, title: 'Test 3', message: 'Jan Kowalski sent you a message', time: '2025-10-22 08:11:59', unread: false},
-        {id: 4, title: 'Reminder', message: 'Meeting at 3:00 PM', time: '2025-09-20 08:15:00', unread: false},
-    ];
+    const fetchNotifications = async () => {
+        if (!studentId) {
+            console.warn('Student ID is not available.');
+            return;
+        }
 
-    const unreadCount = notifications.filter(n => n.unread).length;
+        setLoading(true);
+        try{
+            const res = await fetch(`${API_URL}/api/notifications?student_id=${studentId}`);
+            if(!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
-    const parseDateTime = (dateTimeStr) => {
-        const [datePart, timePart] = dateTimeStr.split(' ');
-        const [year, month, day] = datePart.split('-');
-        const [hours, minutes, seconds] = timePart.split(':')
-
-        return new Date(year, month - 1, day, hours, minutes, seconds);
-    }
-
-    const isToday = (date) => {
-        const today = new Date();
-        return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
-    };
-
-    const displeyTime = (timeStr) => {
-        const notDate = parseDateTime(timeStr);
-
-        if (isToday(notDate)) {
-            return formatRelativeTime(notDate);
-        } else {
-            return formatRelativeDateTime(notDate);
+            const data = await res.json();
+            setNotifications(data);
+        } catch (err) {
+            console.error('Error fetching notifications:', err);
+        } finally {
+            setLoading(false);
         }
     }
 
-    const formatRelativeTime = (date) => {
-        const diffMs = currentTime - date;
-        const diffMinutes = Math.floor(diffMs / 60000);
-        const diffHours = Math.floor(diffMs / 3600000);
-
-        if (diffMinutes < 1) return 'a moment ago';
-        else if (diffMinutes === 1) return '1 minute ago';
-        else if (diffMinutes < 60) return `${diffMinutes} minutes ago`;
-        else if (diffHours === 1) return '1 hour ago';
-        else if (diffHours < 24) return `${diffHours} hours ago`;
-        else return 'today';
+    const handleMarkAllAsRead = async () => {
+        try{
+            const res = await fetch(`${API_URL}/api/notifications/mark-all-read`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ student_id: studentId })
+            });
+            if(!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            await fetchNotifications();
+        } catch (err) {
+            console.error('Error marking all as read:', err);
+        }
     }
 
-    const formatRelativeDateTime = (date) => {
+    const handleMarkAsRead = async (id, type) => {
+        try{
+            const res = await fetch(`${API_URL}/api/notifications/mark-read`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id, type, student_id: studentId}),
+            });
+            if(!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            await fetchNotifications();
+        } catch (err) {
+            console.error('Error marking as read:', err);
+        }
+    }
+
+    const handleDelete = async (e, id, type) => {
+        e.stopPropagation();
+        try{
+            const res = await fetch(`${API_URL}/api/notifications/delete`, {
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id, type, student_id: studentId}),
+            });
+            if(!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            await fetchNotifications();
+        } catch (err) {
+            console.error('Error delete notification:', err);
+        }
+    }
+
+    const formatDate = (dateStr) => {
+        const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-
-        return `${day}.${month}.${year} at ${hours}:${minutes}`;
-    }
+        const year = date. getFullYear();
+        return `${day}.${month}.${year}`;
+    };
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentTime(new Date());
-        }, 60000)
-
-        return () => clearInterval(interval);
-    }, [])
-
-    // Blokowanie scrollowania strony gdy panel otwarty
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
+        if (studentId) {
+            fetchNotifications();
+            const interval = setInterval(() => {
+                fetchNotifications();
+            }, 30000);
+            return () => clearInterval(interval);
         }
+    }, [studentId]);
+
+    useEffect(() => {
+        if(isOpen) fetchNotifications();
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (isOpen) { document.body.style.overflow = 'hidden'; }
+        else { document.body.style.overflow = 'unset'; }
 
         return () => {
             document.body.style.overflow = 'unset';
         };
     }, [isOpen]);
 
-    return (<>
-            {/* Przycisk powiadomień */}
+    return (
+        <>
             <button
-                className={styles.notificationButton}
+                className={styles['notification-button']}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Open notyfications"
                 title="Notifications"
             >
                 <i className="fa-regular fa-bell"></i>
-                {unreadCount > 0 && (<span className={styles.badge}>{unreadCount}</span>)}
+                {unreadCount > 0 && (<span className={styles['badge']}>{unreadCount}</span>)}
             </button>
 
-            {/* Panel powiadomień */}
             {isOpen && (<>
-                    {/* Tło przyciemniające */}
                     <div
-                        className={styles.overlay}
+                        className={styles['overlay']}
                         onClick={() => setIsOpen(false)}
                     />
 
-                    {/* Panel */}
-                    <div className={styles.panel}>
-                        <div className={styles.header}>
-                            <h3 className={styles.title}>Notifications</h3>
+                    <div className={styles['panel']}>
+                        <div className={styles['header']}>
+                            <h3 className={styles['title']}>Notifications</h3>
                             <button
-                                className={styles.closeButton}
+                                className={styles['close-button']}
                                 onClick={() => setIsOpen(false)}
                                 aria-label="Close"
                             >
@@ -115,30 +135,62 @@ export default function NotificationComponent() {
                             </button>
                         </div>
 
-                        <div className={styles.content}>
-                            {notifications.length > 0 ? (notifications.map((notification) => (<div
-                                        key={notification.id}
-                                        className={`${styles.notificationItem} ${notification.unread ? styles.unread : ''}`}
+                        <div className={styles['content']}>
+                            {loading ?  (
+                                <div className={styles['empty-state']}>
+                                    <p>Loading... </p>
+                                </div>
+                            ) : notifications.length > 0 ? (
+                                notifications.map((notification) => (
+                                    <div
+                                        key={`${notification.type}-${notification.id}`}
+                                        className={`${styles['notification-item']} ${notification. unread === 0 ? styles.unread : ''}`}
+                                        onClick={() => handleMarkAsRead(notification.id, notification.type)}
                                     >
-                                        <div className={styles.notificationHeader}>
-                                              <span className={styles.notificationTitle}>
-                                                {notification.title}
-                                              </span>
-                                            <span className={styles.time}>{displeyTime(notification.time)}</span>
+                                        <div className={styles['notification-header']}>
+                                            <span className={styles['notification-title']}>
+                                                Reminder
+                                            </span>
+                                            <span className={styles['time']}>
+                                                {formatDate(notification.date)}
+                                            </span>
                                         </div>
-                                        <p className={styles.message}>{notification.message}</p>
-                                        {notification.unread && (<div className={styles.unreadDot}></div>)}
-                                    </div>))) : (<div className={styles.emptyState}>
-                                    <p>Brak powiadomień</p>
-                                </div>)}
+
+                                        <div className={styles['message-row']}>
+                                            <p className={styles['message']}>{notification.message}</p>
+                                            <button
+                                                className={styles['delete-button']}
+                                                onClick={(e) => handleDelete(e, notification.id, notification.type)}
+                                                aria-label="Delete notification"
+                                                title="Delete"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+
+                                        {notification.unread === 0 && (
+                                            <div className={styles['unread-dot']}></div>
+                                        )}
+                                    </div>
+                                ))
+                            ) : (
+                                <div className={styles['empty-state']}>
+                                    <p>No notifications</p>
+                                </div>
+                            )}
                         </div>
 
-                        <div className={styles.footer}>
-                            <button className={styles.footerButton}>
+                        <div className={styles['footer']}>
+                            <button
+                                className={styles['footer-button']}
+                                onClick={handleMarkAllAsRead}
+                                disabled={unreadCount === 0}
+                            >
                                 Mark all as read
                             </button>
                         </div>
                     </div>
                 </>)}
-        </>);
+        </>
+    );
 }

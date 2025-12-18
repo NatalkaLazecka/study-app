@@ -22,7 +22,8 @@ export default function CalendarEventComponent({ variant }) {
             title: variant.tytul || '',
             describe: variant.opis || '',
             category: variant.rodzaj || '',
-            endDate: variant.data_koncowa || ''
+            endDate: variant.data_koncowa || '',
+            autoNotify: variant.automatyczne_powiadomienia ? '1' : '0'
         });
 
         navigate(`/calendar/event?${params.toString()}`);
