@@ -33,7 +33,9 @@ export const getEventsByStudent = async (req, res) => {
       SELECT w.id, w.tytul, w. opis, 
              DATE_FORMAT(w.data_start, '%Y-%m-%d') AS data_start, 
              DATE_FORMAT(w.data_koncowa, '%Y-%m-%d') AS data_koncowa, 
-             w.priorytet, w.notatka_id, w.student_id, r. nazwa AS rodzaj, p.nazwa AS powtarzanie
+             w.priorytet, w.notatka_id, w.student_id,
+             CAST(w.automatyczne_powiadomienia AS UNSIGNED) AS automatyczne_powiadomienia,
+             r. nazwa AS rodzaj, p.nazwa AS powtarzanie
       FROM wydarzenie w
       LEFT JOIN rodzaj_wydarzenia r ON w.rodzaj_wydarzenia_id = r.id
       LEFT JOIN rodzaj_powtarzania p ON w.rodzaj_powtarzania_id = p.id
