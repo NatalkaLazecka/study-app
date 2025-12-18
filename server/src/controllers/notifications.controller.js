@@ -10,7 +10,7 @@ export const getNotifications = async (req, res) => {
 
     const today = new Date().toISOString().split('T')[0];
 
-    const [eventNotifications] = await pool.query(`
+    const eventNotifications = await pool.query(`
       SELECT
         id,
         'event' AS type,
@@ -22,7 +22,7 @@ export const getNotifications = async (req, res) => {
       ORDER BY data_stworzenia DESC
     `, [today, student_id]);
 
-    const [taskNotifications] = await pool.query(`
+    const taskNotifications = await pool.query(`
       SELECT
         id,
         'task' AS type,
@@ -74,11 +74,11 @@ export const markAllAsRead = async (req, res) => {
     }
 
     await pool.query(
-      'UPDATE aktywnosc_w_ramach_wydarzenia SET przeczytane = 1 WHERE student_id = ?  OR student_id IS NULL',
+      'UPDATE aktywnosc_w_ramach_wydarzenia SET przeczytane = 1 WHERE (student_id = ? OR student_id IS NULL)',
       [student_id]
     );
     await pool.query(
-      'UPDATE aktywnosc_w_ramach_zadania SET przeczytane = 1 WHERE student_id = ? OR student_id IS NULL',
+      'UPDATE aktywnosc_w_ramach_zadania SET przeczytane = 1 WHERE (student_id = ? OR student_id IS NULL)',
       [student_id]
     );
 

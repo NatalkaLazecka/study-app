@@ -112,7 +112,7 @@ const createNotifications = async (eventId, eventTitle, startDate, studentId) =>
 };
 
 export const addEvent = async (req, res) => {
-  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id } = req.body;
+  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia  } = req.body;
 
   try {
     const id = uuidv4();
