@@ -185,3 +185,25 @@ export const deleteTask = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const getTasksByStudent = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const result = await pool.query(`
+      SELECT z.*,
+             CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
+             s.nazwa AS status,
+             g.nazwa AS grupa
+      FROM zadanie z
+      LEFT JOIN status_zadania s ON z.status_zadania_id = s.id
+      LEFT JOIN grupa g ON z.grupa_id = g.id
+      WHERE z.student_id = ?
+      ORDER BY z.deadline ASC
+    `, [studentId]);
+
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
