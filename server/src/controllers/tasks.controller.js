@@ -52,7 +52,7 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) =
       );
     }
   } catch (err) {
-    console.error('❌ Error creating task notifications:', err. message);
+    console.error(' Error creating task notifications:', err. message);
     throw err;
   }
 };
@@ -60,75 +60,96 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) =
 // GET wszystkie zadania
 export const getTasks = async (req, res) => {
   try {
+    const studentId = req.user.id;
+
     const result = await pool.query(`
       SELECT z.*,
              CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
-             s.nazwa AS status, g.nazwa AS grupa
+             s.nazwa AS status,
+             g.nazwa AS grupa
       FROM zadanie z
       LEFT JOIN status_zadania s ON z.status_zadania_id = s.id
       LEFT JOIN grupa g ON z.grupa_id = g.id
+      WHERE z.student_id = ?
       ORDER BY z.deadline ASC
-    `);
+    `, [studentId]);
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+
 // GET JEDNO ZADANIE
 export const getTaskById = async (req, res) => {
   try {
-    const result = await pool. query(
-      `SELECT *, CAST(automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie
-       FROM zadanie WHERE id=?`,
-      [req.params.id]
+    const studentId = req.user.id;
+
+    const result = await pool.query(
+      `SELECT *,
+        CAST(automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie
+       FROM zadanie
+       WHERE id = ? AND student_id = ?`,
+      [req.params.id, studentId]
     );
+
+    if (!result[0]) {
+      return res.status(404).json({ message: "Zadanie nie znalezione" });
+    }
+
     res.json(result[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+
 // POST dodaj zadanie
 export const addTask = async (req, res) => {
-  const { tytul, tresc, priorytet, deadline, student_id, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie } = req.body;
+  const {
+    tytul, tresc, priorytet, deadline,
+    status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
+  } = req.body;
+
+  const student_id = req.user.id; // ← TU
 
   try {
     const id = uuidv4();
 
     await pool.query(
       `INSERT INTO zadanie
-      (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie, student_id, status_zadania_id, wysilek, grupa_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie || 0, student_id, status_zadania_id, wysilek, grupa_id]
+       (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie,
+        student_id, status_zadania_id, wysilek, grupa_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [id, tytul, tresc, priorytet, deadline,
+       automatyczne_powiadomienie || 0,
+       student_id, status_zadania_id, wysilek, grupa_id]
     );
 
-    if (automatyczne_powiadomienie === 1 && deadline && student_id) {
+    if (automatyczne_powiadomienie === 1 && deadline) {
       await createTaskNotifications(id, tytul, deadline, student_id);
     }
 
-    res.status(201).json({
-      message: "Zadanie dodane",
-      id: id,
-      notifications_created: automatyczne_powiadomienie === 1
-    });
+    res.status(201).json({ message: "Zadanie dodane", id });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // PUT aktualizuj zadanie
 export const updateTask = async (req, res) => {
   const { tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie, student_id } = req.body;
 
   try {
-    console.log('📝 Updating task with automatyczne_powiadomienie:', automatyczne_powiadomienie);
+    console.log(' Updating task with automatyczne_powiadomienie:', automatyczne_powiadomienie);
 
     await pool.query(
       `UPDATE zadanie
        SET tytul=?, tresc=?, priorytet=?, deadline=?, status_zadania_id=?, wysilek=?, automatyczne_powiadomienie=?
-       WHERE id=?`,
-      [tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req. params.id]
+       WHERE id=? AND student_id=?`,
+      [tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req.params.id, req.user.id]
     );
 
     if (automatyczne_powiadomienie === 1 && deadline && student_id) {
@@ -153,8 +174,8 @@ export const updateTask = async (req, res) => {
 export const deleteTask = async (req, res) => {
   try {
     await pool.query(
-      'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? ',
-      [req.params. id]
+      'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? AND student_id = ? ',
+      [req.params.id, req.user.id]
     );
 
     await pool.query("DELETE FROM zadanie WHERE id=? ", [req.params.id]);
