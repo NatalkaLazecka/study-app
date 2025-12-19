@@ -58,10 +58,7 @@ export default function TodoDetailsPage({ mode = "edit" }) {
     if (!date) return setError("Due date is required");
 
     const studentId = localStorage.getItem("studentId");
-    if (!studentId) {
-      navigate("/login");
-      return;
-    }
+
 
     setLoading(true);
     setError("");

@@ -17,10 +17,7 @@ export default function TodoListPage() {
   useEffect(() => {
     const fetchTodos = async () => {
       const studentId = localStorage.getItem("studentId");
-      if (!studentId) {
-        navigate("/login");
-        return;
-      }
+
 
       try {
         const res = await fetch(
