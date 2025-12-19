@@ -72,7 +72,8 @@ export default function TodoDetailsPage({ mode = "edit" }) {
       data_rozpoczecia: date,
       student_id: studentId,
       status_zadania_id: "1",
-      automatyczne_powiadomienie: autoNotify ? 1 : 0
+      automatyczne_powiadomienie: autoNotify ? 1 : 0,
+       grupa_id: null
     };
 
     const url =
