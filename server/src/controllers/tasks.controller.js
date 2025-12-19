@@ -22,7 +22,7 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) =
         id: uuidv4(),
         zadanie_id: taskId,
         student_id: studentId,
-        data_stworzenia: new Date(deadlineDate. getTime() - 7 * 24 * 60 * 60 * 1000),
+        data_stworzenia: new Date(deadlineDate.getTime() - 7 * 24 * 60 * 60 * 1000),
         tresc: `TASK '${taskTitle}' deadline in 7 days`,
         przeczytane: 0
       },
@@ -52,7 +52,7 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) =
       );
     }
   } catch (err) {
-    console.error(' Error creating task notifications:', err. message);
+    console.error('Error creating task notifications:', err.message);
     throw err;
   }
 };
@@ -108,11 +108,10 @@ export const getTaskById = async (req, res) => {
 // POST dodaj zadanie
 export const addTask = async (req, res) => {
   const {
-    tytul, tresc, priorytet, deadline,
-    status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
+    tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
   } = req.body;
 
-  const student_id = req.user.id; // ← TU
+  const student_id = req.user.id;
 
   try {
     const id = uuidv4();
@@ -140,7 +139,9 @@ export const addTask = async (req, res) => {
 
 // PUT aktualizuj zadanie
 export const updateTask = async (req, res) => {
-  const { tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie, student_id } = req.body;
+  const { tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie } = req.body;
+
+  const student_id = req.user.id;
 
   try {
     console.log(' Updating task with automatyczne_powiadomienie:', automatyczne_powiadomienie);
@@ -149,15 +150,15 @@ export const updateTask = async (req, res) => {
       `UPDATE zadanie
        SET tytul=?, tresc=?, priorytet=?, deadline=?, status_zadania_id=?, wysilek=?, automatyczne_powiadomienie=?
        WHERE id=? AND student_id=?`,
-      [tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req.params.id, req.user.id]
+      [tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req.params.id, student_id]
     );
 
-    if (automatyczne_powiadomienie === 1 && deadline && student_id) {
-      await createTaskNotifications(req. params.id, tytul, deadline, student_id);
+    if (automatyczne_powiadomienie === 1 && deadline) {
+      await createTaskNotifications(req.params.id, tytul, deadline, student_id);
     } else {
-      await pool. query(
+      await pool.query(
         'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? ',
-        [req.params. id]
+        [req.params.id]
       );
     }
 
@@ -172,10 +173,12 @@ export const updateTask = async (req, res) => {
 
 // DELETE usuń zadanie
 export const deleteTask = async (req, res) => {
+  const student_id = req.user.id;
+
   try {
     await pool.query(
       'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? AND student_id = ? ',
-      [req.params.id, req.user.id]
+      [req.params.id, student_id]
     );
 
     await pool.query("DELETE FROM zadanie WHERE id=? ", [req.params.id]);
