@@ -73,7 +73,6 @@ export default function TodoDetailsPage({mode = "edit"}) {
             priorytet: priority,
             wysilek: effort,
             deadline: date,
-            data_rozpoczecia: date,
             student_id: studentId,
             status_zadania_id: "1",
             automatyczne_powiadomienie: autoNotify ? 1 : 0,
