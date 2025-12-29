@@ -210,38 +210,101 @@ export const addTask = async (req, res) => {
 };
 
 // PUT aktualizuj zadanie
+// export const updateTask = async (req, res) => {
+//   const { student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie } = req.body;
+//
+//   if (!student_id) {
+//     return res.status(400).json({ error: "student_id is required" });
+//   }
+//
+//   try {
+//     console.log(' Updating task with automatyczne_powiadomienie:', automatyczne_powiadomienie);
+//
+//     await pool.query(
+//       `UPDATE zadanie
+//        SET tytul=?, tresc=?, priorytet=?, deadline=?, status_zadania_id=?, wysilek=?, automatyczne_powiadomienie=?
+//        WHERE id=? AND student_id=?`,
+//       [tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req.params.id, student_id]
+//     );
+//
+//     if (automatyczne_powiadomienie === 1 && deadline) {
+//       await createTaskNotifications(req.params.id, tytul, deadline, student_id);
+//     } else {
+//       await pool.query(
+//         'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? ',
+//         [req.params.id]
+//       );
+//     }
+//
+//     res.json({
+//       message: "Zadanie zaktualizowane",
+//       notifications_updated: automatyczne_powiadomienie === 1
+//     });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 export const updateTask = async (req, res) => {
-  const { student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie } = req.body;
+  const {
+    tytul,
+    tresc,
+    priorytet,
+    deadline,
+    status_zadania_id,
+    wysilek,
+    automatyczne_powiadomienie,
+    student_id
+  } = req.body;
 
   if (!student_id) {
     return res.status(400).json({ error: "student_id is required" });
   }
 
   try {
-    console.log(' Updating task with automatyczne_powiadomienie:', automatyczne_powiadomienie);
-
     await pool.query(
-      `UPDATE zadanie
-       SET tytul=?, tresc=?, priorytet=?, deadline=?, status_zadania_id=?, wysilek=?, automatyczne_powiadomienie=?
-       WHERE id=? AND student_id=?`,
-      [tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req.params.id, student_id]
+      `
+      UPDATE zadanie
+      SET
+        tytul = ?,
+        tresc = ?,
+        priorytet = ?,
+        deadline = ?,
+        status_zadania_id = ?,
+        wysilek = ?,
+        automatyczne_powiadomienie = ?
+      WHERE id = ? AND student_id = ?
+      `,
+      [
+        tytul,
+        tresc,
+        priorytet,
+        deadline,
+        status_zadania_id,
+        wysilek,
+        automatyczne_powiadomienie || 0,
+        req.params.id,
+        student_id
+      ]
     );
 
     if (automatyczne_powiadomienie === 1 && deadline) {
-      await createTaskNotifications(req.params.id, tytul, deadline, student_id);
+      await createTaskNotifications(
+        req.params.id,
+        tytul,
+        deadline,
+        student_id
+      );
     } else {
       await pool.query(
-        'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? ',
+        "DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ?",
         [req.params.id]
       );
     }
 
-    res.json({
-      message: "Zadanie zaktualizowane",
-      notifications_updated: automatyczne_powiadomienie === 1
-    });
+    res.json({ message: "Zadanie zaktualizowane" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: "Failed to update task" });
   }
 };
 
