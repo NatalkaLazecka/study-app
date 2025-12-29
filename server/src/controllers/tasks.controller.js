@@ -58,7 +58,11 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) =
 // GET wszystkie zadania
 export const getTasks = async (req, res) => {
   try {
-    const studentId = req.user.id;
+    const { studentId } = req.query;
+
+    if (!studentId) {
+      return res.status(400).json({ error: "studentId is required" });
+    }
 
     const [result] = await pool.query(`
       SELECT z.id, z.tytul, z.tresc, z.priorytet, z.deadline, z.student_id, z.status_zadania_id, z.wysilek, z.grupa_id,
@@ -82,7 +86,11 @@ export const getTasks = async (req, res) => {
 // GET JEDNO ZADANIE
 export const getTaskById = async (req, res) => {
   try {
-    const studentId = req.user.id;
+    const { studentId } = req.query;
+
+    if (!studentId) {
+      return res. status(400).json({ error: "studentId is required" });
+    }
 
     const [result] = await pool.query(
       `SELECT id, tytul, tresc, priorytet, deadline, student_id, status_zadania_id, wysilek, grupa_id,
@@ -106,10 +114,12 @@ export const getTaskById = async (req, res) => {
 // POST dodaj zadanie
 export const addTask = async (req, res) => {
   const {
-    tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
+    student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
   } = req.body;
 
-  const student_id = req.user.id;
+  if (!student_id) {
+    return res.status(400).json({ error: "student_id is required" });
+  }
 
   try {
     const id = uuidv4();
@@ -137,9 +147,11 @@ export const addTask = async (req, res) => {
 
 // PUT aktualizuj zadanie
 export const updateTask = async (req, res) => {
-  const { tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie } = req.body;
+  const { student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie } = req.body;
 
-  const student_id = req.user.id;
+  if (!student_id) {
+    return res.status(400).json({ error: "student_id is required" });
+  }
 
   try {
     console.log(' Updating task with automatyczne_powiadomienie:', automatyczne_powiadomienie);
@@ -171,7 +183,11 @@ export const updateTask = async (req, res) => {
 
 // DELETE usuń zadanie
 export const deleteTask = async (req, res) => {
-  const student_id = req.user.id;
+  const { studentId } = req.query;
+
+   if (!studentId) {
+    return res.status(400).json({ error: "studentId is required" });
+  }
 
   try {
     await pool.query(

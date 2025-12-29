@@ -213,7 +213,7 @@ export const uploadMiddleware = upload.single('file');
 
 export const getEventFiles = async (req, res) => {
   try {
-    const result = await pool. query(
+    const result = await pool.query(
       `SELECT id, nazwa, sciezka, DATE_FORMAT(data_dodania, '%Y-%m-%d %H:%i:%s') AS data_dodania
        FROM plik_wydarzenie
        WHERE wydarzenie_id = ? 
