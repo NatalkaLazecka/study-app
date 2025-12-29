@@ -1,12 +1,10 @@
 import { apiFetch } from "./apiClient";
 
-// ===== CATEGORIES =====
 export async function getEventCategories() {
   const res = await apiFetch("/api/events/categories");
   return res.json();
 }
 
-// ===== FILES =====
 export async function getEventFiles(eventId) {
   const res = await apiFetch(`/api/events/${eventId}/files`);
   return res.json();
@@ -36,7 +34,6 @@ export async function downloadEventFile(fileId) {
   return res.blob();
 }
 
-// ===== EVENTS =====
 export async function createEvent(data) {
   await apiFetch("/api/events", {
     method: "POST",
