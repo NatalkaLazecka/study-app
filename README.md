@@ -208,12 +208,12 @@ Natalka Lazecka - GitHub: [@NatalkaLazecka](https://github.com/NatalkaLazecka)
 Zuzanna Kurpik - GitHub: [@ZUZIAKURPIK](https://github.com/ZUZIAKURPIK)
 
 
-## 7  Licencja
+# 7  Licencja
 
 Ten projekt został stworzony na potrzeby akademickie. 
 
 
-## 8  Podziękowania
+# 8  Podziękowania
 
 Dziękuję za skorzystanie z aplikacji **StudY**!
 
