@@ -131,7 +131,7 @@ export default function TodoListPage() {
                 onChange={(e) => setSelectedDate(e.target.value)}
             >
               <option value="ALL">ALL</option>
-              {uniqueDate.map((dateStr, index) => (
+              {uniqueDates.map((dateStr, index) => (
                   <option key={index} value={dateStr}>
                     {dateStr}
                   </option>
