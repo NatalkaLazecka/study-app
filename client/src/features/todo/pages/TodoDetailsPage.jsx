@@ -6,8 +6,8 @@ import MenuBar from "../../../components/MenuBar";
 import {getStudentId} from "../../../utils/auth";
 
 export default function TodoDetailsPage({mode = "edit"}) {
-    export const STATUS_ON_GOING = "a0b9c93d-e4d0-11f0-b846-42010a400016 ";
-    export const STATUS_DONE = "a17535d5-e4d0-11f0-b846-42010a400016 ";
+    export const STATUS_ON_GOING = "a0b9c93d-e4d0-11f0-b846-42010a400016";
+    export const STATUS_DONE = "a17535d5-e4d0-11f0-b846-42010a400016";
 
     const {id} = useParams();
     const navigate = useNavigate();

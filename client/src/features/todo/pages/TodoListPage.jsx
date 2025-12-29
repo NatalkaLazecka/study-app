@@ -5,6 +5,9 @@ import MenuBar from "../../../components/MenuBar";
 import {getStudentId} from '../../../utils/auth';
 
 export default function TodoListPage() {
+    export const STATUS_ON_GOING = "a0b9c93d-e4d0-11f0-b846-42010a400016";
+    export const STATUS_DONE = "a17535d5-e4d0-11f0-b846-42010a400016";
+
     const API_URL =
         import.meta.env.VITE_RAILWAY_API_URL || "http://localhost:3001";
     const navigate = useNavigate();
@@ -94,7 +97,7 @@ export default function TodoListPage() {
         if (!task) return;
 
         const newDone = !task.done;
-        const newStatus = newDone ? 3 : 1;
+        const newStatus = newDone ? STATUS_DONE : STATUS_ON_GOING;
 
         setTodos((prev) =>
             prev.map((t) =>
