@@ -68,7 +68,7 @@ export const markAsRead = async (req, res) => {
 
 export const markAllAsRead = async (req, res) => {
   try {
-    const { student_id } = req. body;
+    const { student_id } = req.body;
     if (!student_id) {
       return res.status(400).json({ error: 'student_id is required' });
     }
