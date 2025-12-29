@@ -46,7 +46,7 @@ export default function TodoListPage() {
                     tytul: task.tytul,
                     tresc: task.tresc,
                     deadline: task.deadline,
-                    done: task.status_zadania_id === 3,
+                    done: task.status_zadania_id === STATUS_DONE,
                     priority: task.priorytet,
                     effort: task.wysilek,
                     automatyczne_powiadomienie: task.automatyczne_powiadomienie || 0
@@ -106,6 +106,7 @@ export default function TodoListPage() {
         );
 
         try {
+            console.log("BODY do fetch:", body);
             const res = await fetch(`${API_URL}/api/tasks/${id}`, {
                 method: "PUT",
                 headers:  {"Content-Type": "application/json"},
@@ -120,6 +121,7 @@ export default function TodoListPage() {
                     automatyczne_powiadomienie: task.automatyczne_powiadomienie || 0
                 })
             });
+             console.log("BODY do fetch:", body);
 
             if (! res.ok) {
                 throw new Error("Failed to update task");
