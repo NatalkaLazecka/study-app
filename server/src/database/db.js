@@ -14,7 +14,7 @@ const pool = mysql.createPool({
     password: env.db.password,
     database: env.db.name,
     ssl: {
-        rejectUnauthorized: true,
+        rejectUnauthorized: false,
 
     },
     waitForConnections: true,
