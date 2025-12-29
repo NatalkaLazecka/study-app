@@ -1,30 +1,35 @@
+import jwt from "jsonwebtoken";
 
-import crypto from 'crypto'
+const JWT_SECRET = process.env.JWT_SECRET;
 
-// Przechowujemy tokeny w pamięci
-const tokens = new Map()
-
-// Tworzy unikalny token z TTL
-export function issueToken(email, ttlMs = 3600000) {
-  const token = crypto.randomBytes(32).toString('hex')
-  tokens.set(token, { email, expiresAt: Date.now() + ttlMs })
-  return token
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined");
 }
 
-// Weryfikuje, czy token istnieje i jest ważny
+export function issueToken(email, ttl = "15m") {
+  return jwt.sign(
+    {
+      email,
+      purpose: "reset_password",
+    },
+    JWT_SECRET,
+    { expiresIn: ttl }
+  );
+}
+
 export function verifyToken(token) {
-  const entry = tokens.get(token)
-  if (!entry) return { valid: false, reason: 'not_found' }
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
 
-  if (Date.now() > entry.expiresAt) {
-    tokens.delete(token)
-    return { valid: false, reason: 'expired' }
+    if (payload.purpose !== "reset_password") {
+      return { valid: false };
+    }
+
+    return { valid: true, email: payload.email };
+  } catch {
+    return { valid: false };
   }
-
-  return { valid: true, email: entry.email }
 }
 
-// Usuwa token po użyciu
-export function consumeToken(token) {
-  tokens.delete(token)
+export function consumeToken() {
 }
