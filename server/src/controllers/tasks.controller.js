@@ -112,17 +112,78 @@ export const getTaskById = async (req, res) => {
 
 
 // POST dodaj zadanie
+//export const addTask = async (req, res) => {
+//  const {
+//    student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
+//  } = req.body;
+//
+//  if (!student_id) {
+//    return res.status(400).json({ error: "student_id is required" });
+//  }
+//
+//  try {
+//    const id = uuidv4();
+//
+//    await pool.query(
+//      `INSERT INTO zadanie
+//       (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie,
+//        student_id, status_zadania_id, wysilek, grupa_id)
+//       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+//      [id, tytul, tresc, priorytet, deadline,
+//       automatyczne_powiadomienie || 0,
+//       student_id, status_zadania_id, wysilek, grupa_id]
+//    );
+//
+//    if (automatyczne_powiadomienie === 1 && deadline) {
+//      await createTaskNotifications(id, tytul, deadline, student_id);
+//    }
+//
+//    res.status(201).json({ message: "Zadanie dodane", id });
+//  } catch (err) {
+//    res.status(500).json({ error: err.message });
+//  }
+//};
+
 export const addTask = async (req, res) => {
   const {
     student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
   } = req.body;
 
+  // 🔥 DEBUG: pokaż całe body
+  console.log("addTask body:", req.body);
+
+  // 🔥 DEBUG: pokaż jakie konkretnie dane będą wstawiane do bazy
+  const debugPayload = {
+    id: "(GENEROWANY)",
+    tytul,
+    tresc,
+    priorytet,
+    deadline,
+    automatyczne_powiadomienie: automatyczne_powiadomienie || 0,
+    student_id,
+    status_zadania_id,
+    wysilek,
+    grupa_id
+  }
+  console.log("addTask payload:", debugPayload);
+
+  // 🔥 DEBUG: sprawdź czy status_zadania_id wygląda na UUID
+  if (status_zadania_id && typeof status_zadania_id === "string" && status_zadania_id.length !== 36) {
+    console.warn("‼️ Ostrzeżenie: status_zadania_id nie jest poprawnym UUID:", status_zadania_id);
+  }
+
+  // Baza będzie miała błąd jeśli poniższe pole jest puste
   if (!student_id) {
+    console.error("🏮 BŁĄD: student_id jest wymagany!");
     return res.status(400).json({ error: "student_id is required" });
   }
 
   try {
     const id = uuidv4();
+
+    // 🔥 DEBUG: logujemy query
+    console.log(`INSERT INTO zadanie (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie, student_id, status_zadania_id, wysilek, grupa_id)
+      VALUES (${id}, ${tytul}, ${tresc}, ${priorytet}, ${deadline}, ${automatyczne_powiadomienie || 0}, ${student_id}, ${status_zadania_id}, ${wysilek}, ${grupa_id})`);
 
     await pool.query(
       `INSERT INTO zadanie
@@ -134,16 +195,19 @@ export const addTask = async (req, res) => {
        student_id, status_zadania_id, wysilek, grupa_id]
     );
 
+    // 🔥 DEBUG: Info o createTaskNotifications
     if (automatyczne_powiadomienie === 1 && deadline) {
+      console.log("addTask: tworzenie automatycznych powiadomień");
       await createTaskNotifications(id, tytul, deadline, student_id);
     }
 
     res.status(201).json({ message: "Zadanie dodane", id });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    // 🔥 DEBUG: łapiemy dokładny error
+    console.error("addTask ERROR:", err);
+    res.status(500).json({ error: err.message, full: err });
   }
 };
-
 
 // PUT aktualizuj zadanie
 export const updateTask = async (req, res) => {
