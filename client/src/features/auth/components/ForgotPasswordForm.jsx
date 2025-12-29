@@ -47,7 +47,6 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
     onBackToLogin?.();
   };
 
-  // ✅ JSX NA KOŃCU
   return (
     <div className={styles['login-container']}>
       {!isResetMode ? (

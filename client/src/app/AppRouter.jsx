@@ -14,12 +14,15 @@ import GroupCreatePage from '@/features/group/pages/GroupCreatePage';
 import GroupDetailsPage from '@/features/group/pages/GroupDetailsPage';
 import ScheduleEditPage from "../features/schedule/pages/ScheduleEditPage";
 import SchedulePage from "../features/schedule/pages/SchedulePage";
+import {ErrorBoundary} from "../components/ErrorBoundary";
+
 
 const ProtectedRoute = ({ isAuthed, children }) =>
   isAuthed ? children : <Navigate to="/login" replace />;
 
 export default function AppRouter({ isAuthed = true }) {
   return (
+      <ErrorBoundary>
     <Routes>
       {/* Landing & Auth */}
       <Route path="/" element={<LandingPage />} />
@@ -113,6 +116,7 @@ export default function AppRouter({ isAuthed = true }) {
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    </Routes></ErrorBoundary>
+
   );
 }

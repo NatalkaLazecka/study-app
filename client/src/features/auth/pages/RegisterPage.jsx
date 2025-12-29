@@ -7,14 +7,6 @@ export default function RegisterPage() {
 
   const handleRegister = async ({ email, password }) => {
     try {
-      // imię i nazwisko możesz dorobić w formularzu
-      // await register({
-      //   email,
-      //   password,
-      //   imie: "",        // ustaw jeśli dodasz pola
-      //   nazwisko: ""    // ustaw jeśli dodasz pola
-      // });
-
         await register({ email, password, imie: "", nazwisko: "" });
 
       alert('Account created successfully! You can now log in.');
