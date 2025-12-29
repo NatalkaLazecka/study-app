@@ -1,10 +1,8 @@
 import pool from "../database/db.js";
 import { v4 as uuidv4 } from "uuid";
 
-// ✅ Funkcja do tworzenia powiadomień dla zadania
 const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) => {
   try {
-    // Usuń stare powiadomienia
     await pool.query(
       'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ?',
       [taskId]
