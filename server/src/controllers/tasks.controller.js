@@ -144,288 +144,147 @@ export const getTaskById = async (req, res) => {
 //  }
 //};
 
-// export const addTask = async (req, res) => {
-//   const {
-//     student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
-//   } = req.body;
-//
-//   // 🔥 DEBUG: pokaż całe body
-//   console.log("addTask body:", req.body);
-//
-//   // 🔥 DEBUG: pokaż jakie konkretnie dane będą wstawiane do bazy
-//   const debugPayload = {
-//     id: "(GENEROWANY)",
-//     tytul,
-//     tresc,
-//     priorytet,
-//     deadline,
-//     automatyczne_powiadomienie: automatyczne_powiadomienie || 0,
-//     student_id,
-//     status_zadania_id,
-//     wysilek,
-//     grupa_id
-//   }
-//   console.log("addTask payload:", debugPayload);
-//
-//   // 🔥 DEBUG: sprawdź czy status_zadania_id wygląda na UUID
-//   if (status_zadania_id && typeof status_zadania_id === "string" && status_zadania_id.length !== 36) {
-//     console.warn("‼️ Ostrzeżenie: status_zadania_id nie jest poprawnym UUID:", status_zadania_id);
-//   }
-//
-//   // Baza będzie miała błąd jeśli poniższe pole jest puste
-//   if (!student_id) {
-//     console.error("🏮 BŁĄD: student_id jest wymagany!");
-//     return res.status(400).json({ error: "student_id is required" });
-//   }
-//
-//   try {
-//     const id = uuidv4();
-//
-//     // 🔥 DEBUG: logujemy query
-//     console.log(`INSERT INTO zadanie (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie, student_id, status_zadania_id, wysilek, grupa_id)
-//       VALUES (${id}, ${tytul}, ${tresc}, ${priorytet}, ${deadline}, ${automatyczne_powiadomienie || 0}, ${student_id}, ${status_zadania_id}, ${wysilek}, ${grupa_id})`);
-//
-//     await pool.query(
-//       `INSERT INTO zadanie
-//        (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie,
-//         student_id, status_zadania_id, wysilek, grupa_id)
-//        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-//       [id, tytul, tresc, priorytet, deadline,
-//        automatyczne_powiadomienie || 0,
-//        student_id, status_zadania_id, wysilek, grupa_id]
-//     );
-//
-//     // 🔥 DEBUG: Info o createTaskNotifications
-//     if (automatyczne_powiadomienie === 1 && deadline) {
-//       console.log("addTask: tworzenie automatycznych powiadomień");
-//       await createTaskNotifications(id, tytul, deadline, student_id);
-//     }
-//
-//     res.status(201).json({ message: "Zadanie dodane", id });
-//   } catch (err) {
-//     // 🔥 DEBUG: łapiemy dokładny error
-//     console.error("addTask ERROR:", err);
-//     res.status(500).json({ error: err.message, full: err });
-//   }
-// };
-
 export const addTask = async (req, res) => {
   const {
+    student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
+  } = req.body;
+
+  // 🔥 DEBUG: pokaż całe body
+  console.log("addTask body:", req.body);
+
+  // 🔥 DEBUG: pokaż jakie konkretnie dane będą wstawiane do bazy
+  const debugPayload = {
+    id: "(GENEROWANY)",
     tytul,
     tresc,
     priorytet,
     deadline,
+    automatyczne_powiadomienie: automatyczne_powiadomienie || 0,
+    student_id,
     status_zadania_id,
     wysilek,
-    grupa_id,
-    automatyczne_powiadomienie,
-  } = req.body;
+    grupa_id
+  }
+  console.log("addTask payload:", debugPayload);
 
-  const student_id = req.user.id;
+  // 🔥 DEBUG: sprawdź czy status_zadania_id wygląda na UUID
+  if (status_zadania_id && typeof status_zadania_id === "string" && status_zadania_id.length !== 36) {
+    console.warn("‼️ Ostrzeżenie: status_zadania_id nie jest poprawnym UUID:", status_zadania_id);
+  }
+
+  // Baza będzie miała błąd jeśli poniższe pole jest puste
+  if (!student_id) {
+    console.error("🏮 BŁĄD: student_id jest wymagany!");
+    return res.status(400).json({ error: "student_id is required" });
+  }
 
   try {
     const id = uuidv4();
+
+    // 🔥 DEBUG: logujemy query
+    console.log(`INSERT INTO zadanie (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie, student_id, status_zadania_id, wysilek, grupa_id)
+      VALUES (${id}, ${tytul}, ${tresc}, ${priorytet}, ${deadline}, ${automatyczne_powiadomienie || 0}, ${student_id}, ${status_zadania_id}, ${wysilek}, ${grupa_id})`);
 
     await pool.query(
       `INSERT INTO zadanie
        (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie,
         student_id, status_zadania_id, wysilek, grupa_id)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        id,
-        tytul,
-        tresc,
-        priorytet,
-        deadline,
-        automatyczne_powiadomienie || 0,
-        student_id,
-        status_zadania_id,
-        wysilek,
-        grupa_id,
-      ]
+      [id, tytul, tresc, priorytet, deadline,
+       automatyczne_powiadomienie || 0,
+       student_id, status_zadania_id, wysilek, grupa_id]
     );
 
+    // 🔥 DEBUG: Info o createTaskNotifications
     if (automatyczne_powiadomienie === 1 && deadline) {
+      console.log("addTask: tworzenie automatycznych powiadomień");
       await createTaskNotifications(id, tytul, deadline, student_id);
     }
 
     res.status(201).json({ message: "Zadanie dodane", id });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to add task" });
+    // 🔥 DEBUG: łapiemy dokładny error
+    console.error("addTask ERROR:", err);
+    res.status(500).json({ error: err.message, full: err });
   }
 };
 
-
 // PUT aktualizuj zadanie
-// export const updateTask = async (req, res) => {
-//   const { student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie } = req.body;
-//
-//   if (!student_id) {
-//     return res.status(400).json({ error: "student_id is required" });
-//   }
-//
-//   try {
-//     console.log(' Updating task with automatyczne_powiadomienie:', automatyczne_powiadomienie);
-//
-//     await pool.query(
-//       `UPDATE zadanie
-//        SET tytul=?, tresc=?, priorytet=?, deadline=?, status_zadania_id=?, wysilek=?, automatyczne_powiadomienie=?
-//        WHERE id=? AND student_id=?`,
-//       [tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req.params.id, student_id]
-//     );
-//
-//     if (automatyczne_powiadomienie === 1 && deadline) {
-//       await createTaskNotifications(req.params.id, tytul, deadline, student_id);
-//     } else {
-//       await pool.query(
-//         'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? ',
-//         [req.params.id]
-//       );
-//     }
-//
-//     res.json({
-//       message: "Zadanie zaktualizowane",
-//       notifications_updated: automatyczne_powiadomienie === 1
-//     });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
-
 export const updateTask = async (req, res) => {
-  const {
-    tytul,
-    tresc,
-    priorytet,
-    deadline,
-    status_zadania_id,
-    wysilek,
-    automatyczne_powiadomienie,
-  } = req.body;
+  const { student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie } = req.body;
 
-  const student_id = req.user.id;
+  if (!student_id) {
+    return res.status(400).json({ error: "student_id is required" });
+  }
 
   try {
+    console.log(' Updating task with automatyczne_powiadomienie:', automatyczne_powiadomienie);
+
     await pool.query(
       `UPDATE zadanie
-       SET tytul=?, tresc=?, priorytet=?, deadline=?,
-           status_zadania_id=?, wysilek=?, automatyczne_powiadomienie=?
+       SET tytul=?, tresc=?, priorytet=?, deadline=?, status_zadania_id=?, wysilek=?, automatyczne_powiadomienie=?
        WHERE id=? AND student_id=?`,
-      [
-        tytul,
-        tresc,
-        priorytet,
-        deadline,
-        status_zadania_id,
-        wysilek,
-        automatyczne_powiadomienie || 0,
-        req.params.id,
-        student_id,
-      ]
+      [tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req.params.id, student_id]
     );
 
     if (automatyczne_powiadomienie === 1 && deadline) {
       await createTaskNotifications(req.params.id, tytul, deadline, student_id);
     } else {
       await pool.query(
-        "DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ?",
+        'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? ',
         [req.params.id]
       );
     }
 
-    res.json({ message: "Zadanie zaktualizowane" });
+    res.json({
+      message: "Zadanie zaktualizowane",
+      notifications_updated: automatyczne_powiadomienie === 1
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to update task" });
+    res.status(500).json({ error: err.message });
   }
 };
 
-
 // DELETE usuń zadanie
-// export const deleteTask = async (req, res) => {
-//   const { studentId } = req.query;
-//
-//    if (!studentId) {
-//     return res.status(400).json({ error: "studentId is required" });
-//   }
-//
-//   try {
-//     await pool.query(
-//       'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? AND student_id = ? ',
-//       [req.params.id, student_id]
-//     );
-//
-//     await pool.query("DELETE FROM zadanie WHERE id=? ", [req.params.id]);
-//
-//     res.json({ message: "Zadanie usunięte" });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
 export const deleteTask = async (req, res) => {
-  const student_id = req.user.id;
+  const { studentId } = req.query;
+
+   if (!studentId) {
+    return res.status(400).json({ error: "studentId is required" });
+  }
 
   try {
     await pool.query(
-      "DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id=? AND student_id=?",
+      'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? AND student_id = ? ',
       [req.params.id, student_id]
     );
 
-    await pool.query(
-      "DELETE FROM zadanie WHERE id=? AND student_id=?",
-      [req.params.id, student_id]
-    );
+    await pool.query("DELETE FROM zadanie WHERE id=? ", [req.params.id]);
 
     res.json({ message: "Zadanie usunięte" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to delete task" });
+    res.status(500).json({ error: err.message });
   }
 };
 
-
-
-// export const getTasksByStudent = async (req, res) => {
-//   const { studentId } = req.params;
-//
-//   try {
-//     const [result] = await pool.query(`
-//       SELECT z.id, z.tytul, z.tresc, z.priorytet, z.deadline, z.student_id, z.status_zadania_id, z.wysilek, z.grupa_id,
-//              CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
-//              s.nazwa AS status,
-//              g.nazwa AS grupa
-//       FROM zadanie z
-//       LEFT JOIN status_zadania s ON z.status_zadania_id = s.id
-//       LEFT JOIN grupa g ON z.grupa_id = g.id
-//       WHERE z.student_id = ?
-//       ORDER BY z.deadline ASC
-//     `, [studentId]);
-//
-//     res.status(200).json(result);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
-
 export const getTasksByStudent = async (req, res) => {
-  const student_id = req.user.id;
+  const { studentId } = req.params;
 
   try {
-    const [result] = await pool.query(
-      `
-      SELECT z.id, z.tytul, z.tresc, z.priorytet, z.deadline,
-             z.status_zadania_id, z.wysilek,
-             CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie
+    const [result] = await pool.query(`
+      SELECT z.id, z.tytul, z.tresc, z.priorytet, z.deadline, z.student_id, z.status_zadania_id, z.wysilek, z.grupa_id,
+             CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
+             s.nazwa AS status,
+             g.nazwa AS grupa
       FROM zadanie z
+      LEFT JOIN status_zadania s ON z.status_zadania_id = s.id
+      LEFT JOIN grupa g ON z.grupa_id = g.id
       WHERE z.student_id = ?
       ORDER BY z.deadline ASC
-      `,
-      [student_id]
-    );
+    `, [studentId]);
 
-    res.json(result);
+    res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch tasks" });
+    res.status(500).json({ error: err.message });
   }
 };
