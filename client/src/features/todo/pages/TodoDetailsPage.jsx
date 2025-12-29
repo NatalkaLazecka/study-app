@@ -11,7 +11,7 @@ import {
   updateTask,
   deleteTask,
   STATUS_ON_GOING,
-} from "../../auth/api/TodoApi";
+} from "../../auth/api/todoApi";
 
 export default function TodoDetailsPage({ mode = "edit" }) {
   const { id } = useParams();
