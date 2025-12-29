@@ -7,7 +7,9 @@ const pool = mysql.createPool({
     user: env.db.user,
     password: env.db.password,
     database: env.db.name,
-    ssl: "Amazon RDS",
+    ssl: {
+        ca: process.env.DB_SSL_CA
+    },
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
