@@ -3,9 +3,9 @@ import {env} from "../config/env.js";
 import fs from "fs";
 import path from "path";
 
-const ca = fs.readFileSync(
-  path.resolve("src/database/rds-ca.pem")
-);
+// const ca = fs.readFileSync(
+//   path.resolve("src/database/rds-ca.pem")
+// );
 
 const pool = mysql.createPool({
     host: env.db.host,
@@ -14,7 +14,6 @@ const pool = mysql.createPool({
     password: env.db.password,
     database: env.db.name,
     ssl: {
-        ca,
         rejectUnauthorized: true,
 
     },
