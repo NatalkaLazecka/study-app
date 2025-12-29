@@ -125,11 +125,9 @@ export const getTaskById = async (req, res) => {
             [req.params.id, studentId]
         );
 
-        if (!result) {
+        if (!result.length) {
             return res.status(404).json({message: "Zadanie nie znalezione"});
         }
-
-        res.json(result[0]);
     } catch (err) {
         res.status(500).json({error: err.message});
     }
@@ -246,7 +244,7 @@ export const deleteTask = async (req, res) => {
     try {
         await pool.query(
             'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? AND student_id = ? ',
-            [req.params.id, student_id]
+            [req.params.id, studentId]
         );
 
         await pool.query("DELETE FROM zadanie WHERE id=? ", [req.params.id]);
