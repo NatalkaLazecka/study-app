@@ -45,7 +45,8 @@ export default function TodoListPage() {
                     deadline: task.deadline,
                     done: task.status_zadania_id === 3,
                     priority: task.priorytet,
-                    effort: task.wysilek
+                    effort: task.wysilek,
+                    automatyczne_powiadomienie: task.automatyczne_powiadomienie || 0
                 }));
 
                 setTodos(mappedData);
@@ -101,15 +102,34 @@ export default function TodoListPage() {
             )
         );
 
-        await updateTodos(id, {
-            tytul: task.tytul,
-            tresc: task.tresc || "",
-            priorytet: task.priority,
-            deadline: task.deadline,
-            wysilek: task.effort,
-            status_zadania_id: newStatus,
-            student_id: studentId
-        });
+        try {
+            const res = await fetch(`${API_URL}/api/tasks/${id}`, {
+                method: "PUT",
+                headers:  {"Content-Type": "application/json"},
+                body: JSON. stringify({
+                    tytul: task.tytul,
+                    tresc: task.tresc || "",
+                    priorytet: task.priority,
+                    deadline: task.deadline,
+                    wysilek: task.effort,
+                    status_zadania_id: newStatus,
+                    student_id: studentId,
+                    automatyczne_powiadomienie: task.automatyczne_powiadomienie || 0
+                })
+            });
+
+            if (! res.ok) {
+                throw new Error("Failed to update task");
+            }
+        } catch (err) {
+            console.error("Can't update task:", err);
+            setTodos((prev) =>
+                prev.map((t) =>
+                    t.id === id ? {...t, done: !newDone} :  t
+                )
+            );
+            setError("Failed to update task");
+        }
     };
 
     // =========================
@@ -121,7 +141,7 @@ export default function TodoListPage() {
                 navigate('/login');
                 return;
             }
-            await fetch(`${API_URL}/api/tasks/${id}`, {
+            await fetch(`${API_URL}/api/tasks/${id}?studentId=${studentId}`, {
                 method: "DELETE"
             });
             setTodos((prev) => prev.filter((t) => t.id !== id));

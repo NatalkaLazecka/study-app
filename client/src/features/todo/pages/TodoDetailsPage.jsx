@@ -30,7 +30,13 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
         const loadTask = async () => {
             try {
-                const res = await fetch(`${API_URL}/api/tasks/${id}`);
+                const studentId = getStudentId();
+                if (!studentId) {
+                    navigate('/login');
+                    return;
+                }
+
+                const res = await fetch(`${API_URL}/api/tasks/${id}?studentId=${studentId}`);
                 if (!res.ok) throw new Error("Failed to fetch task");
 
                 const data = await res.json();
@@ -49,7 +55,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
         };
 
         loadTask();
-    }, [mode, id, API_URL]);
+    }, [mode, id, API_URL, navigate]);
 
     // =========================
     // SAVE TASK (NEW / EDIT)
@@ -74,7 +80,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
             wysilek: effort,
             deadline: date,
             student_id: studentId,
-            status_zadania_id: "1",
+            status_zadania_id: 1,
             automatyczne_powiadomienie: autoNotify ? 1 : 0,
             grupa_id: null
         };
@@ -117,7 +123,13 @@ export default function TodoDetailsPage({mode = "edit"}) {
         setLoading(true);
 
         try {
-            const res = await fetch(`${API_URL}/api/tasks/${id}`, {
+            const studentId = getStudentId();
+            if (!studentId) {
+                navigate('/login');
+                return;
+            }
+
+            const res = await fetch(`${API_URL}/api/tasks/${id}?studentId=${studentId}`, {
                 method: "DELETE"
             });
 
