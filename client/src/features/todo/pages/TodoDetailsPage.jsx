@@ -6,6 +6,9 @@ import MenuBar from "../../../components/MenuBar";
 import {getStudentId} from "../../../utils/auth";
 
 export default function TodoDetailsPage({mode = "edit"}) {
+    export const STATUS_ON_GOING = "a0b9c93d-e4d0-11f0-b846-42010a400016";
+    export const STATUS_DONE = "a17535d5-e4d0-11f0-b846-42010a400016";
+
     const {id} = useParams();
     const navigate = useNavigate();
 
@@ -76,7 +79,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
             wysilek: effort,
             deadline: date,
             student_id: studentId,
-            status_zadania_id: 1,
+            status_zadania_id: STATUS_ON_GOING,
             automatyczne_powiadomienie: autoNotify ? 1 : 0,
             grupa_id: null
         };
