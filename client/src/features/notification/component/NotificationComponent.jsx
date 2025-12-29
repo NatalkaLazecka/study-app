@@ -7,7 +7,7 @@ import {
     markAllAsRead,
     markAsRead,
     deleteNotification,
-} from "client/src/features/auth/api/notificationsApi.js";
+} from "../../auth/api/notificationsApi.js";
 
 export default function NotificationComponent() {
     const [isOpen, setIsOpen] = useState(false);

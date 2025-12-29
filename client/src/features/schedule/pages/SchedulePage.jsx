@@ -8,7 +8,7 @@ import {getStudentId} from "../../../utils/auth";
 import {
     getStudentSchedule,
     clearStudentSchedule,
-} from "client/src/features/auth/api/scheduleApi.js";
+} from "../../auth/api/scheduleApi.js";
 
 export default function SchedulePage() {
     const navigate = useNavigate();

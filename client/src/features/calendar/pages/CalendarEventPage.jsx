@@ -13,7 +13,7 @@ import {
   createEvent,
   updateEvent,
   deleteEvent,
-} from "client/src/features/auth/api/eventsApi.js";
+} from "../../auth/api/eventsApi.js";
 
 export default function CalendarEventPage() {
   const [eventId, setEventId] = useState("");

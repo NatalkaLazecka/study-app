@@ -10,7 +10,7 @@ import { getStudentId } from "../../../utils/auth";
 import {
   getStudentEvents,
   getTodaySchedule,
-} from "client/src/features/auth/api/calendarApi.js";
+} from "../../auth/api/calendarApi";
 
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());

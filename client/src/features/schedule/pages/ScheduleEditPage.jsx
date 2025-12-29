@@ -17,7 +17,7 @@ import {
     createProfessor,
     updateProfessor,
     deleteProfessor,
-} from "client/src/features/auth/api/scheduleApi.js";
+} from "../../auth/api/scheduleApi.js";
 
 export default function ScheduleEditPage() {
     const navigate = useNavigate();
