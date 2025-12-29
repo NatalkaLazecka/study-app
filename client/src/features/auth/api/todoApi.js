@@ -23,8 +23,9 @@ export function deleteTask(taskId, studentId) {
     });
 }
 
-export function getTaskById(taskId, studentId) {
-    return apiFetch(`/api/tasks/${taskId}?studentId=${studentId}`);
+export async function getTaskById(taskId, studentId) {
+    const res = await apiFetch(`/api/tasks/${taskId}?studentId=${studentId}`);
+    return res.json();
 }
 
 export function createTask(payload) {
