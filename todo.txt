@@ -1,0 +1,28 @@
+Backend
+
+Logika biznesowa utrzymywana bezpośrednio w kontrolerach. Brak organizacji kodu na poziomu architektury całego projektu – podział horyzontalny albo pionowy. Słaba separacja odpowiedzialności.
+
+
+
+
+
+
+Brak autoryzacji w wielu endpointach – np. updateTask, deleteTask
+
+Brak walidacji np. w tasks.controller.js – addTask
+
+
+centralny klient API: dorobic do grup reszta jest
+
+
+Brak testów
+
+FRONT
+
+brak jednolitego podejście od obsługi błędów
+Token przechowywany jest w localStorage. Warto skorzystanie z localStorage ukryć za jakimś interfejsem. Ponadto przechowywanie tokenu w localStorage nie jest bezpieczenym podejściem. Powinniśmy wykrzystać ciasteczko secure, httpOnly.
+Brak testów
+Podczas przekazywania parametrów warto korzystać z destructuring, tak, żeby później nie pisać: props.selectProps.CosTam.CosTam.onDeleteOption
+Brak wykorzystania useMemo i useCallback
+Mieszanie różnych podejść pod kątem styli CSS – inline css, module
+Niektóre komponenty są bardzo duże i powinny być zdekomponowane. Np. strony mający ponad 500 linii kodu i bardzo dużo elementów przechowywanych w state.
