@@ -29,6 +29,8 @@ export default function TodoDetailsPage({ mode = "edit" }) {
   useEffect(() => {
     if (mode !== "edit") return;
 
+
+
     const loadTask = async () => {
       try {
         const studentId = getStudentId();
