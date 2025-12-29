@@ -6,7 +6,7 @@ export const getScheduleForStudent = async (req, res) => {
     const { student_id } = req.params;
 
     try {
-        const result = await pool.query(
+        const [result] = await pool.query(
             `SELECT 
                 pz.id, 
                 pz.student_id, 
@@ -47,7 +47,7 @@ export const getTodayScheduleForStudent = async (req, res) => {
         const daysMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const today = daysMap[new Date().getDay()];
 
-        const result = await pool. query(
+        const [result] = await pool. query(
             `SELECT 
                 pz.id, 
                 pz.student_id, 
@@ -148,7 +148,7 @@ export const deleteAllSchedulesForStudent = async (req, res) => {
 // ---- PROFESOR CONTROLLERS ---- //
 export const getAllProfessor = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT id, imie, nazwisko, e_mail FROM prowadzacy ORDER BY nazwisko, imie`);
+        const [result] = await pool.query(`SELECT id, imie, nazwisko, e_mail FROM prowadzacy ORDER BY nazwisko, imie`);
 
         if(result.length === 0){
             return res.status(404).json({ message: "No instructors found" });
@@ -226,7 +226,7 @@ export const deleteProfessor = async (req, res) => {
 // ---- SUBJECT CONTROLLERS ---- //
 export const getAllSubject = async (req, res) => {
     try {
-        const result = await pool. query(`SELECT id, nazwa FROM przedmiot ORDER BY nazwa`);
+        const [result] = await pool. query(`SELECT id, nazwa FROM przedmiot ORDER BY nazwa`);
 
         if(result.length === 0){
             return res. status(404).json({ message: "No subjects found" });

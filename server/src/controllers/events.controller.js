@@ -7,7 +7,7 @@ import {fileURLToPath} from "url";
 
 export const getEvents = async (req, res) => {
   try {
-    const result = await pool.query(`
+    const [result] = await pool.query(`
       SELECT w.id, w.tytul, w.opis, 
              DATE_FORMAT(w.data_start, '%Y-%m-%d') AS data_start, 
              DATE_FORMAT(w.data_koncowa, '%Y-%m-%d') AS data_koncowa, 
@@ -29,7 +29,7 @@ export const getEventsByStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
 
-    const result = await pool. query(`
+    const [result] = await pool. query(`
       SELECT w.id, w.tytul, w. opis, 
              DATE_FORMAT(w.data_start, '%Y-%m-%d') AS data_start, 
              DATE_FORMAT(w.data_koncowa, '%Y-%m-%d') AS data_koncowa, 
@@ -51,7 +51,7 @@ export const getEventsByStudent = async (req, res) => {
 
 export const getCategories = async (req, res) => {
     try{
-        const result = await pool.query('SELECT id, nazwa FROM rodzaj_wydarzenia ORDER BY id asc');
+        const [result] = await pool.query('SELECT id, nazwa FROM rodzaj_wydarzenia ORDER BY id asc');
         res.json(result);
     }catch (err){
         res.status(500).json({ error: err.message });

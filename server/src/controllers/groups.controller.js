@@ -65,7 +65,7 @@ export const getGroupDetails = async (req, res) => {
   const groupId = req.params.id;
 
   try {
-    const [[group]] = await pool.query(
+    const [group] = await pool.query(
       `SELECT id, nazwa, administrator FROM grupa WHERE id = ?`,
       [groupId]
     );
@@ -107,7 +107,7 @@ export const addUserToGroup = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const [[student]] = await pool.query(
+    const [student] = await pool.query(
       `SELECT id FROM student WHERE e_mail = ?`,
       [email]
     );

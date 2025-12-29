@@ -1,5 +1,4 @@
-import mysql from "mysql";
-import util from "util";
+import mysql from "mysql2";
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "34.57.186.71",
@@ -8,10 +7,11 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD || "m>P?_9C[H*|H>8|l",
   database: process.env.DB_NAME || "study",
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
   },
-  waitForConnections: true
-});
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+}).promise();
 
-pool.query = util.promisify(pool.query);
 export default pool;

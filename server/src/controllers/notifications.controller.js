@@ -10,7 +10,7 @@ export const getNotifications = async (req, res) => {
 
     const today = new Date().toISOString().split('T')[0];
 
-    const eventNotifications = await pool.query(`
+    const [eventNotifications] = await pool.query(`
       SELECT
         id,
         'event' AS type,
@@ -22,7 +22,7 @@ export const getNotifications = async (req, res) => {
       ORDER BY data_stworzenia DESC
     `, [today, student_id]);
 
-    const taskNotifications = await pool.query(`
+    const [taskNotifications] = await pool.query(`
       SELECT
         id,
         'task' AS type,

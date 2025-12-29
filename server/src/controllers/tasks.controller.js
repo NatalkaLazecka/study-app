@@ -62,7 +62,7 @@ export const getTasks = async (req, res) => {
   try {
     const studentId = req.user.id;
 
-    const result = await pool.query(`
+    const [result] = await pool.query(`
       SELECT z.*,
              CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
              s.nazwa AS status,
@@ -86,7 +86,7 @@ export const getTaskById = async (req, res) => {
   try {
     const studentId = req.user.id;
 
-    const result = await pool.query(
+    const [result] = await pool.query(
       `SELECT *,
         CAST(automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie
        FROM zadanie
@@ -94,7 +94,7 @@ export const getTaskById = async (req, res) => {
       [req.params.id, studentId]
     );
 
-    if (!result[0]) {
+    if (!result) {
       return res.status(404).json({ message: "Zadanie nie znalezione" });
     }
 
@@ -193,7 +193,7 @@ export const getTasksByStudent = async (req, res) => {
   const { studentId } = req.params;
 
   try {
-    const result = await pool.query(`
+    const [result] = await pool.query(`
       SELECT z.*,
              CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
              s.nazwa AS status,
