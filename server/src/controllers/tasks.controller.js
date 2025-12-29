@@ -63,7 +63,7 @@ export const getTasks = async (req, res) => {
     const studentId = req.user.id;
 
     const [result] = await pool.query(`
-      SELECT z.*,
+      SELECT z.id, z.tytul, z.tresc, z.priorytet, z.deadline, z.student_id, z.status_zadania_id, z.wysilek, z.grupa_id,
              CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
              s.nazwa AS status,
              g.nazwa AS grupa
@@ -87,7 +87,7 @@ export const getTaskById = async (req, res) => {
     const studentId = req.user.id;
 
     const [result] = await pool.query(
-      `SELECT *,
+      `SELECT id, tytul, tresc, priorytet, deadline, student_id, status_zadania_id, wysilek, grupa_id,
         CAST(automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie
        FROM zadanie
        WHERE id = ? AND student_id = ?`,
@@ -194,7 +194,7 @@ export const getTasksByStudent = async (req, res) => {
 
   try {
     const [result] = await pool.query(`
-      SELECT z.*,
+      SELECT z.id, z.tytul, z.tresc, z.priorytet, z.deadline, z.student_id, z.status_zadania_id, z.wysilek, z.grupa_id,
              CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
              s.nazwa AS status,
              g.nazwa AS grupa

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const getNotes = async (_, res) => {
   try {
-    const [result] = await pool.query("SELECT * FROM notatka ORDER BY data_dodania DESC");
+    const [result] = await pool.query("SELECT id, tytul, opis, data_dodania FROM notatka ORDER BY data_dodania DESC");
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const getStudents = async (req, res) => {
   try {
-    const [result] = await pool.query("SELECT * FROM student");
+    const [result] = await pool.query("SELECT id, indeks, imie, nazwisko, e_mail, haslo, data_rejestracji FROM student");
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -12,7 +12,7 @@ export const getStudents = async (req, res) => {
 
 export const getStudent = async (req, res) => {
   try {
-    const [result] = await pool.query("SELECT * FROM student WHERE id = ?", [req.params.id]);
+    const [result] = await pool.query("SELECT id, indeks, imie, nazwisko, e_mail, haslo, data_rejestracji FROM student WHERE id = ?", [req.params.id]);
     if (!result.length) return res.status(404).json({ message: "Nie znaleziono" });
     res.json(result);
   } catch (err) {

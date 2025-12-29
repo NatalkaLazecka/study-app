@@ -1,14 +1,12 @@
 import mysql from "mysql2";
+import {env} from "../config/env.js";
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || "34.57.186.71",
-  port: process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "m>P?_9C[H*|H>8|l",
-  database: process.env.DB_NAME || "study",
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  host: env.db.host,
+  port: env.db.port,
+  user: env.db.user,
+  password: env.db.password,
+  database: env.db.name,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
