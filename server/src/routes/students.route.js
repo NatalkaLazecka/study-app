@@ -1,5 +1,12 @@
 import express from "express";
-import { getStudents, getStudent, createStudent, updateStudent, deleteStudent } from "../controllers/students.controller.js";
+import {
+    getStudents,
+    getStudent,
+    createStudent,
+    updateStudent,
+    deleteStudent
+} from "../controllers/students.controller.js";
+
 const router = express.Router();
 
 router.get("/", getStudents);

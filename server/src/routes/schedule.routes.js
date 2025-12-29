@@ -8,19 +8,16 @@ import {
 
 const router = express.Router();
 
-// Subjects //
 router.get("/subjects/", getAllSubject);
 router.post('/subject', addSubject);
 router.put('/subject/:id', updateSubject);
 router.delete('/subject/:id', deleteSubject);
 
-// Professors //
 router.get("/professors/", getAllProfessor);
 router.post('/professor', addProfessor);
 router.put('/professor/:id', updateProfessor);
 router.delete('/professor/:id', deleteProfessor);
 
-// Schedule //
 router.get("/student/:student_id/today", getTodayScheduleForStudent);
 router.get("/student/:student_id", getScheduleForStudent);
 router.post("/", addSchedule);

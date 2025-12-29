@@ -54,7 +54,7 @@ export default function UserProfilePage() {
 
     return (
         <div className={styles['profile-root']}>
-            <MenuBar />
+            <MenuBar/>
 
             <div className={styles['profile-maincard']}>
                 {/* LEFT COLUMN */}
@@ -171,7 +171,7 @@ export default function UserProfilePage() {
                                 onChange={handleInfoChange}
                                 className={styles['profile-input']}
                                 placeholder="Language"
-                                >
+                            >
                                 <option value="">Select language</option>
                                 <option value="english">English</option>
                                 <option value="polish">Polish</option>

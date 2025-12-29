@@ -7,11 +7,11 @@ export function requireAuth(req, res, next) {
     }
     const token = header.split(" ")[1];
 
-    try{
+    try {
         const decoded = verifyToken(token);
         req.user = decoded;
         next();
-    }catch (err){
+    } catch (err) {
         return res.status(401).json({message: "Invalid token"});
     }
 

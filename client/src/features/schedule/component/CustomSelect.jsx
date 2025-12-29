@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import CreatableSelect from 'react-select/creatable';
-import { components } from 'react-select';
+import {components} from 'react-select';
 import styles from '../styles/ScheduleComponent.module.css'
 
 const CustomOption = (props) => {
@@ -8,7 +8,7 @@ const CustomOption = (props) => {
 
     const handleEdit = (e) => {
         e.stopPropagation();
-        if(props.selectProps.onEditOption){
+        if (props.selectProps.onEditOption) {
             props.selectProps.onEditOption(props.data);
         }
         setShowMenu(false);
@@ -22,7 +22,7 @@ const CustomOption = (props) => {
         setShowMenu(false);
     }
 
-    return(
+    return (
         <div className={styles['custom-option-wrapper']}>
             <components.Option {...props}>
                 <div className={styles['custom-option-content']}>
@@ -67,18 +67,18 @@ const CustomOption = (props) => {
 
 // Custom Select Component //
 export default function CustomSelect({
-    value,
-    onChange,
-    options,
-    placeholder = "-- Select --",
-    isDisabled = false,
-    isSearchable = true,
-    isClearable = true,
-    onCreateOption,
-    onEditOption,
-    onDeleteOption,
-    isEditable = false,
-}){
+                                         value,
+                                         onChange,
+                                         options,
+                                         placeholder = "-- Select --",
+                                         isDisabled = false,
+                                         isSearchable = true,
+                                         isClearable = true,
+                                         onCreateOption,
+                                         onEditOption,
+                                         onDeleteOption,
+                                         isEditable = false,
+                                     }) {
     const selectOption = options.find(opt => opt.value === value) || null;
 
     const customStyles = {
@@ -186,7 +186,7 @@ export default function CustomSelect({
             ...base,
             color: '#c5c5c5',  // var(--pink)
             transition: 'all 0.3s ease',
-            transform: state.selectProps.menuIsOpen ?  'rotate(180deg)' : 'rotate(0deg)',
+            transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             padding: '0 clamp(8px, 1.5vw, 10px)',
             '&:hover': {
                 color: '#b854b4',
@@ -215,10 +215,10 @@ export default function CustomSelect({
         }),
     }
 
-    return(
+    return (
         <CreatableSelect
             value={selectOption}
-            onChange={(opt) => onChange(opt ?  opt.value : '')}
+            onChange={(opt) => onChange(opt ? opt.value : '')}
             onCreateOption={onCreateOption}
             options={options}
             styles={customStyles}
@@ -232,7 +232,7 @@ export default function CustomSelect({
                 </>
             )}
             noOptionsMessage={() => "No options available"}
-            components={{ Option: CustomOption }}
+            components={{Option: CustomOption}}
             isEditable={isEditable}
             onEditOption={onEditOption}
             onDeleteOption={onDeleteOption}

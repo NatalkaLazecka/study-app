@@ -14,9 +14,7 @@ export default function TodoListPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // =========================
-    // FETCH TODOS (BY STUDENT)
-    // =========================
+
     useEffect(() => {
         const fetchTodos = async () => {
             try {
@@ -61,9 +59,7 @@ export default function TodoListPage() {
         fetchTodos();
     }, [API_URL, navigate]);
 
-    // =========================
-    // UPDATE TASK (DONE / STATUS)
-    // =========================
+
     const updateTodos = async (id, data) => {
         setLoading(true);
         setError('');
@@ -105,8 +101,8 @@ export default function TodoListPage() {
         try {
             const res = await fetch(`${API_URL}/api/tasks/${id}`, {
                 method: "PUT",
-                headers:  {"Content-Type": "application/json"},
-                body: JSON. stringify({
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
                     tytul: task.tytul,
                     tresc: task.tresc || "",
                     priorytet: task.priority,
@@ -118,23 +114,21 @@ export default function TodoListPage() {
                 })
             });
 
-            if (! res.ok) {
+            if (!res.ok) {
                 throw new Error("Failed to update task");
             }
         } catch (err) {
             console.error("Can't update task:", err);
             setTodos((prev) =>
                 prev.map((t) =>
-                    t.id === id ? {...t, done: !newDone} :  t
+                    t.id === id ? {...t, done: !newDone} : t
                 )
             );
             setError("Failed to update task");
         }
     };
 
-    // =========================
-    // DELETE TASK
-    // =========================
+
     const deleteTodo = async (id, studentId) => {
         try {
             if (!studentId) {
@@ -150,9 +144,6 @@ export default function TodoListPage() {
         }
     };
 
-    // =========================
-    // DATE FILTER
-    // =========================
     const uniqueDate = [
         ...new Set(
             todos
@@ -163,9 +154,6 @@ export default function TodoListPage() {
         )
     ];
 
-    // =========================
-    // RENDER
-    // =========================
     return (
         <div>
             <MenuBar/>

@@ -108,7 +108,7 @@ const createNotifications = async (eventId, eventTitle, startDate, studentId) =>
     }
 
   } catch (err) {
-    console.error('❌ Error creating notifications:', err. message);
+    console.error('Error creating notifications:', err. message);
     throw err;
   }
 };
@@ -129,7 +129,7 @@ export const addEvent = async (req, res) => {
     }
 
     res.status(201).json({
-        message: "Wydarzenie dodane",
+        message: "Event created successfully",
         id: id,
         notifications_created: automatyczne_powiadomienia === 1
     });
@@ -156,7 +156,7 @@ export const updateEvent = async (req, res) => {
     }
 
     res.json({
-        message: "Zaktualizowano wydarzenie",
+        message: "Event updated successfully",
         notifications_updated: automatyczne_powiadomienia === 1
     });
   } catch (err) {
@@ -181,7 +181,7 @@ export const deleteEvent = async (req, res) => {
         [req.params.id]
     );
 
-    res.json({ message: "Usunięto wydarzenie" });
+    res.json({ message: "Event deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -189,7 +189,6 @@ export const deleteEvent = async (req, res) => {
 
 
 
-// upload file controller
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -229,7 +228,7 @@ export const getEventFiles = async (req, res) => {
 export const uploadEventFile = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: 'Nie przesłano pliku' });
+      return res.status(400).json({ error: 'No file uploade' });
     }
 
     const id = uuidv4();
@@ -245,7 +244,7 @@ export const uploadEventFile = async (req, res) => {
     );
 
     res.status(201).json({
-      message: 'Plik przesłany pomyślnie',
+      message: 'File uploaded successfully',
       file: {
         id,
         nazwa: fileName,
@@ -266,14 +265,14 @@ export const downloadEventFile = async (req, res) => {
     );
 
     if (result.length === 0) {
-      return res.status(404).json({ error: 'Plik nie znaleziony' });
+      return res.status(404).json({ error: 'File not found' });
     }
 
     const file = result[0];
     const filePath = path.join(__dirname, '../uploads/event-files', file.sciezka);
 
     if (! fs.existsSync(filePath)) {
-      return res.status(404).json({ error: 'Plik nie istnieje na serwerze' });
+      return res.status(404).json({ error: 'File does not exist on server' });
     }
 
     res.download(filePath, file. nazwa);
@@ -290,7 +289,7 @@ export const deleteEventFile = async (req, res) => {
     );
 
     if (result.length === 0) {
-      return res.status(404).json({ error: 'Plik nie znaleziony' });
+      return res.status(404).json({ error: 'File not found' });
     }
 
     const file = result[0];
@@ -302,7 +301,7 @@ export const deleteEventFile = async (req, res) => {
 
     await pool.query('DELETE FROM plik_wydarzenie WHERE id = ?', [req.params.fileId]);
 
-    res.json({ message: 'Plik usunięty pomyślnie' });
+    res.json({ message: 'File deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

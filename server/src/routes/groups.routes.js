@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  getGroups,
-  createGroup,
-  getGroupDetails,
-  addUserToGroup,
-  deleteGroup,
+    getGroups,
+    createGroup,
+    getGroupDetails,
+    addUserToGroup,
+    deleteGroup,
 } from "../controllers/groups.controller.js";
 
 const router = express.Router();

@@ -22,9 +22,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
     const API_URL =
         import.meta.env.VITE_RAILWAY_API_URL || "http://localhost:3001";
 
-    // =========================
-    // LOAD TASK (EDIT MODE)
-    // =========================
+
     useEffect(() => {
         if (mode !== "edit") return;
 
@@ -57,9 +55,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
         loadTask();
     }, [mode, id, API_URL, navigate]);
 
-    // =========================
-    // SAVE TASK (NEW / EDIT)
-    // =========================
+
     const handleSave = async () => {
         if (!title.trim()) return setError("Title is required");
         if (!date) return setError("Due date is required");
@@ -109,9 +105,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
         }
     };
 
-    // =========================
-    // DELETE TASK
-    // =========================
+
     const handleDelete = async () => {
         if (mode !== "edit") {
             navigate("/todo");
@@ -143,9 +137,6 @@ export default function TodoDetailsPage({mode = "edit"}) {
         }
     };
 
-    // =========================
-    // RENDER
-    // =========================
     return (
         <div>
             <MenuBar/>

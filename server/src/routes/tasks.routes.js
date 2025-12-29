@@ -1,11 +1,11 @@
 import express from "express";
 import {
-  getTasks,
-  addTask,
-  updateTask,
-  deleteTask,
-  getTaskById,
-  getTasksByStudent
+    getTasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    getTaskById,
+    getTasksByStudent
 } from "../controllers/tasks.controller.js";
 
 const router = express.Router();

@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import db from '../database/db.js';
 
 export async function findUserByEmail(email) {
-    try{
+    try {
         const [rows] = await db.query(
             "SELECT id, e_mail, haslo, imie, nazwisko, data_rejestracji FROM student WHERE e_mail = ?",
             [email]
@@ -29,7 +29,7 @@ export async function findUserById(id) {
     }
 }
 
-export async function createUser({id, email, password, imie="", nazwisko=""}) {
+export async function createUser({id, email, password, imie = "", nazwisko = ""}) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.query(

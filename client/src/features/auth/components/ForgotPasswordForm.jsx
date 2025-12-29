@@ -1,11 +1,16 @@
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import styles from '../styles/AuthForm.module.css';
-import { sendResetEmail, verifyToken, resetPassword } from '../api/authApi';
+import {
+  sendResetEmail,
+  verifyResetToken,
+  resetPassword
+} from '../api/authApi';
 
 export default function ForgotPasswordForm({ onBackToLogin }) {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -13,7 +18,8 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
 
   useEffect(() => {
     if (!token) return;
-    verifyToken(token).then((data) => {
+
+    verifyResetToken(token).then((data) => {
       if (data.valid) {
         setIsResetMode(true);
         setEmail(data.email);
@@ -31,14 +37,17 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
 
   const handleReset = async (e) => {
     e.preventDefault();
+
     if (newPassword !== repeatPassword) {
       return alert('Passwords do not match!');
     }
+
     await resetPassword({ token, newPassword });
     alert('Password changed successfully! You can log in now.');
     onBackToLogin?.();
   };
 
+  // ✅ JSX NA KOŃCU
   return (
     <div className={styles['login-container']}>
       {!isResetMode ? (
@@ -57,6 +66,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
       ) : (
         <form className={styles['login-box']} onSubmit={handleReset}>
           <h2>Set new password</h2>
+
           <label>New password</label>
           <input
             type="password"
@@ -65,6 +75,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
             onChange={(e) => setNewPassword(e.target.value)}
             required
           />
+
           <label>Repeat password</label>
           <input
             type="password"
@@ -73,6 +84,7 @@ export default function ForgotPasswordForm({ onBackToLogin }) {
             onChange={(e) => setRepeatPassword(e.target.value)}
             required
           />
+
           <button type="submit">Save</button>
         </form>
       )}

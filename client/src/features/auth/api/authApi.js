@@ -15,8 +15,7 @@ export async function sendResetEmail(email) {
   return res.json();
 }
 
-
-export async function verifyToken(token) {
+export async function verifyResetToken(token) {
   const res = await fetch(`${API}/api/emails/verify/${token}`);
 
   if (!res.ok) {
@@ -25,6 +24,7 @@ export async function verifyToken(token) {
 
   return res.json();
 }
+
 
 export async function resetPassword({ token, newPassword }) {
   const res = await fetch(`${API}/api/emails/reset-password`, {
