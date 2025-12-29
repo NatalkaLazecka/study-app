@@ -1,548 +1,258 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import CustomSelect from "../component/CustomSelect";
-import styles from '../styles/SchedulePage.module.css';
-import {useNavigate, useSearchParams} from "react-router-dom";
+import styles from "../styles/SchedulePage.module.css";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MenuBar from "../../../components/MenuBar";
 
+import {
+  getStudentSchedule,
+  createSchedule,
+  updateSchedule,
+  deleteSchedule,
+  getSubjects,
+  createSubject,
+  updateSubject,
+  deleteSubject,
+  getProfessors,
+  createProfessor,
+  updateProfessor,
+  deleteProfessor,
+} from "client/src/features/auth/api/scheduleApi.js";
+
 export default function ScheduleEditPage() {
-    const API_URL = import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [subject, setSubject] = useState('');
-    const [professor, setProfessor] = useState('');
-    const [day, setDay] = useState('');
-    const [time, setTime] = useState('');
-    const [room, setRoom] = useState('');
-    const [classType, setClassType] = useState('');
-    const [studentId, setStudentId] = useState('');
-    const [scheduleId, setScheduleId] = useState('');
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const [classTypes] = useState([
-        { id: 'c468bdd3-c5f3-11f0-839b-a8a15964033b', nazwa: 'wyklad' },
-        { id: 'c46a4788-c5f3-11f0-839b-a8a15964033b', nazwa: 'cwiczenia' }
-    ]);
-    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-    const [subjects, setSubjects] = useState([]);
-    const [professors, setProfessors] = useState([]);
-    const [searchParams] = useSearchParams();
+  const [subject, setSubject] = useState("");
+  const [professor, setProfessor] = useState("");
+  const [day, setDay] = useState("");
+  const [time, setTime] = useState("");
+  const [room, setRoom] = useState("");
+  const [classType, setClassType] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [scheduleId, setScheduleId] = useState("");
 
-    const formatTime = (time) => {
-        if(!time) return '';
-        const parts = time.split(':');
-        return `${parts[0]}:${parts[1]}`;
+  const [subjects, setSubjects] = useState([]);
+  const [professors, setProfessors] = useState([]);
+  const [searchParams] = useSearchParams();
+
+  const classTypes = [
+    { id: "c468bdd3-c5f3-11f0-839b-a8a15964033b", nazwa: "wyklad" },
+    { id: "c46a4788-c5f3-11f0-839b-a8a15964033b", nazwa: "cwiczenia" },
+  ];
+
+  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+  const formatTime = (time) => {
+    if (!time) return "";
+    const parts = time.split(":");
+    return `${parts[0]}:${parts[1]}`;
+  };
+
+
+  useEffect(() => {
+    const studentURL = searchParams.get("studentId");
+    const scheduleURL = searchParams.get("scheduleId");
+
+    if (studentURL) setStudentId(studentURL);
+    if (scheduleURL) setScheduleId(scheduleURL);
+
+    const loadData = async () => {
+      try {
+        const [subjectsData, professorsData] = await Promise.all([
+          getSubjects(),
+          getProfessors(),
+        ]);
+        setSubjects(subjectsData);
+        setProfessors(professorsData);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    loadData();
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!studentId || !scheduleId) return;
+
+    const loadSchedule = async () => {
+      setLoading(true);
+      try {
+        const data = await getStudentSchedule(studentId);
+        const scheduleItem = data.find((item) => item.id === scheduleId);
+
+        if (!scheduleItem) {
+          setError("Schedule item not found");
+          return;
+        }
+
+        setSubject(scheduleItem.przedmiot_id || "");
+        setProfessor(scheduleItem.prowadzacy_id || "");
+        setDay(scheduleItem.dzien_tygodnia || "");
+        setTime(formatTime(scheduleItem.godzina) || "");
+        setRoom(scheduleItem.sala || "");
+        setClassType(scheduleItem.typ_zajec_id || "");
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSchedule();
+  }, [studentId, scheduleId]);
+
+  const validateForm = () => {
+    if (!subject || !day || !time || !classType) {
+      setError("Please fill all required fields.");
+      return false;
     }
+    return true;
+  };
 
-    useEffect(() => {
-        const fetchSubjects = async () => {
-            try {
-                const res = await fetch(`${API_URL}/api/schedule/subjects/`);
-                if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}`);
-                }
-                const data = await res.json();
+  const handelSave = async () => {
+    if (!validateForm()) return;
+    setLoading(true);
+    setError("");
 
-                if (Array.isArray(data)) {
-                    setSubjects(data);
-                } else {
-                    console.error('Subjects is not an array:', data);
-                    setSubjects([]);
-                }
-            } catch (err) {
-                console.error('Error fetching subjects:', err);
-                setSubjects([]);
-            }
-        };
+    const scheduleData = {
+      student_id: studentId,
+      przedmiot_id: subject,
+      prowadzacy_id: professor || null,
+      dzien_tygodnia: day,
+      godzina: time,
+      sala: room || null,
+      typ_zajec_id: classType,
+    };
 
-        const fetchProfessors = async () => {
-            try {
-                const res = await fetch(`${API_URL}/api/schedule/professors/`);
-                if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}`);
-                }
+    try {
+      scheduleId
+        ? await updateSchedule(scheduleId, scheduleData)
+        : await createSchedule(scheduleData);
 
-                const data = await res.json();
-
-                if (Array.isArray(data)) {
-                    setProfessors(data);
-                } else {
-                    console.error('Professors is not an array:', data);
-                    setProfessors([]);
-                }
-            } catch (err) {
-                console.error('Error fetching professors:', err);
-                setProfessors([]);
-            }
-        };
-
-        const initializeDates = () => {
-            const studentURL = searchParams.get('studentId');
-            const scheduleURL = searchParams.get('scheduleId');
-            if (studentURL) setStudentId(studentURL);
-            if (scheduleURL) setScheduleId(scheduleURL);
-
-            fetchProfessors();
-            fetchSubjects();
-        };
-
-        initializeDates();
-     }, [searchParams]);
-
-     useEffect(() => {
-         if (!studentId || !scheduleId) {return; }
-
-        const fetchSchedule = async () => {
-            setLoading(true);
-            try{
-                const res = await fetch(`${API_URL}/api/schedule/student/${studentId}`);
-                if(!res.ok){throw new Error('Failed to fetch schedule');}
-                const data = await res.json();
-                const scheduleItem = data.find(item => item.id === scheduleId);
-                if (scheduleItem) {
-                    setSubject(scheduleItem.przedmiot_id || '');
-                    setProfessor(scheduleItem.prowadzacy_id || '');
-                    setDay(scheduleItem.dzien_tygodnia || '');
-                    setTime(formatTime(scheduleItem.godzina) || '');
-                    setRoom(scheduleItem.sala || '');
-                    setClassType(scheduleItem.typ_zajec_id || '');
-                } else {
-                    setError('Schedule item not found');
-                }
-            }catch (err) {
-                setError(err.message);
-            }finally {
-                setLoading(false);
-            }
-        };
-        fetchSchedule();
-    }, [scheduleId, studentId]);
-
-     const validateForm = () => {
-         if(!subject){
-             setError('Please select a subject.');
-             return false;
-         }
-         if(!day){
-             setError('Please select a day.');
-             return false;
-         }
-         if(!time){
-             setError('Please select a time.');
-             return false;
-         }
-         if(!classType){
-             setError('Please select a class type.');
-             return false;
-         }
-         return true;
-     }
-
-     const handelSave = async () => {
-         setError('');
-         if(!validateForm()){ return; }
-         setLoading(true);
-
-         const scheduleData = {
-             student_id: studentId,
-             przedmiot_id: subject,
-             prowadzacy_id: professor || null,
-             dzien_tygodnia: day,
-             godzina: time,
-             sala: room || null,
-             typ_zajec_id: classType
-         };
-
-         try{
-             let res;
-             if(scheduleId){
-                 res = await fetch(`${API_URL}/api/schedule/${scheduleId}`, {
-                     method: 'PUT',
-                     headers: {'Content-Type': 'application/json'},
-                     body: JSON.stringify(scheduleData)
-                 });
-             }else{
-                 res = await fetch(`${API_URL}/api/schedule/`, {
-                     method: 'POST',
-                     headers: {'Content-Type': 'application/json'},
-                     body: JSON.stringify(scheduleData)
-                 });
-             }
-
-             if(!res.ok) {
-                 const errorData = await res.json();
-                 throw new Error(errorData.message || 'Failed to save schedule');
-             }
-
-             navigate('/schedule');
-         }catch (err) {
-             setError(err.message);
-         }finally {
-             setLoading(false);
-         }
-     };
-
-     const handelDelete = async () => {
-         if(!scheduleId){
-             setError("No schedule to delete.");
-             return;
-         }
-
-         const confirmDelete = window.confirm("Are you sure you want to delete this schedule?");
-         if(!confirmDelete){ return; }
-
-         setError('');
-         setLoading(true);
-
-         try{
-             const res = await fetch(`${API_URL}/api/schedule/${scheduleId}`, {
-                 method: 'DELETE'
-             });
-
-             if(!res.ok) {
-                 const errorData = await res.json();
-                 throw new Error(errorData.message || 'Failed to delete schedule');
-             }
-
-             navigate('/schedule');
-         }catch (err) {
-             setError(err.message);
-         }finally {
-             setLoading(false);
-         }
-     };
-
-     const handleCreateSubject = async (inputVal) => {
-        setLoading(true);
-        setError('');
-
-        try {
-            const res = await fetch(`${API_URL}/api/schedule/subject`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({nazwa: inputVal})
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.message || 'Failed to create subject');
-            }
-
-            const newSubject = await res.json();
-
-            setSubjects(prev => [...prev, newSubject]);
-            setSubject(newSubject.id);
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setLoading(false);
-        }
+      navigate("/schedule");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const handleEditSubject = async (option) => {
-        const newName = prompt(`Edit subject name:`, option.label);
+  const handelDelete = async () => {
+    if (!scheduleId) return;
 
-        if (!newName || newName.trim() === '' || newName === option.label) {
-            return;
-        }
+    if (!window.confirm("Are you sure you want to delete this schedule?"))
+      return;
 
-        setLoading(true);
-        setError('');
-
-        try {
-            const res = await fetch(`${API_URL}/api/schedule/subject/${option.value}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({nazwa: newName.trim()})
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || 'Failed to update subject');
-            }
-
-            const updatedSubject = await res.json();
-
-            setSubjects(prev => prev.map(subj =>
-                subj.id === option.value
-                    ? {...subj, nazwa: updatedSubject.nazwa}
-                    : subj
-            ));
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setLoading(false);
-        }
+    setLoading(true);
+    try {
+      await deleteSchedule(scheduleId);
+      navigate("/schedule");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const handleDeleteSubject = async (option) => {
-        const confirmDelete = window.confirm(
-            `Are you sure you want to delete "${option.label}"?\n\nThis action cannot be undone.`
-        );
-
-        if (!confirmDelete) {
-            return;
-        }
-
-        setLoading(true);
-        setError('');
-
-        try {
-            const res = await fetch(`${API_URL}/api/schedule/subject/${option.value}`, {
-                method: 'DELETE'
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || 'Failed to delete subject');
-            }
-
-            setSubjects(prev => prev.filter(subj => subj.id !== option.value));
-
-            if (subject === option.value) {
-                setSubject('');
-            }
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setLoading(false);
-        }
+  const handleCreateSubject = async (name) => {
+    setLoading(true);
+    try {
+      const newSubject = await createSubject(name);
+      setSubjects((prev) => [...prev, newSubject]);
+      setSubject(newSubject.id);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const handleCreateProfessor = async (inputVal) => {
-        const parts = inputVal.trim().split(' ');
-        if (parts.length < 2) {
-            alert('Please enter both first and last name (e.g.  "John Smith")');
-            return;
-        }
+  const handleEditSubject = async (option) => {
+    const newName = prompt("Edit subject name:", option.label);
+    if (!newName) return;
 
-        const imie = parts[0];
-        const nazwisko = parts. slice(1).join(' ');
-
-        setLoading(true);
-        setError('');
-
-        try {
-            const res = await fetch(`${API_URL}/api/schedule/professor`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ imie, nazwisko })
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.message || 'Failed to create professor');
-            }
-
-            const newProfessor = await res.json();
-            setProfessors(prev => [...prev, newProfessor]);
-            setProfessor(newProfessor.id);
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setLoading(false);
-        }
+    try {
+      const updated = await updateSubject(option.value, newName);
+      setSubjects((prev) =>
+        prev.map((s) => (s.id === option.value ? updated : s))
+      );
+    } catch (err) {
+      setError(err.message);
     }
+  };
 
-    const handleEditProfessor = async (option) => {
-        const newName = prompt(`Edit professor name:`, option.label);
+  const handleDeleteSubject = async (option) => {
+    if (!window.confirm("Delete this subject?")) return;
+    await deleteSubject(option.value);
+    setSubjects((prev) => prev.filter((s) => s.id !== option.value));
+  };
 
-        if (!newName || newName.trim() === '' || newName === option.label) {
-            return;
-        }
+  const handleCreateProfessor = async (input) => {
+    const [imie, ...rest] = input.split(" ");
+    const nazwisko = rest.join(" ");
+    const newProf = await createProfessor(imie, nazwisko);
+    setProfessors((p) => [...p, newProf]);
+    setProfessor(newProf.id);
+  };
 
-        const parts = newName.trim().split(' ');
-        if (parts.length < 2) {
-            alert('Please enter both first and last name (e.g.  "John Smith")');
-            return;
-        }
+  const handleEditProfessor = async (option) => {
+    const [imie, ...rest] = option.label.split(" ");
+    const nazwisko = rest.join(" ");
+    const updated = await updateProfessor(option.value, imie, nazwisko);
+    setProfessors((p) =>
+      p.map((pr) => (pr.id === option.value ? updated : pr))
+    );
+  };
 
-        const imie = parts[0];
-        const nazwisko = parts. slice(1).join(' ');
+  const handleDeletProfessor = async (option) => {
+    if (!window.confirm("Delete this professor?")) return;
+    await deleteProfessor(option.value);
+    setProfessors((p) => p.filter((pr) => pr.id !== option.value));
+  };
 
-        setLoading(true);
-        setError('');
+  const subjectOptions = subjects.map((s) => ({
+    value: s.id,
+    label: s.nazwa,
+  }));
+  const professorOptions = professors.map((p) => ({
+    value: p.id,
+    label: `${p.imie} ${p.nazwisko}`,
+  }));
+  const daysOptions = daysOfWeek.map((d) => ({ value: d, label: d }));
+  const classTypeOptions = classTypes.map((t) => ({
+    value: t.id,
+    label: t.nazwa,
+  }));
 
-        try {
-            const res = await fetch(`${API_URL}/api/schedule/professor/${option.value}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({imie, nazwisko})
-            });
+  return (
+    <div>
+      <MenuBar />
+      <div className={styles["schedule-root"]}>
+        <h1 className={styles["schedule-title"]}>
+          {scheduleId ? "EDIT SCHEDULE" : "NEW SCHEDULE"}
+        </h1>
 
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || 'Failed to update professor');
-            }
+        {error && <div className={styles["err-message"]}>{error}</div>}
 
-            const updatedProfessor = await res.json();
-
-            setProfessors(prev => prev.map(prof =>
-                prof.id === option.value
-                    ? {...prof, imie: updatedProfessor.imie, nazwisko: updatedProfessor.nazwisko}
-                    : prof
-            ));
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const handleDeletProfessor = async (option) => {
-        const confirmDelete = window.confirm(
-            `Are you sure you want to delete "${option.label}"?\n\nThis action cannot be undone.`
-        );
-
-        if (!confirmDelete) {
-            return;
-        }
-
-        setLoading(true);
-        setError('');
-
-        try {
-            const res = await fetch(`${API_URL}/api/schedule/professor/${option.value}`, {
-                method: 'DELETE'
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || 'Failed to delete professor');
-            }
-
-            setProfessors(prev => prev.filter(prof => prof.id !== option.value));
-
-            if (professor === option.value) {
-                setProfessor('');
-            }
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const subjectOptions = Array.isArray(subjects) ? subjects.map(subj => ({value: subj. id, label: subj.nazwa})) : [];
-    const professorOptions = Array.isArray(professors) ? professors.map(prof => ({value: prof.id, label: `${prof.imie} ${prof.nazwisko}`})) : [];
-    const daysOptions = daysOfWeek.map(day => ({value: day, label: day}));
-    const classTypeOptions = classTypes.map(type => ({value: type.id, label: type.nazwa}));
-
-    return (
-        <div>
-            <MenuBar />
-
-            <div className={styles['schedule-root']}>
-                <div className={styles['header-section']}>
-                    <button
-                        className={styles['back-button']}
-                        onClick={() => navigate(-1)}
-                    >
-                        <span className={styles['back-text']}>stud
-                            <span className={styles['back-text-y']}>y</span></span>
-                        <span className={styles['back-arrow']}>&lt;</span>
-                    </button>
-                    <h1 className={styles['schedule-title']}>{scheduleId ? 'EDIT SCHEDULE' : 'NEW SCHEDULE'}</h1>
-                    <div></div>
-                </div>
-
-                {error && (<div className={styles['err-message']}>{error}</div>)}
-
-                {loading ? (
-                    <p className={styles['loading-p']}>Loading calendar...</p>
-                ) : (
-                    <div className={styles['schedule-event-content']}>
-                        <div className={styles['input-box']}>
-                            <p className={styles['input-title']}>Subject *</p>
-                            <CustomSelect
-                                value={subject}
-                                onChange={setSubject}
-                                onCreateOption={handleCreateSubject}
-                                onEditOption={handleEditSubject}
-                                onDeleteOption={handleDeleteSubject}
-                                options={subjectOptions}
-                                placeholder="-- Select Subject --"
-                                isDisabled={loading}
-                                isSearchable={true}
-                                isClearable={true}
-                                isEditable={true}
-                            />
-                        </div>
-
-                        <div className={styles['input-box']}>
-                            <p className={styles['input-title']}>Professor</p>
-                            <CustomSelect
-                                value={professor}
-                                onChange={setProfessor}
-                                onCreateOption={handleCreateProfessor}
-                                onEditOption={handleEditProfessor}
-                                onDeleteOption={handleDeletProfessor}
-                                options={professorOptions}
-                                placeholder="-- Select Professor --"
-                                isDisabled={loading}
-                                isSearchable={true}
-                                isClearable={true}
-                                isEditable={true}
-                            />
-                        </div>
-
-                        <div className={styles['input-box']}>
-                            <p className={styles['input-title']}>Day</p>
-                            <CustomSelect
-                                value={day}
-                                onChange={setDay}
-                                options={daysOptions}
-                                placeholder="-- Select Day --"
-                                isDisabled={loading}
-                                isSearchable={true}
-                                isClearable={true}
-                                isEditable={false}
-                            />
-                        </div>
-
-                        <div className={styles['input-box']}>
-                            <p className={styles['input-title']}>Time</p>
-                            <input
-                                type="time"
-                                value={time}
-                                onChange={(e) => setTime(e.target.value)}
-                                className={styles['schedule-input']}
-                                disabled={loading}
-                            />
-                        </div>
-
-                        <div className={styles['input-box']}>
-                            <p className={styles['input-title']}>Room</p>
-                            <input
-                                type="text"
-                                value={room}
-                                onChange={(e) => setRoom(e.target.value)}
-                                className={styles['schedule-input']}
-                                disabled={loading}
-                            />
-                        </div>
-
-                        <div className={styles['input-box']}>
-                            <p className={styles['input-title']}>Type</p>
-                            <CustomSelect
-                                value={classType}
-                                onChange={setClassType}
-                                options={classTypeOptions}
-                                placeholder="-- Select Type --"
-                                isDisabled={loading}
-                                isSearchable={true}
-                                isClearable={true}
-                                isEditable={false}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                <div className={styles['end-buttons']}>
-                    <button className={styles['end-button']} onClick={handelSave} disabled={loading}>{loading ? 'SAVING...' : 'SAVE'}</button>
-                    <button className={styles['end-button']} onClick={() => navigate(-1)} disabled={loading}>CANCEL</button>
-                    <button className={styles['end-button-delete']} onClick={handelDelete} disabled={loading}>{loading ? 'DELETING...' : 'DELETE'}</button>
-                </div>
-            </div>
+        <div className={styles["schedule-event-content"]}>
+          <CustomSelect
+            value={subject}
+            onChange={setSubject}
+            options={subjectOptions}
+            onCreateOption={handleCreateSubject}
+            onEditOption={handleEditSubject}
+            onDeleteOption={handleDeleteSubject}
+          />
         </div>
-    )
+
+        <div className={styles["end-buttons"]}>
+          <button onClick={handelSave}>SAVE</button>
+          <button onClick={handelDelete}>DELETE</button>
+        </div>
+      </div>
+    </div>
+  );
 }
