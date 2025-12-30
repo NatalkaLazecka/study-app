@@ -14,7 +14,7 @@ import GroupCreatePage from '@/features/group/pages/GroupCreatePage';
 import GroupDetailsPage from '@/features/group/pages/GroupDetailsPage';
 import ScheduleEditPage from "../features/schedule/pages/ScheduleEditPage";
 import SchedulePage from "../features/schedule/pages/SchedulePage";
-import {ErrorBoundary} from "../components/ErrorBoundary";
+import {ErrorBoundary} from "client/src/components/ErrorBoundary.jsx";
 
 
 const ProtectedRoute = ({ isAuthed, children }) =>
