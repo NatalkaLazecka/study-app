@@ -8,7 +8,7 @@ import {getStudentId} from "../../../utils/auth";
 import {
     getStudentSchedule,
     clearStudentSchedule,
-} from "../../auth/api/scheduleApi.js";
+} from "@/features/auth/api/scheduleApi";
 
 export default function SchedulePage() {
     const navigate = useNavigate();
@@ -95,8 +95,9 @@ export default function SchedulePage() {
             </span>
                         <span className={styles["back-arrow"]}>&lt;</span>
                     </button>
+
                     <h1 className={styles["schedule-title"]}>SCHEDULE</h1>
-                    <div></div>
+                    <div/>
                 </div>
 
                 {error && <div className={styles["err-message"]}>{error}</div>}
