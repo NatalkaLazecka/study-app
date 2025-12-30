@@ -5,32 +5,37 @@ export const STATUS_DONE = "a17535d5-e4d0-11f0-b846-42010a400016";
 
 export async function getTasksByStudent(studentId) {
     const res = await apiFetch(`/api/tasks/student/${studentId}`);
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
+    return await res.json();
 }
 
 
-export function updateTask(taskId, payload) {
-    return apiFetch(`/api/tasks/${taskId}`, {
+export async function updateTask(taskId, payload) {
+    const res = await apiFetch(`/api/tasks/${taskId}`, {
         method: "PUT",
         body: JSON.stringify(payload),
     });
+    return await res.json();
 }
 
-export function deleteTask(taskId, studentId) {
-    return apiFetch(`/api/tasks/${taskId}?studentId=${studentId}`, {
+
+export async function deleteTask(taskId, studentId) {
+    const res = await apiFetch(`/api/tasks/${taskId}?studentId=${studentId}`, {
         method: "DELETE",
     });
+    return await res.json();
 }
+
 
 export async function getTaskById(taskId, studentId) {
     const res = await apiFetch(`/api/tasks/${taskId}?studentId=${studentId}`);
     return res;
 }
 
-export function createTask(payload) {
-    return apiFetch(`/api/tasks`, {
+export async function createTask(payload) {
+    const res = await apiFetch(`/api/tasks`, {
         method: "POST",
         body: JSON.stringify(payload),
     });
+    return await res.json();
 }
+
