@@ -39,6 +39,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
                 if (!studentId) return navigate("/login");
 
                 const task = await getTaskById(id, studentId);
+
                 console.log(" TASK:", task);
                 console.log(" TASK KEYS:", task && Object.keys(task));
                 console.log(" TASK TYPE:", task && task.constructor?.name);
