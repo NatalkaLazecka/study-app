@@ -10,7 +10,7 @@ import {
   deleteTask,
   STATUS_DONE,
   STATUS_ON_GOING,
-} from "@/auth/api/todoApi.js";
+} from "@/features/auth/api/todoApi";
 
 export default function TodoListPage() {
   const navigate = useNavigate();
