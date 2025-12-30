@@ -220,7 +220,7 @@ export default function TodoListPage() {
 
                         <span
                             className={styles["delete-icon"]}
-                            onClick={() => deleteTodo(t.id)}
+                            onClick={() => deleteTask(t.id)}
                             style={{marginLeft: "10px", color: "#ff4d6d"}}
                         >
                       <i className="fa-solid fa-trash"/>

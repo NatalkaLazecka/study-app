@@ -103,12 +103,6 @@ export const getTasks = async (req, res) => {
 export const getTaskById = async (req, res) => {
     try {
         const {studentId} = req.query;
-        console.log("getTaskById", {
-            taskId: req.params.id,
-            studentId
-        });
-
-
         if (!studentId) {
             return res.status(400).json({error: "studentId is required"});
         }
