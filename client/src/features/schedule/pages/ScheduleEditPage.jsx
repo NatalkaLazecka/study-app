@@ -17,7 +17,7 @@ import {
     createProfessor,
     updateProfessor,
     deleteProfessor,
-} from "../../auth/api/scheduleApi.js";
+} from "@/features/auth/api/scheduleApi";
 
 export default function ScheduleEditPage() {
     const navigate = useNavigate();
@@ -227,31 +227,122 @@ export default function ScheduleEditPage() {
         label: t.nazwa,
     }));
 
+
     return (
         <div>
-            <MenuBar/>
-            <div className={styles["schedule-root"]}>
-                <h1 className={styles["schedule-title"]}>
-                    {scheduleId ? "EDIT SCHEDULE" : "NEW SCHEDULE"}
-                </h1>
+            <MenuBar />
 
-                {error && <div className={styles["err-message"]}>{error}</div>}
-
-                <div className={styles["schedule-event-content"]}>
-                    <CustomSelect
-                        value={subject}
-                        onChange={setSubject}
-                        options={subjectOptions}
-                        onCreateOption={handleCreateSubject}
-                        onEditOption={handleEditSubject}
-                        onDeleteOption={handleDeleteSubject}
-                    />
+            <div className={styles['schedule-root']}>
+                <div className={styles['header-section']}>
+                    <button
+                        className={styles['back-button']}
+                        onClick={() => navigate(-1)}
+                    >
+                        <span className={styles['back-text']}>stud
+                            <span className={styles['back-text-y']}>y</span></span>
+                        <span className={styles['back-arrow']}>&lt;</span>
+                    </button>
+                    <h1 className={styles['schedule-title']}>{scheduleId ? 'EDIT SCHEDULE' : 'NEW SCHEDULE'}</h1>
+                    <div></div>
                 </div>
 
-                <div className={styles["end-buttons"]}>
-                    <button onClick={handelSave}>SAVE</button>
-                    <button onClick={handelDelete}>DELETE</button>
-                </div>
+                {error && (<div className={styles['err-message']}>{error}</div>)}
+
+                {loading ? (
+                    <p className={styles['loading-p']}>Loading calendar...</p>
+                ) : (
+                    <div className={styles['schedule-event-content']}>
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Subject *</p>
+                            <CustomSelect
+                                value={subject}
+                                onChange={setSubject}
+                                onCreateOption={handleCreateSubject}
+                                onEditOption={handleEditSubject}
+                                onDeleteOption={handleDeleteSubject}
+                                options={subjectOptions}
+                                placeholder="-- Select Subject --"
+                                isDisabled={loading}
+                                isSearchable={true}
+                                isClearable={true}
+                                isEditable={true}
+                            />
+                        </div>
+
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Professor</p>
+                            <CustomSelect
+                                value={professor}
+                                onChange={setProfessor}
+                                onCreateOption={handleCreateProfessor}
+                                onEditOption={handleEditProfessor}
+                                onDeleteOption={handleDeletProfessor}
+                                options={professorOptions}
+                                placeholder="-- Select Professor --"
+                                isDisabled={loading}
+                                isSearchable={true}
+                                isClearable={true}
+                                isEditable={true}
+                            />
+                        </div>
+
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Day</p>
+                            <CustomSelect
+                                value={day}
+                                onChange={setDay}
+                                options={daysOptions}
+                                placeholder="-- Select Day --"
+                                isDisabled={loading}
+                                isSearchable={true}
+                                isClearable={true}
+                                isEditable={false}
+                            />
+                        </div>
+
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Time</p>
+                            <input
+                                type="time"
+                                value={time}
+                                onChange={(e) => setTime(e.target.value)}
+                                className={styles['schedule-input']}
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Room</p>
+                            <input
+                                type="text"
+                                value={room}
+                                onChange={(e) => setRoom(e.target.value)}
+                                className={styles['schedule-input']}
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <div className={styles['input-box']}>
+                            <p className={styles['input-title']}>Type</p>
+                            <CustomSelect
+                                value={classType}
+                                onChange={setClassType}
+                                options={classTypeOptions}
+                                placeholder="-- Select Type --"
+                                isDisabled={loading}
+                                isSearchable={true}
+                                isClearable={true}
+                                isEditable={false}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                <div className={styles['end-buttons']}>
+                    <button className={styles['end-button']} onClick={handelSave} disabled={loading}>{loading ? 'SAVING...' : 'SAVE'}</button>
+                    <button className={styles['end-button']} onClick={() => navigate(-1)} disabled={loading}>CANCEL</button>
+                    <button className={styles['end-button-delete']} onClick={handelDelete} disabled={loading}>{loading ? 'DELETING...' : 'DELETE'}</button>
+           </div>
             </div>
         </div>
     );
