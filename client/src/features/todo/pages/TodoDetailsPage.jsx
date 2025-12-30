@@ -37,6 +37,7 @@ export default function TodoDetailsPage({ mode = "edit" }) {
         if (!studentId) return navigate("/login");
 
         const task = await getTaskById(id, studentId);
+        console.log("task in component:" , task);
 
         setTitle(task.tytul);
         setDesc(task.tresc || "");

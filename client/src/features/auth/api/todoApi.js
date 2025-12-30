@@ -25,8 +25,7 @@ export function deleteTask(taskId, studentId) {
 
 export async function getTaskById(taskId, studentId) {
     const res = await apiFetch(`/api/tasks/${taskId}?studentId=${studentId}`);
-    const data = await res.json();
-    return data;
+    return res;
 }
 
 export function createTask(payload) {
