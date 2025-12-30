@@ -103,6 +103,11 @@ export const getTasks = async (req, res) => {
 export const getTaskById = async (req, res) => {
     try {
         const {studentId} = req.query;
+        console.log("getTaskById", {
+            taskId: req.params.id,
+            studentId
+        });
+
 
         if (!studentId) {
             return res.status(400).json({error: "studentId is required"});
@@ -125,11 +130,13 @@ export const getTaskById = async (req, res) => {
             [req.params.id, studentId]
         );
 
+        console.log("sql result: ", result);
         if (!result.length) {
             return res.status(404).json({message: "Zadanie nie znalezione"});
         }
         res.status(200).json({result});
     } catch (err) {
+        console.error('Error getTaskById', err);
         res.status(500).json({error: err.message});
     }
 };
