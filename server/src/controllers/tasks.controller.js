@@ -128,6 +128,7 @@ export const getTaskById = async (req, res) => {
         if (!result.length) {
             return res.status(404).json({message: "Zadanie nie znalezione"});
         }
+        res.status(200).json({result});
     } catch (err) {
         res.status(500).json({error: err.message});
     }
