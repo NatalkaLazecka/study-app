@@ -25,8 +25,11 @@ export default function TodoDetailsPage({mode = "edit"}) {
     const [autoNotify, setAutoNotify] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    console.log("🔥 RENDER TodoDetailsPage", {id, mode});
+
 
     useEffect(() => {
+        console.log("🔥 useEffect RUN", {id, mode});
         if (mode !== "edit") return;
 
 
@@ -36,7 +39,9 @@ export default function TodoDetailsPage({mode = "edit"}) {
                 if (!studentId) return navigate("/login");
 
                 const task = await getTaskById(id, studentId);
-                console.log("task in component:", task);
+                console.log(" TASK:", task);
+                console.log(" TASK KEYS:", task && Object.keys(task));
+                console.log(" TASK TYPE:", task && task.constructor?.name);
 
                 setTitle(task.tytul ?? "");
                 setDesc(task.tresc || "");
