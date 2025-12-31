@@ -44,6 +44,7 @@ export default function SchedulePage() {
         const fetchWeekType = async () => {
             if (studentId) {
                 const isFull = await getStudentWeekType(studentId);
+                console.log(`isFull: ${isFull}`);
                 setFullWeek(isFull);
             }
         };
@@ -130,7 +131,6 @@ export default function SchedulePage() {
                             onChange={async () => {
                                 await toggleFullWeekSchedule(studentId);
                                 setFullWeek((fw) => !fw);
-                                console.log(studentId);
                             }}
                             className={styles["toggle-input"]}
                         />
