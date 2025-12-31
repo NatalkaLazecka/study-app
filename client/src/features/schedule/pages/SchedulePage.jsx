@@ -121,7 +121,7 @@ export default function SchedulePage() {
                 {error && <div className={styles["err-message"]}>{error}</div>}
 
                 <div className={styles["week-toggle"]}>
-                    <label className={styles["toggle-label"]}>Full Week</label>
+                    <span className={styles["toggle-desc"]}>Full Week</span>
                     <div className={styles["toggle-switch"]}>
                         <input
                             type="checkbox"
