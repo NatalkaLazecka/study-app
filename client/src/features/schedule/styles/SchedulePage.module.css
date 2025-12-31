@@ -26,7 +26,7 @@ body {
     overflow-x: hidden;
 }
 
-.err-message{
+.err-message {
     color: var(--red);
     font-family: 'Roboto Mono', monospace;
     font-size: clamp(14px, 1.5vw, 16px);
@@ -101,12 +101,13 @@ body {
 /* ===== CALENDAR CONTENT ===== */
 .schedule-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: clamp(1rem, 1vw, 3rem);
-    width: 100%;
-    max-width: min(1400px, 95vw);
-    place-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(0.7rem, 2vw, 2.2rem);
+    width: 98vw;
+    max-width: 1600px;
+    place-items: stretch;
     align-items: start;
+    margin: 0 auto;
 }
 
 /* ===== PANEL SECTION ===== */
@@ -115,6 +116,7 @@ body {
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
+    min-width: 0;
 }
 
 .side-panel {
@@ -123,24 +125,28 @@ body {
     border-radius: 12px;
     color: var(--pink);
     font-family: 'Roboto Mono', monospace;
-    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    font-size: clamp(0.93rem, 1.7vw, 1.4rem);
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 3rem);
+    padding: clamp(0.6rem, 2vw, 2rem) clamp(0.7rem, 2vw, 1.5rem);
     box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
     text-align: center;
 }
 
 .panel-content {
+    min-height: 180px;
+    max-height: 65vh;
+    padding: clamp(0.5rem, 1vw, 1.2rem);
+    box-shadow: 0 0 15px rgba(232, 91, 191, 0.16);
+    overflow-y: auto;
+    overflow-x: visible;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
     background: #B381B030;
     border: 1.5px solid #A45EA1;
-    border-radius: 12px;
-    height: clamp(325px, 70vh, 615px);
-    padding: clamp(0.5rem, 1.5vw, 1rem);
-    box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
 /* ===== SXHEDULE COMPONENT ===== */
@@ -185,7 +191,7 @@ body {
     transition: background 0.2s ease;
 }
 
-.schedule-descripsion-button{
+.schedule-descripsion-button {
     background: transparent;
     border: none;
     color: var(--white);
@@ -194,7 +200,7 @@ body {
     display: flex;
 }
 
-.schedule-descripsion-button:hover{
+.schedule-descripsion-button:hover {
     text-decoration: underline;
 }
 
@@ -247,7 +253,7 @@ body {
     gap: clamp(10px, 2vh, 20px);
 }
 
-.input-box{
+.input-box {
     width: 100%;
     max-width: 320px;
     display: flex;
@@ -341,7 +347,7 @@ body {
     transition: 0.3s;
 }
 
-.end-button-delete{
+.end-button-delete {
     border: var(--red) solid 2px;
     border-radius: 12px;
     height: clamp(30px, 4vh, 35px);
@@ -352,7 +358,7 @@ body {
     font-size: clamp(14px, 1.5vw, 16px);
 }
 
-.end-button-delete:hover{
+.end-button-delete:hover {
     border: 2px solid var(--red);
     background: rgba(255, 111, 111, 0.3);
     color: var(--white);
@@ -374,7 +380,7 @@ body {
 }
 
 /* ===== CUSTOM SELECT STYLING ===== */
-.schedule-input{
+.schedule-input {
     border: 2px solid var(--white);
     padding: clamp(8px, 1.5vw, 10px);
     color: var(--white);
@@ -384,20 +390,29 @@ body {
     height: clamp(35px, 5vh, 40px);
 }
 
-.schedule-input:hover{
+.schedule-input:hover {
     border: 2px solid var(--pink);
-    box-shadow:
-        0 0 15px rgba(232, 91, 191, 0.6),
-        inset 0 0 10px rgba(232, 91, 191, 0.2);
+    box-shadow: 0 0 15px rgba(232, 91, 191, 0.6),
+    inset 0 0 10px rgba(232, 91, 191, 0.2);
     animation: dashRotate 2s linear infinite;
 }
 
 @keyframes dashRotate {
-    0% { border-color: var(--pink); }
-    25% { border-color: #b854b4; }
-    50% { border-color: var(--dotblue); }
-    75% { border-color: #b854b4; }
-    100% { border-color: var(--pink); }
+    0% {
+        border-color: var(--pink);
+    }
+    25% {
+        border-color: #b854b4;
+    }
+    50% {
+        border-color: var(--dotblue);
+    }
+    75% {
+        border-color: #b854b4;
+    }
+    100% {
+        border-color: var(--pink);
+    }
 }
 
 .schedule-input option {
@@ -432,8 +447,8 @@ body {
     display: block;
     width: 35px;
     height: 17px;
-    background-color:  #ccc;
-    border-radius:  34px;
+    background-color: #ccc;
+    border-radius: 34px;
     cursor: pointer;
     position: relative;
     transition: background-color 0.3s ease;
@@ -445,8 +460,8 @@ body {
     left: 2px;
     width: 13px;
     height: 13px;
-    background-color:  white;
-    border-radius:  50%;
+    background-color: white;
+    border-radius: 50%;
     transition: transform 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -468,16 +483,67 @@ body {
 }
 
 .week-toggle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-  justify-content: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    justify-content: flex-start;
 }
 
 .toggle-desc {
-  color: var(--white);
-  font-size: 1em;
-  font-family: 'Roboto Mono', monospace;
-  user-select: none;
+    color: var(--white);
+    font-size: 1em;
+    font-family: 'Roboto Mono', monospace;
+    user-select: none;
+}
+
+
+@media (max-width: 900px) {
+    .schedule-content {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 1.2rem;
+        width: 99vw;
+        max-width: 98vw;
+    }
+
+    .schedule-root {
+        padding: 1rem 0.2rem 2rem;
+    }
+
+    .panel-section {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .schedule-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .side-panel, .panel-content {
+        padding: 0.7rem;
+        font-size: 16px;
+    }
+
+    .panel-content {
+        min-height: 100px;
+        max-height: none;
+        height: auto;
+    }
+
+    .schedule-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .header-section {
+        grid-template-columns: 1fr auto;
+        padding: 0 clamp(0.5rem, 2vw, 1rem);
+    }
+
+    .back-button, .back-arrow {
+        font-size: 1rem;
+        padding: 0.2rem 0.5rem;
+    }
 }
