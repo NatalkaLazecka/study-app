@@ -17,7 +17,7 @@ export const getNotifications = async (req, res) => {
         tresc AS message,
         CAST(przeczytane AS UNSIGNED) AS unread
             FROM aktywnosc_w_ramach_wydarzenia
-            WHERE DATE (data_stworzenia) <= ? AND (student_id = ? OR student_id IS NULL)
+            WHERE DATE (data_stworzenia) = ? AND (student_id = ? OR student_id IS NULL)
             ORDER BY data_stworzenia DESC
         `, [today, student_id]);
 
@@ -28,7 +28,7 @@ export const getNotifications = async (req, res) => {
         tresc AS message,
         CAST(przeczytane AS UNSIGNED) AS unread
             FROM aktywnosc_w_ramach_zadania
-            WHERE DATE (data_stworzenia) <= ? AND (student_id = ? OR student_id IS NULL)
+            WHERE DATE (data_stworzenia) = ? AND (student_id = ? OR student_id IS NULL)
             ORDER BY data_stworzenia DESC
         `, [today, student_id]);
 

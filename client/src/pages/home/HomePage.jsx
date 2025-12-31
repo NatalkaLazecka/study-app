@@ -1,6 +1,6 @@
 import {useNavigate} from 'react-router-dom';
 import styles from './HomePage.module.css';
-import {CheckSquare, Calendar, Users, Bell} from 'lucide-react';
+import {CheckSquare, Calendar, Users, Table} from 'lucide-react';
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -42,14 +42,14 @@ export default function HomePage() {
                     <p className={styles['home-tile-label']}>Groups</p>
                 </div>
 
-                {/* Notifications */}
+                {/* Schedule */}
                 <div
                     className={styles['home-tile']}
-                    onClick={() => navigate('/notifications')}
-                    title="Go to Notifications"
+                    onClick={() => navigate('/schedule')}
+                    title="Go to Schedule"
                 >
-                    <Bell className={styles['home-icon']}/>
-                    <p className={styles['home-tile-label']}>Notifications</p>
+                    <Table className={styles['home-icon']}/>
+                    <p className={styles['home-tile-label']}>Schedule</p>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import styles from './MenuBar.module.css';
 import NotificationComponent from '../features/notification/component/NotificationComponent';
 
@@ -9,25 +9,45 @@ export default function MenuBar() {
     return (
         <div className={styles['menu-bar']}>
             <div className={styles['menu-icons']}>
-                <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')} title="To-Do List">
-                    <i className="fa-solid fa-list-check"></i>
-                </button>
-                <button className={styles['menu-icon-btn']} onClick={() => navigate('/calendar')} title="Calendar">
-                    <i className="fa-regular fa-calendar"></i>
-                </button>
-                <button className={styles['menu-icon-btn']} onClick={() => navigate('/groups')} title="Groups">
-                    <i className="fa-solid fa-people-group"></i>
-                </button>
-                <button className={styles['menu-icon-btn']} onClick={() => navigate('/schedule')} title="Schedule">
-                    <i className="fa-solid fa-table"></i>
-                </button>
-                <button className={styles['menu-icon-btn']} onClick={() => navigate('/notifications')} title="Notifications">
-                    <i className="fa-solid fa-question"></i>
-                </button>
+
+                <div className={styles['menu-hover-label']}>
+                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/home')}>
+                        <i className="fa-solid fa-house"></i>
+                    </button>
+                    <span className={styles['menu-label']}>Home</span>
+                </div>
+
+                <div className={styles['menu-hover-label']}>
+                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')}>
+                        <i className="fa-solid fa-list-check"></i>
+                    </button>
+                    <span className={styles['menu-label']}>To Do List</span>
+                </div>
+
+                <div className={styles['menu-hover-label']}>
+                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/calendar')}>
+                        <i className="fa-regular fa-calendar"></i>
+                    </button>
+                    <span className={styles['menu-label']}>Calendar</span>
+                </div>
+
+                <div className={styles['menu-hover-label']}>
+                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/groups')}>
+                        <i className="fa-solid fa-people-group"></i>
+                    </button>
+                    <span className={styles['menu-label']}>Groups</span>
+                </div>
+
+                <div className={styles['menu-hover-label']}>
+                    <button className={styles['menu-icon-btn']} onClick={() => navigate('/schedule')}>
+                        <i className="fa-solid fa-table"></i>
+                    </button>
+                    <span className={styles['menu-label']}>Schedule</span>
+                </div>
             </div>
 
             <div className={styles['menu-user']}>
-                <NotificationComponent />
+                <NotificationComponent/>
                 <button
                     className={styles['menu-icon-btn']}
                     onClick={() => navigate('/profile')}

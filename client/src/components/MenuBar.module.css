@@ -65,3 +65,34 @@
 .menu-icon-btn:active {
     transform: scale(0.95);
 }
+
+.menu-hover-label{
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.menu-label {
+  max-width: 0;
+  opacity: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-left: 0;
+  color: var(--pink);
+  font-weight: 600;
+  font-size: 1em;
+  letter-spacing: 0.02em;
+  transition: max-width 0.35s cubic-bezier(.44,1.61,.68,1.13), opacity 0.2s, margin-left 0.3s;
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 0.18em 0.85em;
+  pointer-events: none;
+}
+
+.menu-hover-label:hover .menu-label,
+.menu-hover-label:focus-within .menu-label {
+  max-width: 200px;
+  opacity: 1;
+  margin-left: 7px;
+  pointer-events: auto;
+}
