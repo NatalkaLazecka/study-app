@@ -135,7 +135,7 @@ body {
 }
 
 .panel-content {
-    min-height: 60vh;
+    min-height: 50vh;
     padding: clamp(0.5rem, 1vw, 1.2rem);
     box-shadow: 0 0 15px rgba(232, 91, 191, 0.16);
     overflow-y: auto;
