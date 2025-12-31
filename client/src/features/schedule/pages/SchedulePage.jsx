@@ -44,7 +44,6 @@ export default function SchedulePage() {
         const fetchWeekType = async () => {
             if (studentId) {
                 const isFull = await getStudentWeekType(studentId);
-                console.log(`isFull: ${isFull}`);
                 setFullWeek(isFull);
             }
         };

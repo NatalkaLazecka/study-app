@@ -90,6 +90,5 @@ export async function toggleFullWeekSchedule(studentId){
 export async function getStudentWeekType(studentId){
   const res = await apiFetch(`/api/students/${studentId}/getTypeForWeek`);
   const data = await res.json();
-  console.log(`Data  ${data},  return: ${Boolean(Number(data[0]?.full_week_schedule))}`)
   return Boolean(Number(data[0]?.full_week_schedule));
 }
