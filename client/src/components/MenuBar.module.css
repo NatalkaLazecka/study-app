@@ -80,6 +80,7 @@
     opacity: 1;
     margin-left: 7px;
     pointer-events: auto;
+    padding: 0.18em 0.85em;
 }
 
 .menu-label {
@@ -96,5 +97,5 @@
     letter-spacing: 0.02em;
     background: rgba(255, 255, 255, 0.06);
     border-radius: 6px;
-    padding: 0.18em 0.85em;
+    padding: 0;
 }
