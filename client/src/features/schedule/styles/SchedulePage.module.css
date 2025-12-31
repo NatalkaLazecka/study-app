@@ -101,7 +101,7 @@ body {
 /* ===== CALENDAR CONTENT ===== */
 .schedule-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: clamp(0.7rem, 2vw, 2.2rem);
     width: 98vw;
     max-width: 1600px;
@@ -136,7 +136,7 @@ body {
 
 .panel-content {
     min-height: 180px;
-    max-height: 65vh;
+    max-height: 80vh;
     padding: clamp(0.5rem, 1vw, 1.2rem);
     box-shadow: 0 0 15px rgba(232, 91, 191, 0.16);
     overflow-y: auto;
