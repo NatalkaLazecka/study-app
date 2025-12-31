@@ -13,36 +13,36 @@ export default function MenuBar() {
                 <div className={styles['menu-hover-label']}>
                     <button className={styles['menu-icon-btn']} onClick={() => navigate('/home')}>
                         <i className="fa-solid fa-house"></i>
+                         <span className={styles['menu-label']}>Home</span>
                     </button>
-                    <span className={styles['menu-label']}>Home</span>
                 </div>
 
                 <div className={styles['menu-hover-label']}>
                     <button className={styles['menu-icon-btn']} onClick={() => navigate('/todo')}>
                         <i className="fa-solid fa-list-check"></i>
+                        <span className={styles['menu-label']}>To Do List</span>
                     </button>
-                    <span className={styles['menu-label']}>To Do List</span>
                 </div>
 
                 <div className={styles['menu-hover-label']}>
                     <button className={styles['menu-icon-btn']} onClick={() => navigate('/calendar')}>
                         <i className="fa-regular fa-calendar"></i>
+                        <span className={styles['menu-label']}>Calendar</span>
                     </button>
-                    <span className={styles['menu-label']}>Calendar</span>
                 </div>
 
                 <div className={styles['menu-hover-label']}>
                     <button className={styles['menu-icon-btn']} onClick={() => navigate('/groups')}>
                         <i className="fa-solid fa-people-group"></i>
+                        <span className={styles['menu-label']}>Groups</span>
                     </button>
-                    <span className={styles['menu-label']}>Groups</span>
                 </div>
 
                 <div className={styles['menu-hover-label']}>
                     <button className={styles['menu-icon-btn']} onClick={() => navigate('/schedule')}>
                         <i className="fa-solid fa-table"></i>
+                        <span className={styles['menu-label']}>Schedule</span>
                     </button>
-                    <span className={styles['menu-label']}>Schedule</span>
                 </div>
             </div>
 
