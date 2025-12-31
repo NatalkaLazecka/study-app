@@ -8,6 +8,8 @@ import {getStudentId} from "../../../utils/auth";
 import {
     getStudentSchedule,
     clearStudentSchedule,
+    getStudentWeekType,
+    toggleFullWeekSchedule
 } from "@/features/auth/api/scheduleApi";
 
 export default function SchedulePage() {
@@ -15,6 +17,7 @@ export default function SchedulePage() {
     const [schedule, setSchedule] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [fullWeek, setFullWeek] = useState(false);
     const studentId = getStudentId();
 
     useEffect(() => {
@@ -37,6 +40,16 @@ export default function SchedulePage() {
         loadSchedule();
     }, [studentId, navigate]);
 
+    useEffect(() => {
+        const fetchWeekType = async () => {
+            if (studentId) {
+                const isFull = await getStudentWeekType(studentId);
+                setFullWeek(isFull);
+            }
+        };
+        fetchWeekType();
+    }, [studentId]);
+
     const groupByDay = () => {
         const days = {
             Monday: [],
@@ -45,6 +58,11 @@ export default function SchedulePage() {
             Thursday: [],
             Friday: [],
         };
+
+        if (fullWeek) {
+            days['Saturday'] = [];
+            days['Sunday'] = [];
+        }
 
         schedule.forEach((item) => {
             if (days[item.dzien_tygodnia]) {
@@ -101,6 +119,25 @@ export default function SchedulePage() {
                 </div>
 
                 {error && <div className={styles["err-message"]}>{error}</div>}
+
+                <div className={styles["week-toggle"]}>
+                    <label className={styles["toggle-label"]}>Full Week</label>
+                    <div className={styles["toggle-switch"]}>
+                        <input
+                            type="checkbox"
+                            id="full-week"
+                            checked={fullWeek}
+                            onChange={async () => {
+                                await toggleFullWeekSchedule(studentId);
+                                setFullWeek((fw) => !fw);
+                            }}
+                            className={styles["toggle-input"]}
+                        />
+                        <label htmlFor="full-week" className={styles["toggle-label"]}>
+                            <span className={styles["toggle-slider"]}></span>
+                        </label>
+                    </div>
+                </div>
 
                 {loading ? (
                     <p className={styles["loading-p"]}>Loading schedule...</p>

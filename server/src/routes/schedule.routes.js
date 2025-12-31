@@ -3,7 +3,7 @@ import {
     addProfessor, addSchedule, addSubject,
     deleteAllSchedulesForStudent, deleteSchedule, deleteSubject, deleteProfessor,
     getAllProfessor, getAllSubject, getScheduleForStudent, getTodayScheduleForStudent,
-    updateSchedule, updateSubject, updateProfessor
+    updateSchedule, updateSubject, updateProfessor, updateFullWeek
 } from "../controllers/schedule.controller.js";
 
 const router = express.Router();

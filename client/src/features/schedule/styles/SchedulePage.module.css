@@ -418,3 +418,51 @@ body {
     color: var(--black);
     font-weight: bold;
 }
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+}
+
+.toggle-input {
+    display: none;
+}
+
+.toggle-label {
+    display: block;
+    width: 35px;
+    height: 17px;
+    background-color:  #ccc;
+    border-radius:  34px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 13px;
+    height: 13px;
+    background-color:  white;
+    border-radius:  50%;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-input:checked + .toggle-label {
+    background-color: #4CAF50;
+}
+
+.toggle-input:checked + .toggle-label .toggle-slider {
+    transform: translateX(18px);
+}
+
+.toggle-label:hover {
+    opacity: 0.9;
+}
+
+.toggle-input:focus + .toggle-label {
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+}

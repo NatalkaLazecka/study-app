@@ -13,12 +13,22 @@ export const getStudents = async (req, res) => {
 export const getStudent = async (req, res) => {
     try {
         const [result] = await pool.query("SELECT id, indeks, imie, nazwisko, e_mail, haslo, data_rejestracji FROM student WHERE id = ?", [req.params.id]);
-        if (!result.length) return res.status(404).json({message: "Student not found"});
+        if (!result.length) return res.status(404).json({message: "getStudent: Student not found"});
         res.json(result);
     } catch (err) {
         res.status(500).json({error: err.message});
     }
 };
+
+export const getStudentWeekType = async (req, res) => {
+    try {
+        const [result] = await pool.query("SELECT CAST(full_week_schedule AS UNSIGNED) AS full_week_schedule FROM student WHERE id=?", [req.params.id]);
+        if (!result.length) return res.status(404).json({message: "getStudentWeekType: Student not found"});
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+}
 
 export const createStudent = async (req, res) => {
     const {indeks, imie, nazwisko, e_mail, haslo} = req.body;
@@ -48,6 +58,25 @@ export const updateStudent = async (req, res) => {
         res.status(500).json({error: err.message});
     }
 };
+
+export const updateFullWeek = async (req, res) => {
+    const {student_id} = req.body;
+
+    try {
+        const [result] = await pool.query(
+            "UPDATE student SET full_week_schedule = !full_week_schedule WHERE id=?",
+            [student_id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({message: "Student schedule not found"});
+        }
+
+        res.status(200).json({message: "Student schedule updated"});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+}
 
 export const deleteStudent = async (req, res) => {
     try {

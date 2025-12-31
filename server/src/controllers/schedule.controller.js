@@ -18,11 +18,13 @@ export const getScheduleForStudent = async (req, res) => {
                     pz.godzina,
                     pz.sala,
                     pz.typ_zajec_id,
-                    tz.nazwa   as typ_zajec
+                    tz.nazwa   as typ_zajec,
+                    s.full_week_schedule
              FROM plan_zajec pz
                       LEFT JOIN prowadzacy p ON pz.prowadzacy_id = p.id
                       LEFT JOIN przedmiot pr ON pz.przedmiot_id = pr.id
                       LEFT JOIN typ_zajec tz ON pz.typ_zajec_id = tz.id
+                      LEFT JOIN student s ON pz.student_id = s.student_id
              WHERE pz.student_id = ?
              ORDER BY pz.dzien_tygodnia, pz.godzina`,
             [student_id]
