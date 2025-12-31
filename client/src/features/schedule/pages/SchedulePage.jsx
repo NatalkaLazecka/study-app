@@ -130,6 +130,7 @@ export default function SchedulePage() {
                             onChange={async () => {
                                 await toggleFullWeekSchedule(studentId);
                                 setFullWeek((fw) => !fw);
+                                console.log(studentId);
                             }}
                             className={styles["toggle-input"]}
                         />
