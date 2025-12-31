@@ -80,7 +80,7 @@ export async function clearStudentSchedule(studentId) {
 }
 
 export async function toggleFullWeekSchedule(studentId){
-  await fetch(`/api/students/${studentId}/updateFullWeek`, {
+  await apiFetch(`/api/students/${studentId}/updateFullWeek`, {
     method: "PUT",
     body: JSON.stringify({ student_id: studentId }),
     headers: { "Content-Type": "application/json" }
@@ -88,7 +88,7 @@ export async function toggleFullWeekSchedule(studentId){
 }
 
 export async function getStudentWeekType(studentId){
-  const res = await fetch(`/api/students/${studentId}/getTypeForWeek`);
+  const res = await apiFetch(`/api/students/${studentId}/getTypeForWeek`);
   const data = await res.json();
   return Boolean(Number(data.full_week_schedule));
 }
