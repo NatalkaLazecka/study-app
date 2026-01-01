@@ -139,3 +139,30 @@
   height: 42px;
 }
 
+.home-subtitle {
+  margin-top: -1.5rem;
+  margin-bottom: 3rem;
+  font-size: 0.95rem;
+  opacity: 0.7;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.home-tile {
+  backdrop-filter: blur(6px);
+}
+
+.home-grid {
+  animation: fadeUp 0.6s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
