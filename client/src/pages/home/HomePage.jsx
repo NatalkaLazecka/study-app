@@ -12,7 +12,7 @@ export default function HomePage() {
       <div className={styles['home-background']}>
         <ColorBends
           rotation={120}
-          speed={0.1}
+          speed={1}
           colors={["#643762", "#FF9FFC", "#561f48"]}
           transparent
           autoRotate={0.25}
