@@ -1,7 +1,7 @@
 import { apiFetch } from "./apiClient";
 
-export async function getStudentSchedule(studentId) {
-  const res = await apiFetch(`/api/schedule/student/${studentId}`);
+export async function getStudentSchedule() {
+  const res = await apiFetch(`/api/schedule/student`);
   return res.json();
 }
 
@@ -73,22 +73,20 @@ export async function deleteProfessor(id) {
   await apiFetch(`/api/schedule/professor/${id}`, { method: "DELETE" });
 }
 
-export async function clearStudentSchedule(studentId) {
-  await apiFetch(`/api/schedule/student/${studentId}/all`, {
+export async function clearStudentSchedule() {
+  await apiFetch(`/api/schedule/student/all`, {
     method: "DELETE",
   });
 }
 
-export async function toggleFullWeekSchedule(studentId){
-  await apiFetch(`/api/students/${studentId}/updateFullWeek`, {
+export async function toggleFullWeekSchedule(){
+  await apiFetch(`/api/students/updateFullWeek`, {
     method: "PUT",
-    body: JSON.stringify({ student_id: studentId }),
-    headers: { "Content-Type": "application/json" }
   })
 }
 
-export async function getStudentWeekType(studentId){
-  const res = await apiFetch(`/api/students/${studentId}/getTypeForWeek`);
+export async function getStudentWeekType(){
+  const res = await apiFetch(`/api/students/getTypeForWeek`);
   const data = await res.json();
-  return Boolean(Number(data[0]?.full_week_schedule));
+  return Boolean(Number(data[0]?.full_week_schedule ?? 0));
 }

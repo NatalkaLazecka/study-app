@@ -12,6 +12,8 @@ import scheduleRoutes from "./routes/schedule.routes.js";
 import notificationsRoutes from "./routes/notifications.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+
 
 dotenv.config();
 
@@ -20,6 +22,7 @@ const app = express()
 // Middleware
 app.use(cors({ origin: FRONTEND_URL, methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true }))
 app.use(express.json())
+app.use(cookieParser());
 
 //ROUTES
 app.use("/api/emails", emailRoutes);

@@ -1,5 +1,5 @@
 import {create} from "zustand";
-import {getStudentId} from "../../../utils/auth";
+import {getStudentId} from "../../../utils/authService";
 
 const API =
     import.meta.env.VITE_RAILWAY_API_URL || "http://localhost:3001";

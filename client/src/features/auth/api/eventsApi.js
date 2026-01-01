@@ -16,7 +16,10 @@ export async function uploadEventFile(eventId, file) {
 
   const res = await fetch(
     `${import.meta.env.VITE_API_URL}/api/events/${eventId}/files`,
-    { method: "POST", body: formData }
+    { method: "POST", body: formData,
+          credentials: "include",
+    }
+
   );
 
   if (!res.ok) throw new Error("Upload failed");
@@ -28,7 +31,10 @@ export async function deleteEventFile(fileId) {
 
 export async function downloadEventFile(fileId) {
   const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/events/files/${fileId}/download`
+    `${import.meta.env.VITE_API_URL}/api/events/files/${fileId}/download`,
+  {
+    credentials: "include",
+  }
   );
   if (!res.ok) throw new Error("Download failed");
   return res.blob();

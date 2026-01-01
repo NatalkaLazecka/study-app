@@ -44,6 +44,7 @@ export async function resetPassword({ token, newPassword }) {
 export async function login(email, password) {
   const res = await fetch(`${API}/api/auth/login`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
@@ -54,10 +55,10 @@ export async function login(email, password) {
 
   return res.json();
 }
-
 export async function register(data) {
   const res = await fetch(`${API}/api/auth/register`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });

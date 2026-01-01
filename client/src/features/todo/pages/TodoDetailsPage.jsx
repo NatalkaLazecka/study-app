@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import calendarStyles from "../../calendar/styles/CalendarPage.module.css";
 import todoStyles from "../styles/Todo.module.css";
 import MenuBar from "../../../components/MenuBar";
-import {getStudentId} from "../../../utils/auth";
+
 
 import {
     getTaskById,
@@ -33,10 +33,10 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
         const loadTask = async () => {
             try {
-                const studentId = getStudentId();
-                if (!studentId) return navigate("/login");
+                // const studentId = getStudentId();
+                // if (!studentId) return navigate("/login");
 
-                const task = await getTaskById(id, studentId);
+                const task = await getTaskById(id);
 
                 setTitle(task.tytul ?? "");
                 setDesc(task.tresc || "");
@@ -61,8 +61,8 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
         try {
             setLoading(true);
-            const studentId = getStudentId();
-            if (!studentId) return navigate("/login");
+            // const studentId = getStudentId();
+            // if (!studentId) return navigate("/login");
 
             const payload = {
                 tytul: title,
@@ -70,7 +70,6 @@ export default function TodoDetailsPage({mode = "edit"}) {
                 priorytet: priority,
                 wysilek: effort,
                 deadline: date,
-                student_id: studentId,
                 status_zadania_id: STATUS_ON_GOING,
                 automatyczne_powiadomienie: autoNotify ? 1 : 0,
             };
@@ -91,10 +90,10 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
     const handleDelete = async () => {
         try {
-            const studentId = getStudentId();
-            if (!studentId) return navigate("/login");
+            // const studentId = getStudentId();
+            // if (!studentId) return navigate("/login");
 
-            await deleteTask(id, studentId);
+            await deleteTask(id);
             navigate("/todo");
         } catch (err) {
             setError(err.message);

@@ -6,7 +6,7 @@ import "react-resizable/css/styles.css";
 
 import styles from "../styles/Group.module.css";
 import {useGroups} from "../store/groupStore";
-import {getStudentId} from "../../../utils/auth";
+import {getStudentId} from "../../../utils/authService";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 

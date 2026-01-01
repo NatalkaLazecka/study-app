@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import styles from "../styles/NotificationComponent.module.css";
-import {getStudentId} from "../../../utils/auth";
+import {getStudentId} from "../../../utils/authService";
 
 import {
     getNotifications,
@@ -15,14 +15,14 @@ export default function NotificationComponent() {
     const [loading, setLoading] = useState(false);
 
     const unreadCount = notifications.filter((n) => n.unread === 0).length;
-    const studentId = getStudentId();
+    // const studentId = getStudentId();
 
     const fetchNotifications = async () => {
-        if (!studentId) return;
+
 
         setLoading(true);
         try {
-            const data = await getNotifications(studentId);
+            const data = await getNotifications();
             setNotifications(data);
         } catch (err) {
             console.error("Error fetching notifications:", err);
@@ -33,7 +33,7 @@ export default function NotificationComponent() {
 
     const handleMarkAllAsRead = async () => {
         try {
-            await markAllAsRead(studentId);
+            await markAllAsRead();
             await fetchNotifications();
         } catch (err) {
             console.error("Error marking all as read:", err);
@@ -42,7 +42,7 @@ export default function NotificationComponent() {
 
     const handleMarkAsRead = async (id, type) => {
         try {
-            await markAsRead(id, type, studentId);
+            await markAsRead(id, type);
             await fetchNotifications();
         } catch (err) {
             console.error("Error marking as read:", err);
@@ -52,7 +52,7 @@ export default function NotificationComponent() {
     const handleDelete = async (e, id, type) => {
         e.stopPropagation();
         try {
-            await deleteNotification(id, type, studentId);
+            await deleteNotification(id, type);
             await fetchNotifications();
         } catch (err) {
             console.error("Error deleting notification:", err);
@@ -67,12 +67,10 @@ export default function NotificationComponent() {
     };
 
     useEffect(() => {
-        if (studentId) {
             fetchNotifications();
             const interval = setInterval(fetchNotifications, 30000);
             return () => clearInterval(interval);
-        }
-    }, [studentId]);
+    }, []);
 
     useEffect(() => {
         if (isOpen) fetchNotifications();

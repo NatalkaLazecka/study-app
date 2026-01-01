@@ -30,7 +30,7 @@ export default function ScheduleEditPage() {
     const [time, setTime] = useState("");
     const [room, setRoom] = useState("");
     const [classType, setClassType] = useState("");
-    const [studentId, setStudentId] = useState("");
+    // const [studentId, setStudentId] = useState("");
     const [scheduleId, setScheduleId] = useState("");
 
     const [subjects, setSubjects] = useState([]);
@@ -52,10 +52,10 @@ export default function ScheduleEditPage() {
 
 
     useEffect(() => {
-        const studentURL = searchParams.get("studentId");
+        // const studentURL = searchParams.get("studentId");
         const scheduleURL = searchParams.get("scheduleId");
 
-        if (studentURL) setStudentId(studentURL);
+        // if (studentURL) setStudentId(studentURL);
         if (scheduleURL) setScheduleId(scheduleURL);
 
         const loadData = async () => {
@@ -75,12 +75,12 @@ export default function ScheduleEditPage() {
     }, [searchParams]);
 
     useEffect(() => {
-        if (!studentId || !scheduleId) return;
+        if (!scheduleId) return;
 
         const loadSchedule = async () => {
             setLoading(true);
             try {
-                const data = await getStudentSchedule(studentId);
+                const data = await getStudentSchedule();
                 const scheduleItem = data.find((item) => item.id === scheduleId);
 
                 if (!scheduleItem) {
@@ -102,7 +102,7 @@ export default function ScheduleEditPage() {
         };
 
         loadSchedule();
-    }, [studentId, scheduleId]);
+    }, [scheduleId]);
 
     const validateForm = () => {
         if (!subject || !day || !time || !classType) {
@@ -118,7 +118,6 @@ export default function ScheduleEditPage() {
         setError("");
 
         const scheduleData = {
-            student_id: studentId,
             przedmiot_id: subject,
             prowadzacy_id: professor || null,
             dzien_tygodnia: day,

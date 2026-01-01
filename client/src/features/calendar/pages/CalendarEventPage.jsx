@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../styles/CalendarPage.module.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import MenuBar from "../../../components/MenuBar";
-import { getStudentId } from "../../../utils/auth";
+// import { getStudentId } from "../../../utils/authService";
 
 import {
   getEventCategories,
@@ -158,39 +158,35 @@ export default function CalendarEventPage() {
     setLoading(true);
     setError("");
 
-    try {
-      const studentId = getStudentId();
-      if (!studentId) {
-        navigate("/login");
-        return;
-      }
 
-      const categoryId = getCategoryIdByName(activeCategory);
-      const eventData = {
-        tytul: title.trim(),
-        opis: describe.trim() || null,
-        data_start: date,
-        data_koncowa: endDate || null,
-        priorytet: "normal",
-        rodzaj_wydarzenia_id: categoryId,
-        rodzaj_powtarzania_id: null,
-        student_id: studentId,
-        automatyczne_powiadomienia: autoNotify ? 1 : 0,
-      };
 
-      if (eventId) {
-        await updateEvent(eventId, eventData);
-      } else {
-        await createEvent(eventData);
-      }
+  try {
+    const categoryId = getCategoryIdByName(activeCategory);
 
-      navigate("/calendar");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    const eventData = {
+      tytul: title.trim(),
+      opis: describe.trim() || null,
+      data_start: date,
+      data_koncowa: endDate || null,
+      priorytet: "normal",
+      rodzaj_wydarzenia_id: categoryId,
+      rodzaj_powtarzania_id: null,
+      automatyczne_powiadomienia: autoNotify ? 1 : 0,
+    };
+
+    if (eventId) {
+      await updateEvent(eventId, eventData);
+    } else {
+      await createEvent(eventData);
     }
-  };
+
+    navigate("/calendar");
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   const handleDelete = async () => {

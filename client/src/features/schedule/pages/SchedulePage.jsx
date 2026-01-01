@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import ScheduleViewComponent from "../component/ScheduleViewComponent";
 import MenuBar from "../../../components/MenuBar";
-import {getStudentId} from "../../../utils/auth";
+import {getStudentId} from "../../../utils/authService";
 
 import {
     getStudentSchedule,
@@ -18,37 +18,43 @@ export default function SchedulePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [fullWeek, setFullWeek] = useState(false);
-    const studentId = getStudentId();
+    // const studentId = getStudentId();
 
     useEffect(() => {
         const loadSchedule = async () => {
             try {
-                if (!studentId) {
-                    navigate("/login");
-                    return;
-                }
+                // if (!studentId) {
+                //     navigate("/login");
+                //     return;
+                // }
 
-                const data = await getStudentSchedule(studentId);
+                const data = await getStudentSchedule();
                 setSchedule(data);
             } catch (err) {
-                setError(err.message || "Schedule is empty");
+                if (err.message?.includes("401")){
+                    navigate("/login");
+                } else {
+                    setError(err.message || "Schedule is empty")
+                }
             } finally {
                 setLoading(false);
             }
         };
 
         loadSchedule();
-    }, [studentId, navigate]);
+    }, [navigate]);
 
     useEffect(() => {
         const fetchWeekType = async () => {
-            if (studentId) {
-                const isFull = await getStudentWeekType(studentId);
+            try {
+                const isFull = await getStudentWeekType();
                 setFullWeek(isFull);
+            } catch {
             }
         };
+
         fetchWeekType();
-    }, [studentId]);
+    }, []);
 
     const groupByDay = () => {
         const days = {
@@ -87,7 +93,7 @@ export default function SchedulePage() {
         setError("");
 
         try {
-            await clearStudentSchedule(studentId);
+            await clearStudentSchedule();
             setSchedule([]);
         } catch (err) {
             setError(err.message);
@@ -128,7 +134,7 @@ export default function SchedulePage() {
                             id="full-week"
                             checked={fullWeek}
                             onChange={async () => {
-                                await toggleFullWeekSchedule(studentId);
+                                await toggleFullWeekSchedule();
                                 setFullWeek((fw) => !fw);
                             }}
                             className={styles["toggle-input"]}
@@ -153,7 +159,6 @@ export default function SchedulePage() {
                                             time={formatTime(item.godzina)}
                                             subject={item.przedmiot_nazwa}
                                             room={item.sala}
-                                            studentId={studentId}
                                             scheduleId={item.id}
                                         />
                                     ))}
@@ -167,7 +172,7 @@ export default function SchedulePage() {
                     <button
                         className={styles["end-button"]}
                         onClick={() =>
-                            navigate(`/schedule/edit?studentId=${studentId}`)
+                            navigate(`/schedule/edit`)
                         }
                     >
                         ADD

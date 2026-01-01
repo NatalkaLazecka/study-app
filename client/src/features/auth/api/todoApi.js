@@ -3,8 +3,8 @@ import {apiFetch} from "./apiClient";
 export const STATUS_ON_GOING = "a0b9c93d-e4d0-11f0-b846-42010a400016";
 export const STATUS_DONE = "a17535d5-e4d0-11f0-b846-42010a400016";
 
-export async function getTasksByStudent(studentId) {
-    const res = await apiFetch(`/api/tasks/student/${studentId}`);
+export async function getMyTasks() {
+    const res = await apiFetch(`/api/tasks/`);
     return await res.json();
 }
 
@@ -18,16 +18,16 @@ export async function updateTask(taskId, payload) {
 }
 
 
-export async function deleteTask(taskId, studentId) {
-    const res = await apiFetch(`/api/tasks/${taskId}?studentId=${studentId}`, {
+export async function deleteTask(taskId) {
+    const res = await apiFetch(`/api/tasks/${taskId}`, {
         method: "DELETE",
     });
     return await res.json();
 }
 
 
-export async function getTaskById(taskId, studentId) {
-  const res = await apiFetch(`/api/tasks/${taskId}?studentId=${studentId}`);
+export async function getTaskById(taskId) {
+  const res = await apiFetch(`/api/tasks/${taskId}`);
   const data = await res.json();
 
 

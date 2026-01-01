@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "../styles/Todo.module.css";
 import MenuBar from "../../../components/MenuBar";
-import { getStudentId } from "../../../utils/auth";
+// import { getStudentId } from "../../../utils/authService";
 
 import {
-  getTasksByStudent,
+  getMyTasks,
   updateTask,
   deleteTask,
   STATUS_DONE,
@@ -24,10 +24,10 @@ export default function TodoListPage() {
     const loadTodos = async () => {
       try {
         setLoading(true);
-        const studentId = getStudentId();
-        if (!studentId) return navigate("/login");
+        // const studentId = getStudentId();
+        // if (!studentId) return navigate("/login");
 
-        const data = await getTasksByStudent(studentId);
+        const data = await getMyTasks();
 
         setTodos(
             data.map((task) => ({
@@ -52,8 +52,8 @@ export default function TodoListPage() {
   }, [navigate]);
 
   const toggleDone = async (id) => {
-    const studentId = getStudentId();
-    if (!studentId) return navigate("/login");
+    // const studentId = getStudentId();
+    // if (!studentId) return navigate("/login");
 
     const task = todos.find((t) => t.id === id);
     if (!task) return;
@@ -73,7 +73,6 @@ export default function TodoListPage() {
         deadline: task.deadline,
         wysilek: task.effort,
         status_zadania_id: newStatus,
-        student_id: studentId,
         automatyczne_powiadomienie: task.automatyczne_powiadomienie || 0,
       });
     } catch (err) {
@@ -85,10 +84,10 @@ export default function TodoListPage() {
   };
 
   const handleDelete = async (id) => {
-    const studentId = getStudentId();
-    if (!studentId) return navigate("/login");
+    // const studentId = getStudentId();
+    // if (!studentId) return navigate("/login");
 
-    await deleteTask(id, studentId);
+    await deleteTask(id);
     setTodos((prev) => prev.filter((t) => t.id !== id));
   };
 

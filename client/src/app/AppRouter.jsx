@@ -15,10 +15,10 @@ import GroupDetailsPage from '@/features/group/pages/GroupDetailsPage';
 import ScheduleEditPage from "../features/schedule/pages/ScheduleEditPage";
 import SchedulePage from "../features/schedule/pages/SchedulePage";
 import {ErrorBoundary} from "@/components/ErrorBoundary.jsx";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
-
-const ProtectedRoute = ({ isAuthed, children }) =>
-  isAuthed ? children : <Navigate to="/login" replace />;
+// const ProtectedRoute = ({ isAuthed, children }) =>
+//   isAuthed ? children : <Navigate to="/login" replace />;
 
 export default function AppRouter({ isAuthed = true }) {
   return (
