@@ -1,18 +1,17 @@
-import {verifyToken} from "../services/jwt.service.js";
+import { verifyToken } from "../services/jwt.service.js";
 
 export function requireAuth(req, res, next) {
-    const header = req.headers.authorization;
-    if (!header) {
-        return res.status(401).json({message: "Missing token"});
-    }
-    const token = header.split(" ")[1];
+  const token = req.cookies?.access_token;
 
-    try {
-        const decoded = verifyToken(token);
-        req.user = decoded;
-        next();
-    } catch (err) {
-        return res.status(401).json({message: "Invalid token"});
-    }
+  if (!token) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
 
+  try {
+    const decoded = verifyToken(token);
+    req.user = decoded; // { id, email }
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
 }
