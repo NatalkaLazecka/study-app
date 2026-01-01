@@ -1,76 +1,112 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
 
+/* ===== ROOT ===== */
 .home-root {
   min-height: 100vh;
   width: 100vw;
-  background: radial-gradient(ellipse 70% 65% at 50% 50%, #b854b4 0%, #3D2A3C 60%, #160c1a 100%), #0a0610;
+  background: radial-gradient(
+      ellipse 70% 65% at 50% 50%,
+      #b854b4 0%,
+      #3D2A3C 60%,
+      #160c1a 100%
+    ),
+    #0a0610;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-family: 'Roboto Mono', monospace;
-  overflow: hidden;
   color: #e8d2e7;
+  overflow: hidden;
 }
 
+/* ===== TITLE ===== */
 .home-title {
   font-size: 3.4rem;
   font-weight: 700;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
   letter-spacing: 0.12em;
   text-transform: lowercase;
-  color: #e8d2e7;
 }
 
 .home-title-highlight {
   color: #e85bbf;
 }
 
+.home-subtitle {
+  margin-top: -1.2rem;
+  margin-bottom: 3rem;
+  font-size: 0.95rem;
+  opacity: 0.7;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* ===== GRID ===== */
 .home-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2.3rem;
+  animation: fadeUp 0.6s ease forwards;
 }
 
+/* ===== TILE ===== */
 .home-tile {
+  width: 170px;
+  height: 160px;
   background: rgba(255, 255, 255, 0.05);
   border: 2px solid #e85bbf;
   border-radius: 14px;
-  width: 170px;
-  height: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: all 0.25s ease;
   cursor: pointer;
-  box-shadow: 0 0 0 0 transparent;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
 }
 
 .home-tile:hover {
   background: #e85bbf;
-  box-shadow: 0 0 20px 0 #e85bbf;
-  border-color: #e85bbf;
+  box-shadow: 0 0 20px #e85bbf;
 }
 
+/* ===== ICON ===== */
 .home-icon {
   color: #f9d3f7;
-  font-size: 2.8rem !important;
   margin-bottom: 15px;
   transition: color 0.2s ease;
+}
+
+.home-icon svg {
+  width: 42px;
+  height: 42px;
 }
 
 .home-tile:hover .home-icon {
   color: #fff;
 }
 
+/* ===== LABEL ===== */
 .home-tile-label {
-  color: #e8d2e7;
   font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
 
+/* ===== ANIMATION ===== */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .home-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -101,68 +137,5 @@
 
   .home-title {
     font-size: 2rem;
-  }
-}
-.home-subtitle {
-  opacity: 0.75;
-  margin-bottom: 2rem;
-  letter-spacing: 0.08em;
-  text-align: center;
-}
-
-.home-primary {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 3rem;
-  padding: 0.7rem 1.6rem;
-  background: #e85bbf;
-  border: none;
-  border-radius: 999px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 0 18px #e85bbf66;
-}
-
-.home-primary:hover {
-  box-shadow: 0 0 30px #e85bbf;
-}
-
-.primary-tile {
-  grid-column: span 2;
-  height: 190px;
-}
-
-.home-icon svg {
-  width: 42px;
-  height: 42px;
-}
-
-.home-subtitle {
-  margin-top: -1.5rem;
-  margin-bottom: 3rem;
-  font-size: 0.95rem;
-  opacity: 0.7;
-  letter-spacing: 0.08em;
-  text-align: center;
-}
-
-.home-tile {
-  backdrop-filter: blur(6px);
-}
-
-.home-grid {
-  animation: fadeUp 0.6s ease forwards;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
