@@ -17,106 +17,131 @@ import SchedulePage from "../features/schedule/pages/SchedulePage";
 import {ErrorBoundary} from "@/components/ErrorBoundary.jsx";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
-// const ProtectedRoute = ({ isAuthed, children }) =>
-//   isAuthed ? children : <Navigate to="/login" replace />;
 
-export default function AppRouter({ isAuthed = true }) {
+
+
+export default function AppRouter() {
   return (
-      <ErrorBoundary>
-    <Routes>
-      {/* Landing & Auth */}
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
+    <ErrorBoundary>
+      <Routes>
+        {/* Public */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-      {/* Calendar */}
-      <Route path="/calendar" element={<CalendarPage />} />
-      <Route path="/calendar/event" element={<CalendarEventPage />} />
+        {/* Protected */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Home */}
-      <Route
-        path="/home"
-        element={
-          <ProtectedRoute isAuthed={isAuthed}>
-            <HomePage />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/todo"
+          element={
+            <ProtectedRoute>
+              <TodoListPage />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* To-Do */}
-      <Route
-        path="/todo"
-        element={
-          <ProtectedRoute isAuthed={isAuthed}>
-            <TodoListPage />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/todo/edit/:id"
+          element={
+            <ProtectedRoute>
+              <TodoDetailsPage mode="edit" />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/todo/edit/:id"
-        element={
-          <ProtectedRoute isAuthed={isAuthed}>
-            <TodoDetailsPage mode="edit" />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/todo/new"
+          element={
+            <ProtectedRoute>
+              <TodoDetailsPage mode="new" />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/todo/new"
-        element={
-          <ProtectedRoute isAuthed={isAuthed}>
-            <TodoDetailsPage mode="new" />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/calendar"
+          element={
+            <ProtectedRoute>
+              <CalendarPage />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Profile */}
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute isAuthed={true}>
-            <UserProfilePage />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/calendar/event"
+          element={
+            <ProtectedRoute>
+              <CalendarEventPage />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Groups */}
-      <Route
-        path="/groups"
-        element={
-          <ProtectedRoute isAuthed={isAuthed}>
-            <GroupListPage />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/schedule"
+          element={
+            <ProtectedRoute>
+              <SchedulePage />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/groups/new"
-        element={
-          <ProtectedRoute isAuthed={isAuthed}>
-            <GroupCreatePage />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/schedule/edit"
+          element={
+            <ProtectedRoute>
+              <ScheduleEditPage />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/groups/:id"
-        element={
-          <ProtectedRoute isAuthed={isAuthed}>
-            <GroupDetailsPage />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/groups"
+          element={
+            <ProtectedRoute>
+              <GroupListPage />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Schedule */}
-      <Route path="/schedule" element={<SchedulePage />} />
-      <Route path="/schedule/edit" element={<ScheduleEditPage />} />
+        <Route
+          path="/groups/new"
+          element={
+            <ProtectedRoute>
+              <GroupCreatePage />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes></ErrorBoundary>
+        <Route
+          path="/groups/:id"
+          element={
+            <ProtectedRoute>
+              <GroupDetailsPage />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <UserProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </ErrorBoundary>
   );
 }
+

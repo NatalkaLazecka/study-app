@@ -9,6 +9,7 @@ export function useAuth() {
     authService
       .me()
       .then(setUser)
+      .catch(() => setUser(null))
       .finally(() => setLoading(false));
   }, []);
 
