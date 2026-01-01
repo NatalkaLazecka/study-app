@@ -17,14 +17,14 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const BASE =
+    const API =
       import.meta.env.VITE_RAILWAY_API_URL;
 
     Promise.all([
-      fetch(`${BASE}/todos`).then(res => res.json()),
-      fetch(`${BASE}/events`).then(res => res.json()),
-      fetch(`${BASE}/groups`).then(res => res.json()),
-      fetch(`${BASE}/schedule`).then(res => res.json()),
+      fetch(`${API}/api/todos`).then(res => res.json()),
+      fetch(`${API}/api/events`).then(res => res.json()),
+      fetch(`${API}/api/groups`).then(res => res.json()),
+      fetch(`${API}/api/schedule`).then(res => res.json()),
     ])
       .then(([todos, events, groups, schedule]) => {
         setStats({
