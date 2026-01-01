@@ -104,9 +104,10 @@
   }
 }
 .home-subtitle {
-  opacity: 0.7;
+  opacity: 0.75;
   margin-bottom: 2rem;
   letter-spacing: 0.08em;
+  text-align: center;
 }
 
 .home-primary {
@@ -114,14 +115,14 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 3rem;
-  padding: 0.7rem 1.4rem;
+  padding: 0.7rem 1.6rem;
   background: #e85bbf;
   border: none;
   border-radius: 999px;
   color: white;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 0 20px #e85bbf55;
+  box-shadow: 0 0 18px #e85bbf66;
 }
 
 .home-primary:hover {
@@ -133,10 +134,8 @@
   height: 190px;
 }
 
-.home-stats {
-  margin-top: 3rem;
-  display: flex;
-  gap: 2rem;
-  font-size: 0.85rem;
-  opacity: 0.8;
+.home-icon svg {
+  width: 42px;
+  height: 42px;
 }
+

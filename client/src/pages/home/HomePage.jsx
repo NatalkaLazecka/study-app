@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import styles from "./HomePage.module.css";
 import { CheckSquare, Calendar, Users, Table, Plus } from "lucide-react";
-import { AuroraBackground } from "reactbits/backgrounds";
-import { TiltCard } from "reactbits/hover";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -15,15 +14,17 @@ export default function HomePage() {
     schedule: 0,
   });
 
-  useEffect(() => {
+  const [loading, setLoading] = useState(true);
 
-    const API = import.meta.env.VITE_RAILWAY_API_URL;
+  useEffect(() => {
+    const BASE =
+      import.meta.env.VITE_RAILWAY_API_URL;
 
     Promise.all([
-      fetch(`${API}/todos`).then(res => res.json()),
-      fetch(`${API}/events`).then(res => res.json()),
-      fetch(`${API}/groups`).then(res => res.json()),
-      fetch(`${API}/schedule`).then(res => res.json()),
+      fetch(`${BASE}/todos`).then(res => res.json()),
+      fetch(`${BASE}/events`).then(res => res.json()),
+      fetch(`${BASE}/groups`).then(res => res.json()),
+      fetch(`${BASE}/schedule`).then(res => res.json()),
     ])
       .then(([todos, events, groups, schedule]) => {
         setStats({
@@ -34,79 +35,74 @@ export default function HomePage() {
         });
       })
       .catch(err => {
-        console.error("Failed to load stats:", err);
-      });
+        console.error("Home stats error:", err);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <AuroraBackground>
-      <div className={styles["home-root"]}>
-        <h1 className={styles["home-title"]}>
-          Hom<span className={styles["home-title-highlight"]}>e</span>
-        </h1>
+    <div className={styles["home-root"]}>
+      <h1 className={styles["home-title"]}>
+        Hom<span className={styles["home-title-highlight"]}>e</span>
+      </h1>
 
-        <p className={styles["home-subtitle"]}>
-          Masz {stats.todos} zadania, {stats.events} wydarzenia,
-          {stats.groups} grupy i {stats.schedule} zajęć.
-        </p>
+      <p className={styles["home-subtitle"]}>
+        {loading
+          ? "Loading your data…"
+          : `You have ${stats.todos} tasks, ${stats.events} events and ${stats.groups} groups`}
+      </p>
 
-        <button
-          className={styles["home-primary"]}
+      <button
+        className={styles["home-primary"]}
+        onClick={() => navigate("/todo")}
+      >
+        <Plus size={18} />
+        Add new task
+      </button>
+
+      <div className={styles["home-grid"]}>
+        <HomeTile
+          label={`To-Do (${stats.todos})`}
+          icon={<CheckSquare />}
           onClick={() => navigate("/todo")}
-        >
-          <Plus size={18} /> Add new task
-        </button>
+          primary
+        />
 
-        <div className={styles["home-grid"]}>
-          <TiltCard>
-            <div
-              className={`${styles["home-tile"]} ${styles["primary-tile"]}`}
-              onClick={() => navigate("/todo")}
-            >
-              <CheckSquare className={styles["home-icon"]} />
-              <p className={styles["home-tile-label"]}>
-                To-Do ({stats.todos})
-              </p>
-            </div>
-          </TiltCard>
+        <HomeTile
+          label={`Calendar (${stats.events})`}
+          icon={<Calendar />}
+          onClick={() => navigate("/calendar")}
+        />
 
-          <TiltCard>
-            <div
-              className={styles["home-tile"]}
-              onClick={() => navigate("/calendar")}
-            >
-              <Calendar className={styles["home-icon"]} />
-              <p className={styles["home-tile-label"]}>
-                Calendar ({stats.events})
-              </p>
-            </div>
-          </TiltCard>
+        <HomeTile
+          label={`Groups (${stats.groups})`}
+          icon={<Users />}
+          onClick={() => navigate("/groups")}
+        />
 
-          <TiltCard>
-            <div
-              className={styles["home-tile"]}
-              onClick={() => navigate("/groups")}
-            >
-              <Users className={styles["home-icon"]} />
-              <p className={styles["home-tile-label"]}>
-                Groups ({stats.groups})
-              </p>
-            </div>
-          </TiltCard>
-
-          <TiltCard>
-            <div
-              className={styles["home-tile"]}
-              onClick={() => navigate("/schedule")}
-            >
-              <Table className={styles["home-icon"]} />
-              <p className={styles["home-tile-label"]}>
-                Schedule ({stats.schedule})
-              </p>
-            </div>
-          </TiltCard>
-        </div>
+        <HomeTile
+          label={`Schedule (${stats.schedule})`}
+          icon={<Table />}
+          onClick={() => navigate("/schedule")}
+        />
       </div>
-    </AuroraBackground>
+    </div>
+  );
+}
+
+function HomeTile({ label, icon, onClick, primary }) {
+  return (
+    <motion.div
+      className={`${styles["home-tile"]} ${
+        primary ? styles["primary-tile"] : ""
+      }`}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      onClick={onClick}
+    >
+      <div className={styles["home-icon"]}>{icon}</div>
+      <p className={styles["home-tile-label"]}>{label}</p>
+    </motion.div>
   );
 }
