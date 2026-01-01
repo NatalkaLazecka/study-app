@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './HomePage.module.css';
 import { CheckSquare, Calendar, Users, Table } from 'lucide-react';
 import { motion } from 'framer-motion';
-import ColorBends from './ColorBends';
+import ColorBends from '../../../ColorBends.jsx';
 
 export default function HomePage() {
   const navigate = useNavigate();
