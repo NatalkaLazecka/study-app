@@ -658,6 +658,10 @@
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
 }
 
+/* ===============================
+   UIverse-style dropdown
+   =============================== */
+
 .dropdown-wrapper {
     position: relative;
     display: inline-block;
@@ -680,10 +684,6 @@
     cursor: pointer;
     outline: none;
 
-    box-shadow:
-        0 0 0 transparent,
-        inset 0 0 0 transparent;
-
     transition:
         box-shadow 0.25s ease,
         transform 0.2s ease,
@@ -702,7 +702,7 @@
     pointer-events: none;
 }
 
-/* hover – efekt UIverse */
+/* hover */
 .todo-date:hover {
     background: rgba(255, 102, 196, 0.12);
     box-shadow:
@@ -711,14 +711,13 @@
     transform: translateY(-1px);
 }
 
-/* focus – glow */
+/* focus */
 .todo-date:focus {
     box-shadow:
         0 0 18px rgba(255, 102, 196, 0.7),
         inset 0 0 12px rgba(255, 102, 196, 0.35);
 }
 
-/* option (lista) */
 .todo-date option {
     background: #140b11;
     color: var(--text);
