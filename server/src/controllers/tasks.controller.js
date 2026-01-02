@@ -183,7 +183,7 @@ export const addTask = async (req, res) => {
         console.log(`INSERT INTO zadanie (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie, student_id,
                                           status_zadania_id, wysilek, grupa_id)
                      VALUES (${id}, ${tytul}, ${tresc}, ${priorytet}, ${deadline}, ${automatyczne_powiadomienie || 0},
-                             ${student_id}, ${status_zadania_id}, ${wysilek}, ${grupa_id})`);
+                             ${studentId}, ${status_zadania_id}, ${wysilek}, ${grupa_id})`);
 
         await pool.query(
             `INSERT INTO zadanie
