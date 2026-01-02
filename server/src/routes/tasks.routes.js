@@ -5,7 +5,8 @@ import {
     updateTask,
     deleteTask,
     getTaskById,
-    getTasksByStudent
+    getTasksByStudent,
+    getNotificationModes
 } from "../controllers/tasks.controller.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 
