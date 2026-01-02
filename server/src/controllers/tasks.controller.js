@@ -208,9 +208,6 @@ export const addTask = async (req, res) => {
             }
         }
 
-        console.log(`INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
-                     VALUES (UUID(), ${studentId}, ${modeId}`);
-
         if (automatyczne_powiadomienie === 1 && deadline && tryby_powiadomien && tryby_powiadomien.length > 0) {
             console.log("addTask: tworzenie automatycznych powiadomień, createTaskNotifications(id, tytul, deadline, studentId, tryby_powiadomien)", id, tytul, deadline, studentId, tryby_powiadomien);
             await createTaskNotifications(id, tytul, deadline, studentId, tryby_powiadomien);
