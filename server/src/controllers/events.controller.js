@@ -27,7 +27,7 @@ export const getEvents = async (req, res) => {
 
 export const getEventsByStudent = async (req, res) => {
   try {
-    const { studentId } = req.params;
+    const { studentId } = req.user.id;
 
     const [result] = await pool. query(`
       SELECT w.id, w.tytul, w. opis, 
