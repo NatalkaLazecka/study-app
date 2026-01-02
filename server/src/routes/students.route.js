@@ -8,15 +8,15 @@ import {
     updateFullWeek,
     getStudentWeekType
 } from "../controllers/students.controller.js";
-
+import { requireAuth } from "../middleware/requireAuth.js";
 const router = express.Router();
 
-router.get("/", getStudents);
-router.get("/:id", getStudent);
-router.get("/:id/getTypeForWeek", getStudentWeekType)
-router.post("/", createStudent);
-router.put("/:id", updateStudent);
-router.put('/:id/updateFullWeek', updateFullWeek)
-router.delete("/:id", deleteStudent);
+router.get("/",requireAuth, getStudents);
+router.get("/:id",requireAuth, getStudent);
+router.get("/:id/getTypeForWeek",requireAuth, getStudentWeekType)
+router.post("/",requireAuth, createStudent);
+router.put("/:id",requireAuth, updateStudent);
+router.put('/:id/updateFullWeek',requireAuth, updateFullWeek)
+router.delete("/:id",requireAuth, deleteStudent);
 
 export default router;
