@@ -29,6 +29,8 @@ export const getEventsByStudent = async (req, res) => {
   try {
     const { studentId } = req.user.id;
 
+    console.log("getEventsByStudetn events.controller - studentId:", studentId);
+
     const [result] = await pool. query(`
       SELECT w.id, w.tytul, w. opis, 
              DATE_FORMAT(w.data_start, '%Y-%m-%d') AS data_start, 
