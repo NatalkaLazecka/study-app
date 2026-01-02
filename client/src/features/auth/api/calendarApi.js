@@ -2,7 +2,7 @@ import { apiFetch } from "./apiClient";
 
 export async function getStudentEvents() {
   const res = await apiFetch(`/api/events/student`);
-  console.log("calendarApi getStudentEvents: ", res);
+  console.log("calendarApi getStudentEvents: ", res.json());
   return res.json();
 }
 

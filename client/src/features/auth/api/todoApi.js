@@ -5,7 +5,7 @@ export const STATUS_DONE = "a17535d5-e4d0-11f0-b846-42010a400016";
 
 export async function getMyTasks() {
     const res = await apiFetch(`/api/tasks/`);
-    console.log("todoApi getMyTasks: ", res);
+    console.log("todoApi getMyTasks: ", res.json());
     return await res.json();
 }
 
