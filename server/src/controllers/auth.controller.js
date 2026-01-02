@@ -27,53 +27,43 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-    const {email, password} = req.body;
+  const {email, password} = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({error: 'Email and password are required'});
-    }
+  if (!email || !password) {
+    return res.status(400).json({error: 'Email and password are required'});
+  }
 
-    try {
+  try {
+    const user = await findUserByEmail(email);
+    if (!user) return res.status(401).json({error: 'Invalid credentials'});
 
-        const user = await findUserByEmail(email);
+    const isValid = await bcrypt.compare(password, user.haslo);
+    if (!isValid) return res.status(401).json({error: 'Invalid credentials'});
 
-        if (!user) {
-            return res.status(401).json({error: 'Invalid credentials'});
-        }
+    const token = generateToken(user);
 
-        const isValid = await bcrypt.compare(password, user.haslo);
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dni
+    });
 
-        if (!isValid) {
-
-            return res.status(401).json({error: 'Invalid credentials'});
-        }
-
-
-        const token = generateToken(user);
-
-        res.cookie("access_token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dni
-        });
-
-        res.json({
-            user: {
-                id: user.id,
-                email: user.e_mail,
-                imie: user.imie,
-                nazwisko: user.nazwisko
-            }
-        });
-
-    } catch (err) {
-        console.error('Login error:', err);
-        res.status(500).json({error: 'Login failed'});
-    }
+    res.json({
+      user: {
+        id: user.id,
+        email: user.e_mail,
+        imie: user.imie,
+        nazwisko: user.nazwisko
+      }
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({error: 'Login failed'});
+  }
 }
 
 export async function me(req, res) {
-    const user = await findUserById(req.user.id);
-    res.json({user});
+  const user = await findUserById(req.user.id);
+  res.json({user});
 }
