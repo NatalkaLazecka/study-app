@@ -125,8 +125,6 @@ export const getTasks = async (req, res) => {
     }
 };
 
-
-
 export const getTaskById = async (req, res) => {
     try {
         const studentId = req.user.id;
@@ -202,7 +200,7 @@ export const addTask = async (req, res) => {
                 await pool.query(
                     `INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
                      VALUES (UUID(), ?, ?)`,
-                    [id, modeId]
+                    [studentId, modeId]
                 );
             }
         }
