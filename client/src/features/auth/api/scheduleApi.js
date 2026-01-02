@@ -2,6 +2,7 @@ import { apiFetch } from "./apiClient";
 
 export async function getStudentSchedule() {
   const res = await apiFetch(`/api/schedule/`);
+  console.log("scheduleApi getStudentSchedule: ", res);
   return res.json();
 }
 
