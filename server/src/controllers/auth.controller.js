@@ -41,18 +41,21 @@ export async function login(req, res) {
         if (!isValid) return res.status(401).json({error: 'Invalid credentials'});
 
         const token = generateToken(user);
-        
+
         console.log('[DEBUG] login: user.id=', user.id);
         console.log('[DEBUG] login: token (first 50 chars)=', token?.slice?.(0, 50));
-        const cookieOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        };
-        console.log('[DEBUG] login: cookieOptions=', cookieOptions);
 
-        res.cookie("access_token", token, cookieOptions);
+
+// wykryj, czy połączenie jest secure (np. za proxy x-forwarded-proto: 'https')
+        const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+
+// ustaw cookie - secure tylko gdy rzeczywiście HTTPS (w prod będzie true za proxy)
+        res.cookie("access_token", token, {
+            httpOnly: true,
+            secure: isSecure,
+            sameSite: isSecure ? "none" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dni
+        });
 
         res.json({
             user: {

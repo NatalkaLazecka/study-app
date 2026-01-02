@@ -21,6 +21,8 @@ console.log('[DEBUG] FRONTEND_URL=', process.env.FRONTEND_URL || FRONTEND_URL);
 
 const app = express()
 
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(cors({ origin: FRONTEND_URL, methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true }))
 app.use(express.json())
