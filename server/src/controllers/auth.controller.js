@@ -40,28 +40,21 @@ export async function login(req, res) {
         const isValid = await bcrypt.compare(password, user.haslo);
         if (!isValid) return res.status(401).json({error: 'Invalid credentials'});
 
+        // server/src/controllers/auth.controller.js — fragment w funkcji login
         const token = generateToken(user);
 
-        console.log('[DEBUG] login: user.id=', user.id);
-        console.log('[DEBUG] login: token (first 50 chars)=', token?.slice?.(0, 50));
-
-
-// wykryj, czy połączenie jest secure (np. za proxy x-forwarded-proto: 'https')
-        const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
-// przed isSecure / res.cookie
+// wykryj, czy połączenie jest secure (za proxy x-forwarded-proto lub req.secure)
 
         console.log('[DEBUG] login: req.secure =', req.secure);
         console.log('[DEBUG] login: x-forwarded-proto =', req.headers['x-forwarded-proto']);
-        console.log('[DEBUG] login: isSecure =', isSecure);
-// ustaw cookie - secure tylko gdy rzeczywiście HTTPS (w prod będzie true za proxy)
-        // TYLKO DO TESTU: wymuś secure: false i sameSite: 'lax'
+
         res.cookie("access_token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
+            secure: true,                   // true jeśli rzeczywiste HTTPS
+            sameSite: "none", // NONE dla cross-site, Lax dla dev/HTTP'
+            path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-        console.log('[DEBUG] login: set cookie with secure:false (test)');
 
         res.json({
             user: {
@@ -71,6 +64,7 @@ export async function login(req, res) {
                 nazwisko: user.nazwisko
             }
         });
+
     } catch (err) {
         console.error('Login error:', err);
         res.status(500).json({error: 'Login failed'});

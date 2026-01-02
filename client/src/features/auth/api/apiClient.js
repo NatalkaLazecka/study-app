@@ -5,7 +5,7 @@ export async function apiFetch(endpoint, options = {}) {
     credentials: 'include',
     headers: {
       "Content-Type": "application/json",
-      ...(options.headers || {}),
+      ...options.headers,
     },
     ...options,
   });
