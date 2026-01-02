@@ -198,12 +198,12 @@ export const addTask = async (req, res) => {
         if (tryby_powiadomien && tryby_powiadomien. length > 0) {
             for (const modeId of tryby_powiadomien) {
                 console.log(`INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
-                     VALUES (UUID(), ${studentId}, ${modeId}`);
+                     VALUES (UUID(), ${id}, ${modeId}`);
 
                 await pool.query(
                     `INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
                      VALUES (UUID(), ?, ?)`,
-                    [studentId, modeId]
+                    [id, modeId]
                 );
             }
         }
