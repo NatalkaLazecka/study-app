@@ -145,7 +145,7 @@ export default function CalendarPage() {
                                     ))
                                 ) : (
                                     <p style={{color: "var(--white)", padding: "1rem"}}>
-                                        No events today
+                                        No events in calendar
                                     </p>
                                 )}
                             </div>

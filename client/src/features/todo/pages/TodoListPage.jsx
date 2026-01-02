@@ -232,7 +232,7 @@ export default function TodoListPage() {
                         </tbody>
                     </table>
                 ) : (
-                    <p style={{color: "var(--white)", padding: "1rem"}}>
+                    <p style={{color: "var(--white)", padding: "1rem", marginTop: "clamp(2rem,4vh,3rem)"}}>
                         No task to do
                     </p>
                 ) }
