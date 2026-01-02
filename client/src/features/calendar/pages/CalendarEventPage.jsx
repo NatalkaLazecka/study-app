@@ -312,7 +312,7 @@ export default function CalendarEventPage() {
 
           {files.length > 0 && (
             <div className={styles["files-list"]}>
-              {files.map((file) => (
+              {files.length > 0 ? (files.map((file) => (
                 <div key={file.id} className={styles["file-item"]}>
                   <div className={styles["file-icon"]}>
                     <i className="fa-solid fa-file"></i>
@@ -335,7 +335,7 @@ export default function CalendarEventPage() {
                     </button>
                   </div>
                 </div>
-              ))}
+              )))}
             </div>
           )}
 
