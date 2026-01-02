@@ -1,11 +1,6 @@
 import mysql from "mysql2";
 import {env} from "../config/env.js";
-import fs from "fs";
-import path from "path";
 
-// const ca = fs.readFileSync(
-//   path.resolve("src/database/rds-ca.pem")
-// );
 
 const pool = mysql.createPool({
     host: env.db.host,
