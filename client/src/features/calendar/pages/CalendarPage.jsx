@@ -139,9 +139,15 @@ export default function CalendarPage() {
                         <div className={styles["panel-section"]}>
                             <div className={styles["side-panel"]}>Events</div>
                             <div className={styles["panel-content"]}>
-                                {events.map((e) => (
-                                    <CalendarEventComponent key={e.id} variant={e}/>
-                                ))}
+                                {events.length > 0 ? (
+                                    events.map((e) => (
+                                        <CalendarEventComponent key={e.id} variant={e}/>
+                                    ))
+                                ) : (
+                                    <p style={{color: "var(--white)", padding: "1rem"}}>
+                                        No events today
+                                    </p>
+                                )}
                             </div>
                         </div>
 

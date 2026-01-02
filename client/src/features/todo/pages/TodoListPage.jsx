@@ -140,96 +140,102 @@ export default function TodoListPage() {
 
 
                 {/* TABLE */}
-                <table className={styles["todo-table"]}>
-                    <tbody>
-                    {todos
-                        .filter((t) =>
-                            selectedDate === "ALL"
-                                ? true
-                                : new Date(t.deadline).toLocaleDateString("en-GB") ===
-                                selectedDate
-                        )
-                        .map((t) => (
-                            <tr
-                                key={t.id}
-                                className={`${styles["todo-row"]} ${
-                                    t.done ? styles["todo-done"] : ""
-                                }`}
-                            >
-                                <td
-                                    className={styles["todo-cell"]}
-                                    onClick={() => toggleDone(t.id)}
+                {todos.length > 0 ? (
+                    <table className={styles["todo-table"]}>
+                        <tbody>
+                        {todos
+                            .filter((t) =>
+                                selectedDate === "ALL"
+                                    ? true
+                                    : new Date(t.deadline).toLocaleDateString("en-GB") ===
+                                    selectedDate
+                            )
+                            .map((t) => (
+                                <tr
+                                    key={t.id}
+                                    className={`${styles["todo-row"]} ${
+                                        t.done ? styles["todo-done"] : ""
+                                    }`}
                                 >
-                                    <input
-                                        type="checkbox"
-                                        className={styles["todo-checkbox"]}
-                                        checked={t.done}
-                                        readOnly
-                                    />
-                                    {t.tytul}
-                                </td>
+                                    <td
+                                        className={styles["todo-cell"]}
+                                        onClick={() => toggleDone(t.id)}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            className={styles["todo-checkbox"]}
+                                            checked={t.done}
+                                            readOnly
+                                        />
+                                        {t.tytul}
+                                    </td>
 
-                                <td className={styles["todo-cell"]}>
-                                    {Array(3)
-                                        .fill(null)
-                                        .map((_, i) => (
-                                            <span
-                                                key={i}
-                                                className={`${styles.emoji} ${
-                                                    i < t.priority ? styles.activeFire : ""
-                                                }`}
-                                            >
-                          <i className="fa-solid fa-fire"/>
-                        </span>
-                                        ))}
-                                </td>
-
-                                <td className={styles["todo-cell"]}>
-                                    {Array(4)
-                                        .fill(null)
-                                        .map((_, i) => {
-                                            const active = i < t.effort;
-                                            return (
+                                    <td className={styles["todo-cell"]}>
+                                        {Array(3)
+                                            .fill(null)
+                                            .map((_, i) => (
                                                 <span
                                                     key={i}
                                                     className={`${styles.emoji} ${
-                                                        active ? styles.activeCircle : ""
+                                                        i < t.priority ? styles.activeFire : ""
                                                     }`}
                                                 >
-                            <i
-                                className={
-                                    active
-                                        ? "fa-solid fa-circle"
-                                        : "fa-regular fa-circle"
-                                }
-                            />
-                          </span>
-                                            );
-                                        })}
-                                </td>
+                              <i className="fa-solid fa-fire"/>
+                            </span>
+                                            ))}
+                                    </td>
 
-                                <td className={styles["todo-cell"]}>
-                    <span
-                        className={styles["edit-icon"]}
-                        onClick={() =>
-                            navigate(`/todo/edit/${t.id}`)
-                        }
-                    >
-                      <i className="fa-solid fa-arrow-right"/>
-                    </span>
+                                    <td className={styles["todo-cell"]}>
+                                        {Array(4)
+                                            .fill(null)
+                                            .map((_, i) => {
+                                                const active = i < t.effort;
+                                                return (
+                                                    <span
+                                                        key={i}
+                                                        className={`${styles.emoji} ${
+                                                            active ? styles.activeCircle : ""
+                                                        }`}
+                                                    >
+                                <i
+                                    className={
+                                        active
+                                            ? "fa-solid fa-circle"
+                                            : "fa-regular fa-circle"
+                                    }
+                                />
+                              </span>
+                                                );
+                                            })}
+                                    </td>
 
-                                    <span
-                                        className={styles["delete-icon"]}
-                                        onClick={() => handleDelete(t.id)}
-                                        style={{marginLeft: "10px", color: "#ff4d6d"}}
-                                    >
-                      <i className="fa-solid fa-trash"/>
-                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                                    <td className={styles["todo-cell"]}>
+                        <span
+                            className={styles["edit-icon"]}
+                            onClick={() =>
+                                navigate(`/todo/edit/${t.id}`)
+                            }
+                        >
+                          <i className="fa-solid fa-arrow-right"/>
+                        </span>
+
+                                        <span
+                                            className={styles["delete-icon"]}
+                                            onClick={() => handleDelete(t.id)}
+                                            style={{marginLeft: "10px", color: "#ff4d6d"}}
+                                        >
+                          <i className="fa-solid fa-trash"/>
+                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p style={{color: "var(--white)", padding: "1rem"}}>
+                        No task to do
+                    </p>
+                ) }
 
                 {/* ADD NEW */}
                 <button
