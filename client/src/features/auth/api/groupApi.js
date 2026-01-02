@@ -1,7 +1,7 @@
 import { apiFetch } from "./apiClient";
 
 export async function getMyGroups() {
-  const res = await apiFetch("/api/groups/my");
+  const res = await apiFetch("/api/groups");
   return res.json();
 }
 
