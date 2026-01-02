@@ -1,7 +1,7 @@
 import { apiFetch } from "./apiClient";
 
 export async function getStudentSchedule() {
-  const res = await apiFetch(`/api/schedule/student`);
+  const res = await apiFetch(`/api/schedule/`);
   return res.json();
 }
 
