@@ -27,7 +27,7 @@ export const getEvents = async (req, res) => {
 
 export const getEventsByStudent = async (req, res) => {
   try {
-    const { studentId } = req.user.id;
+    const studentId = req.user.id;
 
     console.log("getEventsByStudetn events.controller - studentId:", studentId);
 
