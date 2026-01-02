@@ -6,6 +6,6 @@ export async function getStudentEvents() {
 }
 
 export async function getTodaySchedule() {
-  const res = await apiFetch(`/api/schedule/student/today`);
+  const res = await apiFetch(`/api/schedule/today`);
   return res.json();
 }
