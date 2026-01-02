@@ -7,7 +7,6 @@ export async function getEventCategories() {
 
 export async function getEventFiles(eventId) {
   const res = await apiFetch(`/api/events/${eventId}/files`);
-  consol.log("getEventFiles eventsApi", res.json())
   return res.json();
 }
 

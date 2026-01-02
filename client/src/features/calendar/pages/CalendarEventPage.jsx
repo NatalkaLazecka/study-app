@@ -80,7 +80,18 @@ export default function CalendarEventPage() {
   const fetchFiles = async () => {
     try {
       const data = await getEventFiles(eventId);
-      setFiles(data);
+
+        console.log("🔍 Fetched files raw:", data);
+        console.log("🔍 Files length:", data?.length);
+        console.log("🔍 Files JSON:", JSON.stringify(data, null, 2));
+
+        data?. forEach((file, index) => {
+            console.log(`🔍 File ${index}:`, file);
+            console.log(`🔍 File ${index} id: `, file?.id);
+            console.log(`🔍 File ${index} nazwa:`, file?.nazwa);
+        });
+
+        setFiles(data || []);
     } catch (err) {
       setError(err.message);
     }
