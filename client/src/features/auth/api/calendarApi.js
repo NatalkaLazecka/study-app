@@ -8,5 +8,6 @@ export async function getStudentEvents() {
 
 export async function getTodaySchedule() {
   const res = await apiFetch(`/api/schedule/today`);
+  console.log("calendarApi getTodaySchedule: ", res.json());
   return res.json();
 }
