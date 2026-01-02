@@ -5,7 +5,6 @@ import {useNavigate} from "react-router-dom";
 import CalendarEventComponent from "../component/CalendarEventComponent";
 import CalendarScheduleComponent from "../component/CalendarScheduleComponent";
 import MenuBar from "../../../components/MenuBar";
-// import { getStudentId } from "../../../utils/authService";
 
 import {
     getStudentEvents,

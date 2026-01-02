@@ -6,7 +6,7 @@ import MenuBar from "../../../components/MenuBar";
 
 export default function GroupListPage() {
     const navigate = useNavigate();
-    const {groups, fetchGroups} = useGroups();
+    const {groups, fetchGroups, loading} = useGroups();
 
     useEffect(() => {
         fetchGroups();

@@ -6,7 +6,7 @@ import "react-resizable/css/styles.css";
 
 import styles from "../styles/Group.module.css";
 import {useGroups} from "../store/groupStore";
-import {getStudentId} from "../../../utils/authService";
+
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -40,7 +40,7 @@ export default function GroupDetailsPage() {
         return <div className={styles.groupsRoot}>Loading…</div>;
     }
 
-    const isAdmin = currentGroup.administrator === getStudentId();
+    // const isAdmin = currentGroup.administrator === getStudentId();
 
     const onLayoutChange = (lgLayout) => {
         setLayout(lgLayout);
