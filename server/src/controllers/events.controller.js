@@ -31,13 +31,13 @@ export const getEventsByStudent = async (req, res) => {
 
     console.log("getEventsByStudetn events.controller - studentId:", studentId);
 
-    const [result] = await pool. query(`
-      SELECT w.id, w.tytul, w. opis, 
+    const [result] = await pool.query(`
+      SELECT w.id, w.tytul, w.opis,
              DATE_FORMAT(w.data_start, '%Y-%m-%d') AS data_start, 
              DATE_FORMAT(w.data_koncowa, '%Y-%m-%d') AS data_koncowa, 
              w.priorytet, w.notatka_id, w.student_id,
              CAST(w.automatyczne_powiadomienia AS UNSIGNED) AS automatyczne_powiadomienia,
-             r. nazwa AS rodzaj, p.nazwa AS powtarzanie
+             r.nazwa AS rodzaj, p.nazwa AS powtarzanie
       FROM wydarzenie w
       LEFT JOIN rodzaj_wydarzenia r ON w.rodzaj_wydarzenia_id = r.id
       LEFT JOIN rodzaj_powtarzania p ON w.rodzaj_powtarzania_id = p.id
@@ -79,7 +79,7 @@ const createNotifications = async (eventId, eventTitle, startDate, studentId) =>
         id: uuidv4(),
         wydarzenie_id: eventId,
         student_id: studentId,
-        data_stworzenia: new Date(startDateTime. getTime() - 7 * 24 * 60 * 60 * 1000),
+        data_stworzenia: new Date(startDateTime.getTime() - 7 * 24 * 60 * 60 * 1000),
         tresc:  `EVENT name '${eventTitle}' starts in 7 days`,
         przeczytane: 0
       },
@@ -87,7 +87,7 @@ const createNotifications = async (eventId, eventTitle, startDate, studentId) =>
         id: uuidv4(),
         wydarzenie_id: eventId,
         student_id: studentId,
-        data_stworzenia: new Date(startDateTime. getTime() - 3 * 24 * 60 * 60 * 1000),
+        data_stworzenia: new Date(startDateTime.getTime() - 3 * 24 * 60 * 60 * 1000),
         tresc: `EVENT name '${eventTitle}' starts in 3 days`,
         przeczytane: 0
       },
@@ -110,7 +110,7 @@ const createNotifications = async (eventId, eventTitle, startDate, studentId) =>
     }
 
   } catch (err) {
-    console.error('Error creating notifications:', err. message);
+    console.error('Error creating notifications:', err.message);
     throw err;
   }
 };
@@ -215,7 +215,7 @@ export const uploadMiddleware = upload.single('file');
 
 export const getEventFiles = async (req, res) => {
   try {
-    const result = await pool.query(
+    const [result] = await pool.query(
       `SELECT id, nazwa, sciezka, DATE_FORMAT(data_dodania, '%Y-%m-%d %H:%i:%s') AS data_dodania
        FROM plik_wydarzenie
        WHERE wydarzenie_id = ? 
@@ -262,7 +262,7 @@ export const uploadEventFile = async (req, res) => {
 
 export const downloadEventFile = async (req, res) => {
   try {
-    const result = await pool.query(
+    const [result] = await pool.query(
       'SELECT nazwa, sciezka FROM plik_wydarzenie WHERE id = ?',
       [req.params.fileId]
     );
@@ -274,11 +274,11 @@ export const downloadEventFile = async (req, res) => {
     const file = result[0];
     const filePath = path.join(__dirname, '../uploads/event-files', file.sciezka);
 
-    if (! fs.existsSync(filePath)) {
+    if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: 'File does not exist on server' });
     }
 
-    res.download(filePath, file. nazwa);
+    res.download(filePath, file.nazwa);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -286,7 +286,7 @@ export const downloadEventFile = async (req, res) => {
 
 export const deleteEventFile = async (req, res) => {
   try {
-    const result = await pool.query(
+    const [result] = await pool.query(
       'SELECT sciezka FROM plik_wydarzenie WHERE id = ?',
       [req.params.fileId]
     );

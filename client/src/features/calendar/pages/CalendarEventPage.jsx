@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styles from "../styles/CalendarPage.module.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import MenuBar from "../../../components/MenuBar";
-// import { getStudentId } from "../../../utils/authService";
 
 import {
   getEventCategories,
