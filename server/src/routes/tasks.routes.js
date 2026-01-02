@@ -11,6 +11,7 @@ import { requireAuth } from "../middleware/requireAuth.js";
 
 const router = express.Router();
 
+router.get("/notification-modes", requireAuth, getNotificationModes);
 router.get("/student",requireAuth, getTasksByStudent);
 router.get("/",requireAuth, getTasks);
 router.post("/",requireAuth, addTask);

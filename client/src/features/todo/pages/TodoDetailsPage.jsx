@@ -11,6 +11,7 @@ import {
     updateTask,
     deleteTask,
     STATUS_ON_GOING,
+    getNotificationModes,
 } from "@/features/auth/api/todoApi";
 
 export default function TodoDetailsPage({mode = "edit"}) {
@@ -26,10 +27,24 @@ export default function TodoDetailsPage({mode = "edit"}) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const [notificationModes, setNotificationModes] = useState([]);
+    const [selectedModes, setSelectedModes] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    useEffect(() => {
+        const loadModes = async () => {
+            try {
+                const modes = await getNotificationModes();
+                setNotificationModes(modes);
+            } catch (err) {
+                console.error("Error loading notification modes:", err);
+            }
+        };
+        loadModes();
+    }, []);
 
     useEffect(() => {
         if (mode !== "edit") return;
-
 
         const loadTask = async () => {
             try {
@@ -48,6 +63,10 @@ export default function TodoDetailsPage({mode = "edit"}) {
                         : ""
                 );
                 setAutoNotify(task.automatyczne_powiadomienie === 1);
+
+                if (task.tryby_powiadomien && task.tryby_powiadomien.length > 0) {
+                    setSelectedModes(task.tryby_powiadomien. map(t => t.id));
+                }
             } catch (err) {
                 setError(err.message);
             }
@@ -55,6 +74,14 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
         loadTask();
     }, [id, mode, navigate]);
+
+    const handleModeToggle = (modeId) => {
+        setSelectedModes(prev =>
+            prev.includes(modeId)
+                ? prev. filter(id => id !== modeId)
+                : [...prev, modeId]
+        );
+    };
 
     const handleSave = async () => {
         if (!title || !date) return setError("Missing required fields");
@@ -72,6 +99,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
                 deadline: date,
                 status_zadania_id: STATUS_ON_GOING,
                 automatyczne_powiadomienie: autoNotify ? 1 : 0,
+                tryby_powiadomien: selectedModes,
             };
 
             if (mode === "edit") {
@@ -184,6 +212,40 @@ export default function TodoDetailsPage({mode = "edit"}) {
                             </label>
                         </div>
                     </div>
+
+                    {autoNotify && (
+                        <div className={todoStyles["notification-modes"]}>
+                            <p className={calendarStyles["input-title"]}>
+                                Notification Modes
+                            </p>
+                            <div
+                                className={todoStyles["dropdown-header"]}
+                                onClick={() => setShowDropdown(!showDropdown)}
+                            >
+                                <span>
+                                    {selectedModes.length === 0
+                                        ? "Select notification modes"
+                                        : `Selected (${selectedModes.length})`}
+                                </span>
+                                <i className={`fa-solid fa-chevron-${showDropdown ? 'up' : 'down'}`}/>
+                            </div>
+
+                            {showDropdown && (
+                                <div className={todoStyles["dropdown-list"]}>
+                                    {notificationModes.map(mode => (
+                                        <label key={mode.id} className={todoStyles["checkbox-item"]}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedModes.includes(mode.id)}
+                                                onChange={() => handleModeToggle(mode.id)}
+                                            />
+                                            <span>{mode.nazwa}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* PRIORITY */}
                     <div className={calendarStyles["input-box"]}>

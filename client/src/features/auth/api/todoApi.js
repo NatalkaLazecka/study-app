@@ -46,3 +46,8 @@ export async function createTask(payload) {
     return await res.json();
 }
 
+export async function getNotificationModes() {
+    const res = await apiFetch(`/api/tasks/notification-modes`);
+    return await res.json();
+}
+

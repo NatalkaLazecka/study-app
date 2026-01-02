@@ -9,7 +9,7 @@ const normalizeDateForMySQL = (value) => {
     return value;
 };
 
-const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) => {
+const createTaskNotifications = async (taskId, taskTitle, deadline, studentId, notificationModeIds) => {
     try {
         await pool.query(
             'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ?',
@@ -17,38 +17,61 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) =
         );
 
         const deadlineDate = new Date(deadline);
-
         if (isNaN(deadlineDate.getTime())) {
             console.error('Invalid deadline:', deadline);
             return;
         }
 
-        const notifications = [
-            {
-                id: uuidv4(),
-                zadanie_id: taskId,
-                student_id: studentId,
-                data_stworzenia: new Date(deadlineDate.getTime() - 7 * 24 * 60 * 60 * 1000),
-                tresc: `TASK '${taskTitle}' deadline in 7 days`,
-                przeczytane: 0
-            },
-            {
-                id: uuidv4(),
-                zadanie_id: taskId,
-                student_id: studentId,
-                data_stworzenia: new Date(deadlineDate.getTime() - 3 * 24 * 60 * 60 * 1000),
-                tresc: `TASK '${taskTitle}' deadline in 3 days`,
-                przeczytane: 0
-            },
-            {
-                id: uuidv4(),
-                zadanie_id: taskId,
-                student_id: studentId,
-                data_stworzenia: deadlineDate,
-                tresc: `TASK '${taskTitle}' deadline is today`,
-                przeczytane: 0
+        if (!notificationModeIds || notificationModeIds.length === 0) {
+            return;
+        }
+
+        const placeholders = notificationModeIds. map(() => '?').join(',');
+        const [modes] = await pool.query(
+            `SELECT id, nazwa FROM tryb_powiadomien WHERE id IN (${placeholders})`,
+            notificationModeIds
+        );
+
+        const modeMap = {
+            'month': 30,
+            'week': 7,
+            '3 days': 3,
+            'day': 1
+        };
+
+        const messageMap = {
+            'month':  '1 month',
+            'week': '1 week',
+            '3 days': '3 days',
+            'day': '1 day'
+        };
+
+        const notifications = [];
+
+        for (const mode of modes) {
+            const daysBeforeDeadline = modeMap[mode.nazwa];
+            const messageText = messageMap[mode.nazwa];
+
+            if (daysBeforeDeadline !== undefined) {
+                notifications.push({
+                    id: uuidv4(),
+                    zadanie_id: taskId,
+                    student_id: studentId,
+                    data_stworzenia: new Date(deadlineDate.getTime() - daysBeforeDeadline * 24 * 60 * 60 * 1000),
+                    tresc: `TASK '${taskTitle}' deadline in ${messageText}`,
+                    przeczytane: 0
+                });
             }
-        ];
+        }
+
+        notifications.push({
+            id: uuidv4(),
+            zadanie_id: taskId,
+            student_id: studentId,
+            data_stworzenia:  deadlineDate,
+            tresc:  `TASK '${taskTitle}' deadline is today`,
+            przeczytane: 0
+        });
 
         for (const notif of notifications) {
             await pool.query(
@@ -63,6 +86,14 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) =
     }
 };
 
+export const getNotificationModes = async (req, res) => {
+    try {
+        const [modes] = await pool.query('SELECT id, nazwa FROM tryb_powiadomien ORDER BY FIELD(nazwa, "day", "3 days", "week", "month")');
+        res.json(modes);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+};
 
 export const getTasks = async (req, res) => {
     try {
@@ -121,22 +152,32 @@ export const getTaskById = async (req, res) => {
         if (!result.length) {
             return res.status(404).json({message: "Zadanie nie znalezione"});
         }
-        res.status(200).json({result});
+
+        const task = result[0];
+
+        const [modes] = await pool.query(
+            `SELECT tp.id, tp.nazwa
+             FROM zadanie_tryb_powiadomien ztp
+             JOIN tryb_powiadomien tp ON ztp.tryb_powiadomien_id = tp. id
+             WHERE ztp.zadanie_id = ?`,
+            [req.params.id]
+        );
+
+        task.tryby_powiadomien = modes;
+
+        res.status(200).json(task);
     } catch (err) {
         console.error('Error getTaskById', err);
         res.status(500).json({error: err.message});
     }
 };
 
-
-
 export const addTask = async (req, res) => {
     const {
-         tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
+         tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie, tryby_powiadomien
     } = req.body;
 
     const studentId = req.user.id;
-
 
     try {
         const id = uuidv4();
@@ -156,9 +197,19 @@ export const addTask = async (req, res) => {
                 studentId, status_zadania_id, wysilek, grupa_id]
         );
 
-        if (automatyczne_powiadomienie === 1 && deadline) {
+        if (tryby_powiadomien && tryby_powiadomien. length > 0) {
+            for (const modeId of tryby_powiadomien) {
+                await pool.query(
+                    `INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
+                     VALUES (UUID(), ?, ?)`,
+                    [id, modeId]
+                );
+            }
+        }
+
+        if (automatyczne_powiadomienie === 1 && deadline && tryby_powiadomien && tryby_powiadomien.length > 0) {
             console.log("addTask: tworzenie automatycznych powiadomień");
-            await createTaskNotifications(id, tytul, deadline, studentId);
+            await createTaskNotifications(id, tytul, deadline, studentId, tryby_powiadomien);
         }
 
         res.status(201).json({message: "Zadanie dodane", id});
@@ -175,11 +226,11 @@ export const updateTask = async (req, res) => {
         deadline,
         status_zadania_id,
         wysilek,
-        automatyczne_powiadomienie
+        automatyczne_powiadomienie,
+        tryby_powiadomien
     } = req.body;
 
-const studentId = req.user.id;
-
+    const studentId = req.user.id;
 
     try {
         await pool.query(
@@ -208,16 +259,26 @@ const studentId = req.user.id;
             ]
         );
 
-        if (automatyczne_powiadomienie === 1 && deadline) {
-            await createTaskNotifications(
-                req.params.id,
-                tytul,
-                deadline,
-                studentId
-            );
+        await pool.query(
+            'DELETE FROM zadanie_tryb_powiadomien WHERE zadanie_id = ?',
+            [req.params.id]
+        );
+
+        if (tryby_powiadomien && tryby_powiadomien.length > 0) {
+            for (const modeId of tryby_powiadomien) {
+                await pool. query(
+                    `INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
+                     VALUES (UUID(), ?, ?)`,
+                    [req.params. id, modeId]
+                );
+            }
+        }
+
+        if (automatyczne_powiadomienie === 1 && deadline && tryby_powiadomien && tryby_powiadomien.length > 0) {
+            await createTaskNotifications(req.params.id, tytul, deadline, studentId, tryby_powiadomien);
         } else {
             await pool.query(
-                "DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ?",
+                'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ?',
                 [req.params.id]
             );
         }
@@ -232,15 +293,21 @@ const studentId = req.user.id;
 export const deleteTask = async (req, res) => {
      const studentId = req.user.id;
 
-
-
     try {
         await pool.query(
             'DELETE FROM aktywnosc_w_ramach_zadania WHERE zadanie_id = ? AND student_id = ? ',
             [req.params.id, studentId]
         );
 
-        await pool.query("DELETE FROM zadanie WHERE id=? ", [req.params.id]);
+        await pool.query(
+            'DELETE FROM zadanie_tryb_powiadomien WHERE zadanie_id = ?',
+            [req.params.id]
+        );
+
+        await pool.query(
+            "DELETE FROM zadanie WHERE id=? ",
+            [req.params.id]
+        );
 
         res.json({message: "Zadanie usunięte"});
     } catch (err) {
