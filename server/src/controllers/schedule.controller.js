@@ -2,7 +2,7 @@ import pool from "../database/db.js";
 import {v4 as uuidv4} from "uuid";
 
 export const getScheduleForStudent = async (req, res) => {
-    const {student_id} = req.params;
+     const studentId = req.user.id;
 
     try {
         const [result] = await pool.query(
@@ -25,7 +25,7 @@ export const getScheduleForStudent = async (req, res) => {
                       LEFT JOIN typ_zajec tz ON pz.typ_zajec_id = tz.id
              WHERE pz.student_id = ?
              ORDER BY pz.dzien_tygodnia, pz.godzina`,
-            [student_id]
+            [studentId]
         );
 
         if (result.length === 0) {
@@ -39,7 +39,7 @@ export const getScheduleForStudent = async (req, res) => {
 }
 
 export const getTodayScheduleForStudent = async (req, res) => {
-    const {student_id} = req.params;
+     const studentId = req.user.id;
 
     try {
         const daysMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -65,7 +65,7 @@ export const getTodayScheduleForStudent = async (req, res) => {
              WHERE pz.student_id = ?
                AND pz.dzien_tygodnia = ?
              ORDER BY pz.godzina`,
-            [student_id, today]
+            [studentId, today]
         );
 
         res.status(200).json(result);
@@ -75,15 +75,16 @@ export const getTodayScheduleForStudent = async (req, res) => {
 }
 
 export const addSchedule = async (req, res) => {
-    const {student_id, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id} = req.body;
+    const {przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id} = req.body;
     const id = uuidv4();
+     const studentId = req.user.id;
 
     try {
         await pool.query(
             `INSERT INTO plan_zajec (id, student_id, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala,
                                      typ_zajec_id)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, student_id, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id]);
+            [id, studentId, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id]);
 
         res.status(201).json({message: "Schedule added", scheduleId: id});
     } catch (err) {
@@ -93,12 +94,13 @@ export const addSchedule = async (req, res) => {
 
 export const updateSchedule = async (req, res) => {
     const {id} = req.params;
-    const {student_id, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id} = req.body;
+    const { przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id} = req.body;
+     const studentId = req.user.id;
 
     try {
         const result = await pool.query(
             "UPDATE plan_zajec SET student_id=?, przedmiot_id=?, prowadzacy_id=?, dzien_tygodnia=?, godzina=?, sala=?, typ_zajec_id=? WHERE id=?",
-            [student_id, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id, id]
+            [studentId, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id, id]
         );
 
         if (result.affectedRows === 0) {
@@ -128,10 +130,10 @@ export const deleteSchedule = async (req, res) => {
 }
 
 export const deleteAllSchedulesForStudent = async (req, res) => {
-    const {student_id} = req.params;
+     const studentId = req.user.id;
 
     try {
-        const result = await pool.query("DELETE FROM plan_zajec WHERE student_id=?", [student_id]);
+        const result = await pool.query("DELETE FROM plan_zajec WHERE student_id=?", [studentId]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({message: "No schedules found for the student"});

@@ -60,12 +60,12 @@ export const updateStudent = async (req, res) => {
 };
 
 export const updateFullWeek = async (req, res) => {
-    const {student_id} = req.body;
+     const studentId = req.user.id;
 
     try {
         const [result] = await pool.query(
             "UPDATE student SET full_week_schedule = !full_week_schedule WHERE id=?",
-            [student_id]
+            [studentId]
         );
 
         if (result.affectedRows === 0) {

@@ -3,7 +3,7 @@ import { verifyToken } from "../services/jwt.service.js";
 export function requireAuth(req, res, next) {
   console.log("[DEBUG] requireAuth: req.cookies =", req.cookies);
 
-  const token = req.cookies?.access_token;
+  const token = req.cookies?.access_token || req.headers.authorization?.split(" ")[1];
 
   console.log("[DEBUG] requireAuth: token =", token);
 

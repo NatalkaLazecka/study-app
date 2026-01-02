@@ -114,18 +114,18 @@ const createNotifications = async (eventId, eventTitle, startDate, studentId) =>
 };
 
 export const addEvent = async (req, res) => {
-  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia  } = req.body;
-
+  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, automatyczne_powiadomienia  } = req.body;
+  const studentId = req.user.id;
   try {
     const id = uuidv4();
     await pool.query(
       `INSERT INTO wydarzenie (id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia]
+      [id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, studentId, automatyczne_powiadomienia]
     );
 
     if(automatyczne_powiadomienia === 1 && data_start){
-        await createNotifications(id, tytul, data_start, student_id);
+        await createNotifications(id, tytul, data_start, studentId);
     }
 
     res.status(201).json({
@@ -139,7 +139,8 @@ export const addEvent = async (req, res) => {
 };
 
 export const updateEvent = async (req, res) => {
-  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, automatyczne_powiadomienia, student_id } = req.body;
+  const { tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, automatyczne_powiadomienia } = req.body;
+  const studentId = req.user.id;
   try {
     await pool.query(
       "UPDATE wydarzenie SET tytul=?, opis=?, data_start=?, data_koncowa=?, priorytet=?, rodzaj_wydarzenia_id=?, automatyczne_powiadomienia=? WHERE id=?",
@@ -147,7 +148,7 @@ export const updateEvent = async (req, res) => {
     );
 
     if(automatyczne_powiadomienia === 1 && data_start){
-        await createNotifications(req.params.id, tytul, data_start, student_id);
+        await createNotifications(req.params.id, tytul, data_start, studentId);
     }else{
         await pool.query(
           'DELETE FROM aktywnosc_w_ramach_wydarzenia WHERE wydarzenie_id = ?',

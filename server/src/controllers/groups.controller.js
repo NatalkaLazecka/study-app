@@ -3,7 +3,7 @@ import {v4 as uuidv4} from "uuid";
 
 
 export const getGroups = async (req, res) => {
-    const {studentId} = req.params;
+    const studentId = req.user.id;
 
     try {
         const [rows] = await pool.query(
@@ -25,7 +25,7 @@ export const getGroups = async (req, res) => {
 
 
 export const createGroup = async (req, res) => {
-    const {studentId} = req.params;
+    const studentId = req.user.id;
     const {nazwa} = req.body;
 
     if (!nazwa || !nazwa.trim()) {

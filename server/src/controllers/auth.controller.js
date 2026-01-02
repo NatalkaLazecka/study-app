@@ -43,7 +43,7 @@ export async function login(req, res) {
         // server/src/controllers/auth.controller.js — fragment w funkcji login
         const token = generateToken(user);
 
-// wykryj, czy połączenie jest secure (za proxy x-forwarded-proto lub req.secure)
+
 
         console.log('[DEBUG] login: req.secure =', req.secure);
         console.log('[DEBUG] login: x-forwarded-proto =', req.headers['x-forwarded-proto']);
@@ -72,7 +72,9 @@ export async function login(req, res) {
 }
 
 export async function me(req, res) {
-    const user = await findUserById(req.user.id);
+    const userId = req.user.id;
+    const user = await findUserById(userId);
+    if(!user) return res.status(404).json({message: "User not found"});
     res.json({user});
 }
 

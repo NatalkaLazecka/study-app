@@ -2,11 +2,8 @@ import pool from "../database/db.js";
 
 export const getNotifications = async (req, res) => {
     try {
-        const {student_id} = req.query;
+          const studentId = req.user.id;
 
-        if (!student_id) {
-            return res.status(400).json({error: 'student_id is required'});
-        }
 
         const today = new Date().toISOString().split('T')[0];
 
@@ -19,7 +16,7 @@ export const getNotifications = async (req, res) => {
             FROM aktywnosc_w_ramach_wydarzenia
             WHERE DATE (data_stworzenia) = ? AND (student_id = ? OR student_id IS NULL)
             ORDER BY data_stworzenia DESC
-        `, [today, student_id]);
+        `, [today, studentId]);
 
         const [taskNotifications] = await pool.query(`
             SELECT id,
@@ -30,7 +27,7 @@ export const getNotifications = async (req, res) => {
             FROM aktywnosc_w_ramach_zadania
             WHERE DATE (data_stworzenia) = ? AND (student_id = ? OR student_id IS NULL)
             ORDER BY data_stworzenia DESC
-        `, [today, student_id]);
+        `, [today, studentId]);
 
         const allNotifications = [...eventNotifications, ...taskNotifications]
             .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -42,12 +39,10 @@ export const getNotifications = async (req, res) => {
 };
 
 export const markAsRead = async (req, res) => {
-    const {id, type, student_id} = req.body;
+    try{
+    const {id, type} = req.body;
+    const studentId = req.user.id;
 
-    try {
-        if (!student_id) {
-            return res.status(400).json({error: 'student_id is required'});
-        }
 
         const table = type === 'event'
             ? 'aktywnosc_w_ramach_wydarzenia'
@@ -58,7 +53,7 @@ export const markAsRead = async (req, res) => {
              SET przeczytane = 1
              WHERE id = ?
                AND (student_id = ? OR student_id IS NULL)`,
-            [id, student_id]
+            [id, studentId]
         );
 
         res.json({message: 'Notification marked as read'});
@@ -68,19 +63,16 @@ export const markAsRead = async (req, res) => {
 };
 
 export const markAllAsRead = async (req, res) => {
-    try {
-        const {student_id} = req.body;
-        if (!student_id) {
-            return res.status(400).json({error: 'student_id is required'});
-        }
+       try{
+        const studentId = req.user.id;
 
         await pool.query(
             'UPDATE aktywnosc_w_ramach_wydarzenia SET przeczytane = 1 WHERE (student_id = ? OR student_id IS NULL)',
-            [student_id]
+            [studentId]
         );
         await pool.query(
             'UPDATE aktywnosc_w_ramach_zadania SET przeczytane = 1 WHERE (student_id = ? OR student_id IS NULL)',
-            [student_id]
+            [studentId]
         );
 
         res.json({message: 'All notifications marked as read'});
@@ -90,12 +82,10 @@ export const markAllAsRead = async (req, res) => {
 };
 
 export const deleteNotification = async (req, res) => {
-    const {id, type, student_id} = req.body;
+    try{
+    const {id, type} = req.body;
+    const studentId = req.user.id;
 
-    try {
-        if (!student_id) {
-            return res.status(400).json({error: 'student_id is required'});
-        }
 
         const table = type === 'event'
             ? 'aktywnosc_w_ramach_wydarzenia'
@@ -106,7 +96,7 @@ export const deleteNotification = async (req, res) => {
              FROM ${table}
              WHERE id = ?
                AND (student_id = ? OR student_id IS NULL)`,
-            [id, student_id]
+            [id, studentId]
         );
 
         res.json({message: 'Notification deleted'});

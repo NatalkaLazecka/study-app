@@ -66,11 +66,7 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId) =
 
 export const getTasks = async (req, res) => {
     try {
-        const {studentId} = req.query;
-
-        if (!studentId) {
-            return res.status(400).json({error: "studentId is required"});
-        }
+        const studentId = req.user.id;
 
         const [result] = await pool.query(`
             SELECT z.id,
@@ -102,10 +98,7 @@ export const getTasks = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
     try {
-        const {studentId} = req.query;
-        if (!studentId) {
-            return res.status(400).json({error: "studentId is required"});
-        }
+        const studentId = req.user.id;
 
         const [result] = await pool.query(
             `SELECT id,
@@ -139,8 +132,10 @@ export const getTaskById = async (req, res) => {
 
 export const addTask = async (req, res) => {
     const {
-        student_id, tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
+         tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie
     } = req.body;
+
+    const studentId = req.user.id;
 
 
     try {
@@ -158,12 +153,12 @@ export const addTask = async (req, res) => {
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [id, tytul, tresc, priorytet, deadline,
                 automatyczne_powiadomienie || 0,
-                student_id, status_zadania_id, wysilek, grupa_id]
+                studentId, status_zadania_id, wysilek, grupa_id]
         );
 
         if (automatyczne_powiadomienie === 1 && deadline) {
             console.log("addTask: tworzenie automatycznych powiadomień");
-            await createTaskNotifications(id, tytul, deadline, student_id);
+            await createTaskNotifications(id, tytul, deadline, studentId);
         }
 
         res.status(201).json({message: "Zadanie dodane", id});
@@ -180,13 +175,11 @@ export const updateTask = async (req, res) => {
         deadline,
         status_zadania_id,
         wysilek,
-        automatyczne_powiadomienie,
-        student_id
+        automatyczne_powiadomienie
     } = req.body;
 
-    if (!student_id) {
-        return res.status(400).json({error: "student_id is required"});
-    }
+const studentId = req.user.id;
+
 
     try {
         await pool.query(
@@ -211,7 +204,7 @@ export const updateTask = async (req, res) => {
                 wysilek,
                 automatyczne_powiadomienie || 0,
                 req.params.id,
-                student_id
+                studentId
             ]
         );
 
@@ -220,7 +213,7 @@ export const updateTask = async (req, res) => {
                 req.params.id,
                 tytul,
                 deadline,
-                student_id
+                studentId
             );
         } else {
             await pool.query(
@@ -237,11 +230,9 @@ export const updateTask = async (req, res) => {
 };
 
 export const deleteTask = async (req, res) => {
-    const {studentId} = req.query;
+     const studentId = req.user.id;
 
-    if (!studentId) {
-        return res.status(400).json({error: "studentId is required"});
-    }
+
 
     try {
         await pool.query(
@@ -258,7 +249,8 @@ export const deleteTask = async (req, res) => {
 };
 
 export const getTasksByStudent = async (req, res) => {
-    const {studentId} = req.params;
+    const studentId = req.user.id;
+
 
     try {
         const [result] = await pool.query(`
