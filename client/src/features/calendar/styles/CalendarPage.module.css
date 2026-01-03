@@ -85,7 +85,6 @@ body {
     font-size: clamp(1.5rem, calc(1.2rem + 2vw), 2.8rem);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    /*margin-bottom: clamp(1rem, calc(0.8rem + 1.5vh), 2rem);*/
     color: var(--light);
     text-shadow: 0 0 15px rgba(232, 91, 191, 0.4);
     justify-self: center;
@@ -427,7 +426,6 @@ body {
 }
 
 .import-box {
-    /*margin-top: min(10px, 1.5dvh);*/
     display: flex;
     gap: min(20px, 2vw);
     align-items: center;
@@ -799,7 +797,6 @@ body {
 
 /* ===== NOTIFICATION MODES DROPDOWN ===== */
 .notification-modes {
-    /*margin-top: 1rem;*/
     position: relative;
     width: 100%;
     max-width: min(320px, 90%);
