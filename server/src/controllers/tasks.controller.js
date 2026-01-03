@@ -49,17 +49,17 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId, n
 
             switch (mode.nazwa) {
                 case 'month':
-                    notificationDate = new Date(startDateTime);
+                    notificationDate = new Date(deadlineDate);
                     notificationDate.setMonth(notificationDate.getMonth() - 1);
                     break;
                 case 'week':
-                    notificationDate = new Date(startDateTime.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    notificationDate = new Date(deadlineDate.getTime() - 7 * 24 * 60 * 60 * 1000);
                     break;
                 case '3 days':
-                    notificationDate = new Date(startDateTime.getTime() - 3 * 24 * 60 * 60 * 1000);
+                    notificationDate = new Date(deadlineDate.getTime() - 3 * 24 * 60 * 60 * 1000);
                     break;
-                case 'day':
-                    notificationDate = new Date(startDateTime.getTime() - 1 * 24 * 60 * 60 * 1000);
+                case '1 day':
+                    notificationDate = new Date(deadlineDate.getTime() - 1 * 24 * 60 * 60 * 1000);
                     break;
                 default:
                     continue;

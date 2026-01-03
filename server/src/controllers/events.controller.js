@@ -172,7 +172,7 @@ const createEventNotifications = async (eventId, eventTitle, startDate, studentI
                 case '3 days':
                     notificationDate = new Date(startDateTime.getTime() - 3 * 24 * 60 * 60 * 1000);
                     break;
-                case 'day':
+                case '1 day':
                     notificationDate = new Date(startDateTime.getTime() - 1 * 24 * 60 * 60 * 1000);
                     break;
                 default:

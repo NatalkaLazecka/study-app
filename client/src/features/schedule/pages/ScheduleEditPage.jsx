@@ -17,12 +17,14 @@ import {
     createProfessor,
     updateProfessor,
     deleteProfessor,
+    getStudentWeekType,
 } from "@/features/auth/api/scheduleApi";
 
 export default function ScheduleEditPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [fullWeek, setFullWeek] = useState(false);
 
     const [subject, setSubject] = useState("");
     const [professor, setProfessor] = useState("");
@@ -42,7 +44,15 @@ export default function ScheduleEditPage() {
         {id: "c46a4788-c5f3-11f0-839b-a8a15964033b", nazwa: "cwiczenia"},
     ];
 
-    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const getDaysOfWeek = () => {
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+        if (fullWeek) {
+            days.push("Saturday", "Sunday");
+        }
+
+        return days;
+    };
 
     const formatTime = (time) => {
         if (!time) return "";
@@ -50,14 +60,22 @@ export default function ScheduleEditPage() {
         return `${parts[0]}:${parts[1]}`;
     };
 
+    useEffect(() => {
+        const fetchWeekType = async () => {
+            try {
+                const isFull = await getStudentWeekType();
+                setFullWeek(isFull);
+            } catch (err) {
+                console.error("Error fetching week type:", err);
+            }
+        };
+
+        fetchWeekType();
+    }, []);
 
     useEffect(() => {
-        // const studentURL = searchParams.get("studentId");
         const scheduleURL = searchParams.get("scheduleId");
-
-        // if (studentURL) setStudentId(studentURL);
         if (scheduleURL) setScheduleId(scheduleURL);
-
         const loadData = async () => {
             try {
                 const [subjectsData, professorsData] = await Promise.all([
@@ -220,7 +238,7 @@ export default function ScheduleEditPage() {
         value: p.id,
         label: `${p.imie} ${p.nazwisko}`,
     }));
-    const daysOptions = daysOfWeek.map((d) => ({value: d, label: d}));
+    const daysOptions = getDaysOfWeek().map((d) => ({value: d, label: d}));
     const classTypeOptions = classTypes.map((t) => ({
         value: t.id,
         label: t.nazwa,
