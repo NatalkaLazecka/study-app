@@ -57,3 +57,14 @@ export async function updateEvent(id, data) {
 export async function deleteEvent(id) {
   await apiFetch(`/api/events/${id}`, { method: "DELETE" });
 }
+
+export async function getNotificationModes() {
+    const res = await apiFetch(`/api/events/notification-modes`);
+    return await res.json();
+}
+
+export async function getEventById(eventId) {
+  const res = await apiFetch(`/api/events/${eventId}`);
+  const data = await res.json();
+  return data;
+}

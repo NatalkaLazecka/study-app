@@ -34,13 +34,6 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId, n
             notificationModeIds
         );
 
-        const modeMap = {
-            'month': 30,
-            'week': 7,
-            '3 days': 3,
-            'day': 1
-        };
-
         const messageMap = {
             'month': '1 month',
             'week': '1 week',
@@ -51,15 +44,33 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId, n
         const notifications = [];
 
         for (const mode of modes) {
-            const daysBeforeDeadline = modeMap[mode.nazwa];
+            let notificationDate;
             const messageText = messageMap[mode.nazwa];
 
-            if (daysBeforeDeadline !== undefined) {
+            switch (mode.nazwa) {
+                case 'month':
+                    notificationDate = new Date(startDateTime);
+                    notificationDate.setMonth(notificationDate.getMonth() - 1);
+                    break;
+                case 'week':
+                    notificationDate = new Date(startDateTime.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+                case '3 days':
+                    notificationDate = new Date(startDateTime.getTime() - 3 * 24 * 60 * 60 * 1000);
+                    break;
+                case 'day':
+                    notificationDate = new Date(startDateTime.getTime() - 1 * 24 * 60 * 60 * 1000);
+                    break;
+                default:
+                    continue;
+            }
+
+            if (notificationDate && messageText) {
                 notifications.push({
                     id: uuidv4(),
                     zadanie_id: taskId,
                     student_id: studentId,
-                    data_stworzenia: new Date(deadlineDate.getTime() - daysBeforeDeadline * 24 * 60 * 60 * 1000),
+                    data_stworzenia: notificationDate,
                     tresc: `TASK '${taskTitle}' deadline in ${messageText}`,
                     przeczytane: 0
                 });
@@ -186,8 +197,8 @@ export const addTask = async (req, res) => {
     } = req.body;
 
     if (!tytul || !deadline) {
-            return res.status(400).json({ error: "Pola 'tytul', 'deadline' i 'status_zadania_id' są wymagane." });
-        }
+        return res.status(400).json({error: "Pola 'tytul', 'deadline' i 'status_zadania_id' są wymagane."});
+    }
     const studentId = req.user.id;
 
     try {
@@ -244,37 +255,25 @@ export const updateTask = async (req, res) => {
         tryby_powiadomien
     } = req.body;
 
-     if (!tytul || !deadline) {
-            return res.status(400).json({ error: "Pola 'tytul', 'deadline' i 'status_zadania_id' są wymagane." });
-        }
+    if (!tytul || !deadline) {
+        return res.status(400).json({error: "Pola 'tytul', 'deadline' i 'status_zadania_id' są wymagane."});
+    }
 
     const studentId = req.user.id;
 
     try {
         await pool.query(
-            `
-                UPDATE zadanie
-                SET tytul                      = ?,
-                    tresc                      = ?,
-                    priorytet                  = ?,
-                    deadline                   = ?,
-                    status_zadania_id          = ?,
-                    wysilek                    = ?,
-                    automatyczne_powiadomienie = ?
-                WHERE id = ?
-                  AND student_id = ?
-            `,
-            [
-                tytul,
-                tresc,
-                priorytet,
-                normalizeDateForMySQL(deadline),
-                status_zadania_id,
-                wysilek,
-                automatyczne_powiadomienie || 0,
-                req.params.id,
-                studentId
-            ]
+            `UPDATE zadanie
+             SET tytul = ?,
+                 tresc = ?,
+                 priorytet = ?,
+                 deadline = ?,
+                 status_zadania_id = ?,
+                 wysilek = ?,
+                 automatyczne_powiadomienie = ?
+             WHERE id = ?
+               AND student_id = ?`,
+            [tytul, tresc, priorytet, normalizeDateForMySQL(deadline), status_zadania_id, wysilek, automatyczne_powiadomienie || 0, req.params.id, studentId]
         );
 
         await pool.query(
