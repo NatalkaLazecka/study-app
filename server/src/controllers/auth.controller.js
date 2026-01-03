@@ -4,9 +4,9 @@ import {findUserByEmail, createUser, findUserById} from '../services/user.servic
 import {generateToken} from '../services/jwt.service.js';
 
 export async function register(req, res) {
-    const {e_mail, password, imie, nazwisko} = req.body;
+    const {e_mail, haslo, imie, nazwisko} = req.body;
 
-    if (!e_mail || !password) {
+    if (!e_mail || !haslo) {
         return res.status(400).json({error: 'Email and password fields are required'});
     }
 
@@ -17,7 +17,7 @@ export async function register(req, res) {
         }
 
         const id = uuid();
-        await createUser({id, e_mail, password, imie: imie || null, nazwisko: nazwisko || null});
+        await createUser({id, e_mail, haslo, imie: imie || null, nazwisko: nazwisko || null});
 
         res.json({ok: true});
     } catch (err) {
@@ -27,9 +27,10 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-    const {e_mail, password} = req.body;
+    console.log("LOGIN BODY:", req.body);
+    const {e_mail, haslo} = req.body;
 
-    if (!e_mail || !password) {
+    if (!e_mail || !haslo) {
         return res.status(400).json({error: 'Email and password are required'});
     }
 
@@ -37,16 +38,12 @@ export async function login(req, res) {
         const user = await findUserByEmail(e_mail);
         if (!user) return res.status(401).json({error: 'Invalid credentials'});
 
-        const isValid = await bcrypt.compare(password, user.haslo);
+        const isValid = await bcrypt.compare(haslo, user.haslo);
         if (!isValid) return res.status(401).json({error: 'Invalid credentials'});
 
 
         const token = generateToken(user);
 
-
-
-        console.log('[DEBUG] login: req.secure =', req.secure);
-        console.log('[DEBUG] login: x-forwarded-proto =', req.headers['x-forwarded-proto']);
 
         res.cookie("access_token", token, {
             httpOnly: true,
