@@ -1,12 +1,12 @@
 import {useNavigate} from 'react-router-dom';
 import styles from './HomePage.module.css';
 import {CheckSquare, Calendar, Users, Table} from 'lucide-react';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import LoadingPage from "../../components/LoadingPage";
 
 export default function HomePage() {
     const navigate = useNavigate();
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const timer = setTimeout(() => {
