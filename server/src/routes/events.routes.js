@@ -10,6 +10,7 @@ import {
   updateEventValidator,
   eventIdParamValidator,
   fileIdParamValidator,
+
 } from "../validators/event.validator.js";
 
 import { validate } from "../middleware/validate.js";
@@ -40,7 +41,7 @@ router.put(
 router.delete(
   "/:id",
   requireAuth,
-  idParamValidator("id"),
+  updateEventValidator,
   validate,
   deleteEvent
 );
