@@ -239,7 +239,7 @@ body {
     border: 1.5px solid var(--pink);
     border-radius: 16px;
     box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
-    padding: min(30px, 2vw) min(20px, 2vw);;
+    padding: min(30px, 2vw) min(20px, 2vw);
     color: var(--light);
     width: 100%;
     max-width: min(830px, 95vw);
@@ -248,7 +248,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: clamp(0.5rem, calc(0.4rem + 1vh), 0.75rem);
     overflow-y: auto;
 }
