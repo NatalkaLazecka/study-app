@@ -379,7 +379,7 @@ body {
 }
 
 .end-buttons {
-    margin-top: clamp(0.625rem, calc(0.5rem + 1vh), 1.25rem);
+    margin-top: clamp(0.6rem, calc(0.4rem + 1vh), 1rem);
     gap: min(20px, 2vw);
     display: flex;
     flex-wrap: wrap;
