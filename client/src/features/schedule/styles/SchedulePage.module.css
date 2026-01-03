@@ -352,7 +352,7 @@ body {
 
 .schedule-input:hover {
     border: 1px solid var(--pink);
-    boxShadow: 0 0 15px rgba(232, 91, 191, 0.6), inset 0 0 10px rgba(232, 91, 191, 0.2),
+    box-shadow: 0 0 15px rgba(232, 91, 191, 0.6), inset 0 0 10px rgba(232, 91, 191, 0.2);
 }
 
 .schedule-input option {
