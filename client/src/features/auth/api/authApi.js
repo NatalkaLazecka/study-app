@@ -46,8 +46,12 @@ export async function login(email, password) {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({
+      e_mail: email,
+      haslo: password,
+    }),
   });
+
 
   if (!res.ok) {
     throw new Error("Login failed");
