@@ -8,7 +8,7 @@ export const getGroups = async (req, res) => {
         const [rows] = await pool.query(
             `SELECT g.id, g.nazwa, g.administrator
             FROM grupa g
-                LEFT JOIN kategoria_grupy k ON g.kategoria_grupy_id = k.id
+                LEFT JOIN kategoria_grupy k ON g.kategoria_grupa_id = k.id
                 JOIN grupa_student gs ON g.id = gs.grupa_id
             WHERE gs.student_id = ?`,
             [studentId]
@@ -75,7 +75,7 @@ export const getGroupDetails = async (req, res) => {
         const [groupRows] = await pool.query(
             `SELECT g.id, g.nazwa, g.administrator, k.nazwa as kategoria
              FROM grupa g
-                LEFT JOIN kategoria_grupy k ON g.kategoria_grupy_id = k.id
+                LEFT JOIN kategoria_grupy k ON g.kategoria_grupa_id = k.id
              WHERE id = ?`,
             [groupId]
         );
