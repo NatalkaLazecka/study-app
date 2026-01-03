@@ -1,5 +1,5 @@
 import {useNavigate} from 'react-router-dom';
-import styles from './HomePage.module. css';
+import styles from './HomePage.module.css';
 import {CheckSquare, Calendar, Users, Table} from 'lucide-react';
 import {useEffect, useState} from "react";
 import LoadingPage from "../../components/LoadingPage";
