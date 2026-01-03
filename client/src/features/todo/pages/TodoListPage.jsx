@@ -122,6 +122,7 @@ export default function TodoListPage() {
                     <div/>
                 </div>
 
+
                 {/* FILTER BAR */}
                 <div className={styles["dropdown-wrapper"]}>
                     <select
@@ -138,7 +139,11 @@ export default function TodoListPage() {
                     </select>
                 </div>
 
-
+                <div className={styles["todo-headers"]}>
+                    <div className={styles["todo-header-btn"]}>TITLE</div>
+                    <div className={styles["todo-header-btn"]}>PRIORITY</div>
+                    <div className={styles["todo-header-btn"]}>EFFORT</div>
+                </div>
                 {/* TABLE */}
                 {todos.length > 0 ? (
                     <table className={styles["todo-table"]}>
@@ -235,7 +240,7 @@ export default function TodoListPage() {
                     <p style={{color: "var(--white)", padding: "1rem", marginTop: "clamp(2rem,4vh,3rem)"}}>
                         No task to do
                     </p>
-                ) }
+                )}
 
                 {/* ADD NEW */}
                 <button
