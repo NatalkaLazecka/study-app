@@ -4,20 +4,20 @@ import {findUserByEmail, createUser, findUserById} from '../services/user.servic
 import {generateToken} from '../services/jwt.service.js';
 
 export async function register(req, res) {
-    const {email, password, imie, nazwisko} = req.body;
+    const {e_mail, password, imie, nazwisko} = req.body;
 
-    if (!email || !password) {
+    if (!e_mail || !password) {
         return res.status(400).json({error: 'Email and password fields are required'});
     }
 
     try {
-        const existingUser = await findUserByEmail(email);
+        const existingUser = await findUserByEmail(e_mail);
         if (existingUser) {
             return res.status(400).json({error: 'User already exists'});
         }
 
         const id = uuid();
-        await createUser({id, email, password, imie: imie || null, nazwisko: nazwisko || null});
+        await createUser({id, e_mail, password, imie: imie || null, nazwisko: nazwisko || null});
 
         res.json({ok: true});
     } catch (err) {
