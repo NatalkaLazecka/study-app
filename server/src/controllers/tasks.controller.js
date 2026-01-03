@@ -26,9 +26,11 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId, n
             return;
         }
 
-        const placeholders = notificationModeIds. map(() => '?').join(',');
+        const placeholders = notificationModeIds.map(() => '?').join(',');
         const [modes] = await pool.query(
-            `SELECT id, nazwa FROM tryb_powiadomien WHERE id IN (${placeholders})`,
+            `SELECT id, nazwa
+             FROM tryb_powiadomien
+             WHERE id IN (${placeholders})`,
             notificationModeIds
         );
 
@@ -40,7 +42,7 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId, n
         };
 
         const messageMap = {
-            'month':  '1 month',
+            'month': '1 month',
             'week': '1 week',
             '3 days': '3 days',
             'day': '1 day'
@@ -68,8 +70,8 @@ const createTaskNotifications = async (taskId, taskTitle, deadline, studentId, n
             id: uuidv4(),
             zadanie_id: taskId,
             student_id: studentId,
-            data_stworzenia:  deadlineDate,
-            tresc:  `TASK '${taskTitle}' deadline is today`,
+            data_stworzenia: deadlineDate,
+            tresc: `TASK '${taskTitle}' deadline is today`,
             przeczytane: 0
         });
 
@@ -156,7 +158,7 @@ export const getTaskById = async (req, res) => {
         const [modes] = await pool.query(
             `SELECT tp.id, tp.nazwa
              FROM zadanie_tryb_powiadomien ztp
-             JOIN tryb_powiadomien tp ON ztp.tryb_powiadomien_id = tp. id
+                      JOIN tryb_powiadomien tp ON ztp.tryb_powiadomien_id = tp.id
              WHERE ztp.zadanie_id = ?`,
             [req.params.id]
         );
@@ -172,9 +174,20 @@ export const getTaskById = async (req, res) => {
 
 export const addTask = async (req, res) => {
     const {
-         tytul, tresc, priorytet, deadline, status_zadania_id, wysilek, grupa_id, automatyczne_powiadomienie, tryby_powiadomien
+        tytul,
+        tresc,
+        priorytet,
+        deadline,
+        status_zadania_id,
+        wysilek,
+        grupa_id,
+        automatyczne_powiadomienie,
+        tryby_powiadomien
     } = req.body;
 
+    if (!tytul || !deadline) {
+            return res.status(400).json({ error: "Pola 'tytul', 'deadline' i 'status_zadania_id' są wymagane." });
+        }
     const studentId = req.user.id;
 
     try {
@@ -195,10 +208,10 @@ export const addTask = async (req, res) => {
                 studentId, status_zadania_id, wysilek, grupa_id]
         );
 
-        if (tryby_powiadomien && tryby_powiadomien. length > 0) {
+        if (tryby_powiadomien && tryby_powiadomien.length > 0) {
             for (const modeId of tryby_powiadomien) {
                 console.log(`INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
-                     VALUES (UUID(), ${id}, ${modeId}`);
+                             VALUES (UUID(), ${id}, ${modeId}`);
 
                 await pool.query(
                     `INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
@@ -230,6 +243,10 @@ export const updateTask = async (req, res) => {
         automatyczne_powiadomienie,
         tryby_powiadomien
     } = req.body;
+
+     if (!tytul || !deadline) {
+            return res.status(400).json({ error: "Pola 'tytul', 'deadline' i 'status_zadania_id' są wymagane." });
+        }
 
     const studentId = req.user.id;
 
@@ -267,10 +284,10 @@ export const updateTask = async (req, res) => {
 
         if (tryby_powiadomien && tryby_powiadomien.length > 0) {
             for (const modeId of tryby_powiadomien) {
-                await pool. query(
+                await pool.query(
                     `INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
                      VALUES (UUID(), ?, ?)`,
-                    [req.params. id, modeId]
+                    [req.params.id, modeId]
                 );
             }
         }
@@ -292,7 +309,7 @@ export const updateTask = async (req, res) => {
 };
 
 export const deleteTask = async (req, res) => {
-     const studentId = req.user.id;
+    const studentId = req.user.id;
 
     try {
         await pool.query(
@@ -305,10 +322,15 @@ export const deleteTask = async (req, res) => {
             [req.params.id]
         );
 
-        await pool.query(
-            "DELETE FROM zadanie WHERE id=? ",
-            [req.params.id]
+        const [result] = await pool.query(
+            "DELETE FROM zadanie WHERE id=? AND student_id = ?",
+            [req.params.id, studentId]
         );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({message: "Zadanie nie znalezione lub brak uprawnień"});
+        }
+
 
         res.json({message: "Zadanie usunięte"});
     } catch (err) {
