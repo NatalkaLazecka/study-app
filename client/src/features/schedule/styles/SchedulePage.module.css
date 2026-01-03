@@ -39,8 +39,8 @@ body {
     grid-template-columns: 1fr auto 1fr;
     align-items: start;
     width: 100%;
-    margin-bottom: clamp(1rem, 3vh, 2rem);
-    padding: 0 clamp(1rem, 4vw, 3rem);
+    margin-bottom: clamp(0.8rem, calc(0.8rem + 1.5vh), 2rem);
+    padding: 0 min(3rem, 4vw);
 }
 
 .header-section > div:last-child {
@@ -52,12 +52,17 @@ body {
     border: none;
     color: var(--light);
     font-family: 'Roboto Mono', monospace;
-    font-size: clamp(18px, 2.5vw, 26px);
+    font-size:  clamp(1.125rem, calc(1rem + 1vw), 1.625rem);
     cursor: pointer;
     display: flex;
     gap: 0.5rem;
     transition: color 0.2s;
     justify-self: start;
+    padding: min(0.5rem, 1.5vw);
+}
+
+.back-button:hover {
+    color: var(--pink);
 }
 
 .back-text {
@@ -70,16 +75,15 @@ body {
 
 .back-arrow {
     color: var(--pink);
-    font-size: clamp(18px, 2.5vw, 26px);
+    font-size: clamp(1.125rem, calc(1rem + 1vw), 1.625rem);
     font-weight: bold;
     cursor: pointer;
 }
 
 .schedule-title {
-    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    font-size: clamp(1.5rem, calc(1.2rem + 2vw), 2.8rem);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    margin-bottom: clamp(1rem, 3vh, 2rem);
     color: var(--light);
     text-shadow: 0 0 15px rgba(232, 91, 191, 0.4);
     justify-self: center;
@@ -87,7 +91,7 @@ body {
 
 /* ===== SCHEDULE ROOT ===== */
 .schedule-root {
-    min-height: calc(100vh - clamp(50px, 7vh, 70px));
+    min-height: 100dvh;
     width: 100%;
     background: radial-gradient(ellipse 70% 65% at 50% 50%, #b854b4 0%, #3D2A3C 60%, #160c1a 100%), #0a0610;
     display: flex;
@@ -95,19 +99,18 @@ body {
     align-items: center;
     justify-content: flex-start;
     font-family: 'Roboto Mono', monospace;
-    padding: 3rem 0;
+    padding: min(3rem, 4dvh) min(1rem, 2vw);
 }
 
-/* ===== CALENDAR CONTENT ===== */
+/* ===== SCHEDULE CONTENT ===== */
 .schedule-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: clamp(0.7rem, 2vw, 2.2rem);
+    gap: min(2.2rem, 2vw);
     width: 98vw;
-    max-width: 1600px;
-    place-items: stretch;
+    max-width: min(1600px, 95vw);
+    place-items: center;
     align-items: start;
-    margin: 0 auto;
 }
 
 /* ===== PANEL SECTION ===== */
@@ -121,29 +124,26 @@ body {
 
 .side-panel {
     background: #1E1E1E21;
-    border: clamp(2px, 0.5vw, 4px) solid var(--pink);
+    border: clamp(2px, calc(2px + 0.2vw), 4px) solid var(--pink);
     border-radius: 12px;
     color: var(--pink);
     font-family: 'Roboto Mono', monospace;
-    font-size: clamp(0.93rem, 1.7vw, 1.4rem);
+    font-size: clamp(0.9rem, calc(0.85rem + 0.5vw), 1.2rem);
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding: clamp(0.6rem, 2vw, 2rem) clamp(0.7rem, 2vw, 1.5rem);
+    padding: clamp(0.6rem, calc(0.8rem + 1vh), 1.5rem) min(3rem, 3vw);
     box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
     text-align: center;
 }
 
 .panel-content {
-    min-height: 50vh;
-    padding: clamp(0.5rem, 1vw, 1.2rem);
+    height: clamp(325px, 48dvh, 615px);
+    padding: min(1rem, 1.5vw);
     box-shadow: 0 0 15px rgba(232, 91, 191, 0.16);
     overflow-y: auto;
-    overflow-x: visible;
+    overflow-x: hidden;
     border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
     background: #B381B030;
     border: 1.5px solid #A45EA1;
 }
