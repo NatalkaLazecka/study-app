@@ -80,6 +80,7 @@ export default function CalendarPage() {
                 const [eventsData, scheduleData] = await Promise.all([
                     getStudentEvents(),
                     getTodaySchedule(),
+                    new Promise(resolve => setTimeout(resolve, 2000))
                 ]);
 
                 setEvents(eventsData);

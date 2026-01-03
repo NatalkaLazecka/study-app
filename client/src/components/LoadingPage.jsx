@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './MenuBar.module.css';
+import styles from './LoadingPage.module.css';
 
 export default function LoadingPage() {
     return (
