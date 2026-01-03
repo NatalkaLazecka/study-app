@@ -168,7 +168,7 @@
     flex-direction: row;
     align-items: stretch;
     gap: clamp(0.5rem, 2vw, 2rem);
-    margin-bottom: clamp(1rem, 2vh, 1.6rem);
+    margin-top: clamp(1rem, 2vh, 1.6rem);
     max-width: min(900px, 95vw);
     width: 100%;
 }
