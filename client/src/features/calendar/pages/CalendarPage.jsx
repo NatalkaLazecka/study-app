@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import CalendarEventComponent from "../component/CalendarEventComponent";
 import CalendarScheduleComponent from "../component/CalendarScheduleComponent";
 import MenuBar from "../../../components/MenuBar";
+import LoadingPage from "../../../components/LoadingPage";
 
 import {
     getStudentEvents,
@@ -116,7 +117,8 @@ export default function CalendarPage() {
                 {error && <div className={styles["err-message"]}>{error}</div>}
 
                 {loading ? (
-                    <p className={styles["loading-p"]}>Loading calendar...</p>
+                    // <p className={styles["loading-p"]}>Loading calendar...</p>
+                    <LoadingPage />
                 ) : (
                     <div className={styles["calendar-content"]}>
                         <div className={styles["calendar-box"]}>
