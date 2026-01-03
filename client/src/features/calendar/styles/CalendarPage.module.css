@@ -427,7 +427,7 @@ body {
 }
 
 .import-box {
-    margin-top: min(10px, 1.5dvh);
+    /*margin-top: min(10px, 1.5dvh);*/
     display: flex;
     gap: min(20px, 2vw);
     align-items: center;
@@ -799,7 +799,7 @@ body {
 
 /* ===== NOTIFICATION MODES DROPDOWN ===== */
 .notification-modes {
-    margin-top: 1rem;
+    /*margin-top: 1rem;*/
     position: relative;
     width: 100%;
     max-width: min(320px, 90%);
