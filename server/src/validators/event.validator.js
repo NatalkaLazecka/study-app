@@ -26,10 +26,6 @@ export const createEventValidator = [
     .isISO8601()
     .withMessage("Invalid end date"),
 
-  body("priorytet")
-    .optional()
-    .isInt({ min: 1, max: 3 })
-    .withMessage("Priority must be between 1 and 3"),
 
   body("rodzaj_wydarzenia_id")
     .isUUID()
