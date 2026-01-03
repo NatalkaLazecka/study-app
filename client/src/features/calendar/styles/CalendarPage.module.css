@@ -481,7 +481,7 @@ body {
     cursor: pointer;
     background: none;
     border: none;
-    padding: min(1rem, 1.5vw);
+    padding: 0 min(1rem, 1.5vw);
     transition: color 0.2s, transform 0.2s;
     min-width: clamp(30px, 5vw, 40px);
 }
@@ -500,7 +500,7 @@ body {
     display: flex;
     color: var(--white);
     font-weight: bold;
-    font-size: clamp(0.875rem, calc(0.8rem + 0.9vw), 1.625rem);
+    font-size: clamp(0.875rem, calc(0.8rem + 0.9vw), 1.500rem);
     text-transform: uppercase;
     background: none;
     letter-spacing: 0.07em;
