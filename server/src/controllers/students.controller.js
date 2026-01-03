@@ -21,8 +21,10 @@ export const getStudent = async (req, res) => {
 };
 
 export const getStudentWeekType = async (req, res) => {
+    const studentId = req.user.id;
+
     try {
-        const [result] = await pool.query("SELECT CAST(full_week_schedule AS UNSIGNED) AS full_week_schedule FROM student WHERE id=?", [req.params.id]);
+        const [result] = await pool.query("SELECT CAST(full_week_schedule AS UNSIGNED) AS full_week_schedule FROM student WHERE id=?", [studentId);
         if (!result.length) return res.status(404).json({message: "getStudentWeekType: Student not found"});
         res.json(result);
     } catch (err) {
