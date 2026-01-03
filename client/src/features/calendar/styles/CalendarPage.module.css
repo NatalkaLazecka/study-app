@@ -6,7 +6,7 @@
     --light: #f6d3f4;
     --bg-dark: #160C1AFF;
     --white: #fdfdfd;
-    --black: #0c0c0c;
+    --black:  #0c0c0c;
     --red: #FF5C5C;
     --dotblue: #9ED7FF;
     --dotgreen: #8EF19D;
@@ -26,11 +26,12 @@ body {
     overflow-x: hidden;
 }
 
-.err-message{
+.err-message {
     color: var(--red);
     font-family: 'Roboto Mono', monospace;
-    font-size: clamp(14px, 1.5vw, 16px);
-    margin-top: clamp(5px, 1.5vh, 10px);
+    font-size: clamp(0.875rem, calc(0.8rem + 0.5vw), 1rem);
+    margin-top: min(0.625rem, 1.5vh);
+    padding: min(0.5rem, 2vw);
 }
 
 /* ===== HEADER SECTION ===== */
@@ -39,11 +40,11 @@ body {
     grid-template-columns: 1fr auto 1fr;
     align-items: start;
     width: 100%;
-    margin-bottom: clamp(1rem, 3vh, 2rem);
-    padding: 0 clamp(1rem, 4vw, 3rem);
+    margin-bottom: clamp(1rem, calc(0.8rem + 1.5vh), 2rem);
+    padding: 0 min(3rem, 4vw);
 }
 
-.header-section > div:last-child {
+.header-section > divlast-child {
     justify-self: end;
 }
 
@@ -52,12 +53,17 @@ body {
     border: none;
     color: var(--light);
     font-family: 'Roboto Mono', monospace;
-    font-size: clamp(18px, 2.5vw, 26px);
+    font-size:  clamp(1.125rem, calc(1rem + 1vw), 1.625rem);
     cursor: pointer;
     display: flex;
     gap: 0.5rem;
     transition: color 0.2s;
     justify-self: start;
+    padding: min(0.5rem, 1.5vw);
+}
+
+.back-button:hover {
+    color: var(--pink);
 }
 
 .back-text {
@@ -70,16 +76,16 @@ body {
 
 .back-arrow {
     color: var(--pink);
-    font-size: clamp(18px, 2.5vw, 26px);
+    font-size: clamp(1.125rem, calc(1rem + 1vw), 1.625rem);
     font-weight: bold;
     cursor: pointer;
 }
 
 .calendar-title {
-    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    font-size: clamp(1.5rem, calc(1.2rem + 2vw), 2.8rem);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    margin-bottom: clamp(1rem, 3vh, 2rem);
+    margin-bottom: clamp(1rem, calc(0.8rem + 1.5vh), 2rem);
     color: var(--light);
     text-shadow: 0 0 15px rgba(232, 91, 191, 0.4);
     justify-self: center;
@@ -87,7 +93,7 @@ body {
 
 /* ===== CALENDAR ROOT ===== */
 .calendar-root {
-    min-height: calc(100vh - clamp(50px, 7vh, 70px));
+    min-height: 100dvh;
     width: 100%;
     background: radial-gradient(ellipse 70% 65% at 50% 50%, #b854b4 0%, #3D2A3C 60%, #160c1a 100%), #0a0610;
     display: flex;
@@ -95,57 +101,63 @@ body {
     align-items: center;
     justify-content: flex-start;
     font-family: 'Roboto Mono', monospace;
-    /*padding: clamp(1rem, 4vh, 3rem) clamp(0.5rem, 2vw, 0);*/
-    padding: 3rem 0;
+    padding: min(3rem, 4dvh) min(1rem, 2vw);
 }
 
 /* ===== CALENDAR CONTENT ===== */
 .calendar-content {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1rem, 3vw, 3rem);
+    grid-template-columns:  repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: min(3rem, 3vw);
     width: 100%;
     max-width: min(1400px, 95vw);
     place-items: center;
     align-items: start;
 }
 
+@media (min-width: 768px) {
+    .calendar-content {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 .calendar-box {
-    background: rgba(255, 255, 255, 0.06);
+    background:  rgba(255, 255, 255, 0.06);
     border: 1.5px solid var(--pink);
-    border-radius: clamp(12px, 2vw, 16px);
+    border-radius: clamp(0.75rem, calc(0.6rem + 0.8vw), 1rem);
     box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
     color: var(--light);
     width: 100%;
     height: 100%;
-    max-width: clamp(300px, 90vw, 560px);;
-    min-height: clamp(400px, 55vh, 700px);
+    max-width: clamp(300px, 90vw, 560px);
+    min-height: clamp(400px, 55dvh, 700px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: min(1rem, 2vw);
 }
 
 /* ===== PANEL SECTION ===== */
 .panel-section {
-    display: flex;
+    display:  flex;
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
-    max-width: 400px;
+    max-width: min(400px, 100%);
 }
 
 .side-panel {
     background: #1E1E1E21;
-    border: clamp(2px, 0.5vw, 4px) solid var(--pink);
+    border:  clamp(2px, calc(2px + 0.2vw), 4px) solid var(--pink);
     border-radius: 12px;
     color: var(--pink);
     font-family: 'Roboto Mono', monospace;
-    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    font-size:  clamp(0.9rem, calc(0.85rem + 0.5vw), 1.2rem);
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding: clamp(1rem, 2vh, 1.5rem) clamp(1.5rem, 3vw, 3rem);
+    padding: clamp(1rem, calc(0.8rem + 1vh), 1.5rem) min(3rem, 3vw);
     box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
     text-align: center;
 }
@@ -154,8 +166,8 @@ body {
     background: #B381B030;
     border: 1.5px solid #A45EA1;
     border-radius: 12px;
-    height: clamp(325px, 48vh, 615px);
-    padding: clamp(0.5rem, 1.5vw, 1rem);
+    height: clamp(325px, 48dvh, 615px);
+    padding: min(1rem, 1.5vw);
     box-shadow: 0 0 15px rgba(232, 91, 191, 0.2);
     overflow-y: auto;
     overflow-x: hidden;
@@ -166,24 +178,24 @@ body {
     background: rgba(255, 255, 255, 0.06);
     border: 1.5px solid var(--pink);
     border-radius: 16px;
-    box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
-    padding: clamp(15px, 1.5vw, 30px) clamp(10px, 2vw, 20px);
+    box-shadow:  0 0 18px rgba(232, 91, 191, 0.3);
+    padding: min(30px, 3vw) min(20px, 2vw);
     color: var(--light);
     width: 100%;
-    max-width: 830px;
-    min-height: clamp(400px, 60vh, 650px);
-    max-height: 70vh;
+    max-width: min(830px, 95vw);
+    min-height: clamp(400px, 60dvh, 650px);
+    max-height: 70dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: clamp(8px, 2vh, 12px);
+    justify-content: flex-start;
+    gap: clamp(0.5rem, calc(0.4rem + 1vh), 0.75rem);
     overflow-y: auto;
 }
 
-.input-box{
+.input-box {
     width: 100%;
-    max-width: 320px;
+    max-width: min(320px, 90%);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -193,22 +205,23 @@ body {
 .input-title {
     color: var(--white);
     font-weight: bold;
-    font-size: 14px;
+    font-size: clamp(0.875rem, calc(0.8rem + 0.3vw), 1rem);
     margin-bottom: 5px;
 }
 
 .event-input {
     border: 0.5px solid var(--white);
-    padding: clamp(8px, 1.5vw, 10px);
+    padding: min(10px, 1.5vw);
     color: var(--white);
     background: rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     width: 100%;
-    height: clamp(35px, 5vh, 40px);
+    height: clamp(35px, 5dvh, 40px);
+    font-size: clamp(0.875rem, calc(0.8rem + 0.3vw), 1rem);
 }
 
 .event-h3 {
-    font-size: clamp(16px, 2vw, 18px);
+    font-size: clamp(1rem, calc(0.9rem + 0.8vw), 1.125rem);
     font-family: 'Source Code Pro', monospace;
     font-weight: lighter;
     color: var(--white);
@@ -216,52 +229,54 @@ body {
 
 .event-h2 {
     font-weight: lighter;
-    font-size: clamp(24px, 4vw, 30px);
+    font-size: clamp(1.5rem, calc(1.2rem + 1.5vw), 1.875rem);
     font-family: 'Source Code Pro', monospace;
-    color: var(--white);
+    color:  var(--white);
+    margin:  clamp(0.5rem, 1dvh, 1rem) 0;
 }
 
 .event-buttons {
-    padding: clamp(4px, 3vh, 12px);
+    padding: min(12px, 3dvh);
     display: flex;
-    justify-content: space-between;
-    width: 90%;
+    justify-content: center;
+    width: 100%;
     flex-wrap: wrap;
-    gap: clamp(6px, 1vh, 10px);
+    gap: clamp(0.375rem, calc(0.3rem + 0.5vh), 0.625rem);
 }
 
 .event-button {
     border: var(--pink) solid 1px;
     background: rgba(255, 255, 255, 0.2);
     color: var(--white);
-    width: clamp(120px, 18vw, 150px);
-    height: clamp(30px, 4vh, 35px);
-    font-size: clamp(14px, 1.5vw, 16px);
+    width: clamp(120px, calc(100px + 8vw), 150px);
+    height: clamp(30px, 4dvh, 35px);
+    font-size: clamp(0.875rem, calc(0.8rem + 0.4vw), 1rem);
     font-family: 'Source Code Pro', monospace;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .event-button:hover {
-    border: 2px solid var(--pink);
+    border:  2px solid var(--pink);
     background: rgba(255, 255, 255, 0.25);
     color: var(--white);
     font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+    transform: translateY(-2px);
 }
 
 .event-button-active {
     border: 3px solid var(--pink);
-    background: 0;
+    background: rgba(232, 91, 191, 0.2);
     color: var(--white);
     font-weight: bold;
-    cursor: pointer;
 }
 
 /* ===== EVENT COMPONENT ===== */
 .event-dot {
     color: #9ED7FF;
     margin-top: 3px;
-    font-size: clamp(18px, 2.5vw, 22px);
+    font-size:  clamp(1.125rem, calc(1rem + 1vw), 1.375rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -274,7 +289,7 @@ body {
     display: flex;
     text-align: center;
     flex-direction: column;
-    flex: 1;
+    flex:  1;
     min-width: 0;
     overflow: hidden;
 }
@@ -282,26 +297,25 @@ body {
 .event-component {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: clamp(0.5rem, 2vw, 1.5rem);
+    gap: min(1.5rem, 2vw);
     align-items: center;
     width: 100%;
-    padding: clamp(8px, 1.5vw, 12px);
-    margin-bottom: clamp(8px, 1.5vh, 15px);
+    padding:  min(12px, 1.5vw);
+    margin-bottom: clamp(0.5rem, calc(0.4rem + 0.8vh), 0.9375rem);
     border-radius: 8px;
     transition: background 0.2s ease, transform 0.2s ease;
     cursor: pointer;
 }
 
-.event-component > div:first-child {
-    display: flex;
-    text-align: center;
-    flex-direction: column;
+.event-component:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
 }
 
 .event-descripsion-title {
-    font-size: clamp(16px, 2vw, 20px);
-    margin: 0 0 clamp(2px, 0.5vh, 4px) 0;
-    padding: 0;
+    font-size: clamp(1rem, calc(0.9rem + 0.8vw), 1.25rem);
+    margin:  0 0 clamp(2px, 0.5vh, 4px) 0;
+    padding:  0;
     font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -309,10 +323,10 @@ body {
 }
 
 .event-descripsion-date {
-    font-size: clamp(12px, 1.5vw, 16px);
+    font-size: clamp(0.75rem, calc(0.7rem + 0.5vw), 1rem);
     color: var(--light);
     font-weight: lighter;
-    margin: 0;
+    margin:  0;
     padding: 0;
     opacity: 0.85;
 }
@@ -322,9 +336,9 @@ body {
     grid-template-columns: auto 1fr;
     align-items: start;
     color: var(--white);
-    padding: clamp(8px, 1.5vw, 12px);
+    padding: min(12px, 1.5vw);
     text-align: start;
-    gap: clamp(10px, 2vw, 20px);
+    gap: min(20px, 2vw);
     border-radius: 8px;
     transition: background 0.2s ease;
 }
@@ -333,19 +347,19 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin-bottom: clamp(8px, 1.5vh, 15px);
+    margin-bottom: clamp(0.5rem, calc(0.4rem + 0.8vh), 0.9375rem);
     font-family: 'Source Code Pro', monospace;
 }
 
 .event-descripsion-time {
-    font-size: clamp(12px, 1.5vw, 16px);
+    font-size: clamp(0.75rem, calc(0.7rem + 0.5vw), 1rem);
     color: var(--light);
     font-weight: lighter;
     text-align: end;
     opacity: 0.85;
     white-space: nowrap;
     margin: 0;
-    padding: 0;
+    padding:  0;
 }
 
 .tile-event-indicators {
@@ -360,13 +374,13 @@ body {
 }
 
 .tile-event-indicator {
-    font-size: clamp(6px, 1vw, 8px);
+    font-size: clamp(0.375rem, calc(0.35rem + 0.4vw), 0.5rem);
     line-height: 1;
 }
 
 .end-buttons {
-    margin-top: clamp(10px, 2vh, 20px);
-    gap: clamp(10px, 2vw, 20px);
+    margin-top: clamp(0.625rem, calc(0.5rem + 1vh), 1.25rem);
+    gap: min(20px, 2vw);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -375,61 +389,63 @@ body {
 .end-button {
     border: var(--pink) solid 2px;
     border-radius: 12px;
-    height: clamp(30px, 4vh, 35px);
-    width: clamp(100px, 15vw, 120px);
+    height: clamp(30px, 4dvh, 35px);
+    min-width: clamp(100px, calc(80px + 6vw), 120px);
     background: rgba(255, 255, 255, 0.2);
     color: var(--white);
     font-family: 'Source Code Pro', monospace;
-    font-size: clamp(14px, 1.5vw, 16px);
+    font-size:  clamp(0.875rem, calc(0.8rem + 0.4vw), 1rem);
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .end-button:hover {
     border: 2px solid var(--pink);
     background: rgba(255, 255, 255, 0.25);
-    color: var(--white);
     font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+    transform: translateY(-2px);
 }
 
-.end-button-delete{
+.end-button-delete {
     border: var(--red) solid 2px;
     border-radius: 12px;
-    height: clamp(30px, 4vh, 35px);
-    width: clamp(100px, 15vw, 120px);
+    height: clamp(30px, 4dvh, 35px);
+    min-width: clamp(100px, calc(80px + 6vw), 120px);
     background: rgba(255, 111, 111, 0.2);
     color: var(--white);
     font-family: 'Source Code Pro', monospace;
-    font-size: clamp(14px, 1.5vw, 16px);
+    font-size: clamp(0.875rem, calc(0.8rem + 0.4vw), 1rem);
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.end-button-delete:hover{
+.end-button-delete:hover {
     border: 2px solid var(--red);
     background: rgba(255, 111, 111, 0.3);
-    color: var(--white);
     font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+    transform: translateY(-2px);
 }
 
 .import-box {
-    margin-top: clamp(5px, 1.5vh, 10px);
+    margin-top: min(10px, 1.5dvh);
     display: flex;
-    gap: clamp(10px, 2vw, 20px);
+    gap: min(20px, 2vw);
     align-items: center;
     flex-wrap: wrap;
     cursor: pointer;
     user-select: none;
-    transition: opacity 0.2s ease;
+    transition: all 0.2s ease;
+    padding: min(8px, 1vw);
 }
 
 .import-box:hover {
     font-weight: bold;
     text-decoration: underline;
+    transform: translateX(4px);
 }
 
 .import-icon {
-    font-size: clamp(22px, 3vw, 28px);
+    font-size: clamp(1.375rem, calc(1.2rem + 1.2vw), 1.75rem);
 }
 
 /* ===== REACT CALENDAR STYLES ===== */
@@ -439,34 +455,39 @@ body {
     color: var(--light);
     font-family: 'Roboto Mono', monospace;
     max-width: 100%;
+    padding: min(0.5rem, 1vw);
 }
 
 :global(.react-calendar__navigation) {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: clamp(0.3rem, 1vh, 0.7rem);
-    gap: clamp(0.3rem, 1.3vw, 1.6rem);
+    margin-bottom: clamp(0.3rem, calc(0.2rem + 0.6vh), 0.7rem);
+    gap: clamp(0.3rem, calc(0.2rem + 0.8vw), 1.6rem);
 }
 
 :global(.react-calendar__navigation__label) {
     color: #f6d3f4;
-    font-size: clamp(12px, 1.0vw, 16px);
+    font-size: clamp(0.75rem, calc(0.7rem + 0.5vw), 1rem);
     font-weight: bold;
-    letter-spacing: clamp(0.08em, 0.12em, 0.14em);;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 
 :global(.react-calendar__navigation button) {
     color: #e85bbf;
-    font-size: clamp(0.8rem, 1.6vw, 1.6rem);
+    font-size: clamp(0.8rem, calc(0.7rem + 0.8vw), 1.6rem);
     font-weight: bold;
     cursor: pointer;
     background: none;
     border: none;
-    padding: clamp(0.3rem, 0.8vw, 1rem);
-    transition: color 0.2s;
+    padding: min(1rem, 1.5vw);
+    transition: color 0.2s, transform 0.2s;
     min-width: clamp(30px, 5vw, 40px);
+}
+
+:global(.react-calendar__navigation button:hover) {
+    transform: scale(1.1);
 }
 
 :global(.react-calendar__navigation button:disabled) {
@@ -479,34 +500,34 @@ body {
     display: flex;
     color: var(--white);
     font-weight: bold;
-    font-size: clamp(14px, 2.2vw, 26px);
+    font-size: clamp(0.875rem, calc(0.8rem + 0.9vw), 1.625rem);
     text-transform: uppercase;
     background: none;
-    letter-spacing: clamp(0.05em, 0.07em, 0.09em);
+    letter-spacing: 0.07em;
 }
 
 :global(.react-calendar__month-view__weekdays__weekday) {
-    flex: 1 0 14.2857%;
+    flex:  1 0 14.2857%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: clamp(0.3em, 0.8vh, 0.6em) 0;
+    padding: clamp(0.3em, calc(0.2em + 0.5dvh), 0.6em) 0;
     text-align: center;
 }
 
-:global(.react-calendar__month-view__days__day){
-    flex: 0 0 calc(14.2857% - clamp(0.05em, 0.1vw, 0.1em));
-    max-width: calc(14.2857% - clamp(0.05em, 0.1vw, 0.1em));
+:global(.react-calendar__month-view__days__day) {
+    flex: 0 0 calc(14.2857% - 0.1em);
+    max-width: calc(14.2857% - 0.1em);
     background: #ffffff40;
     color: var(--white);
-    font-size: clamp(14px, 2.2vw, 22px);
+    font-size: clamp(0.875rem, calc(0.8rem + 0.9vw), 1.375rem);
     border-radius: 1.5px;
     border: 1px solid rgba(218, 218, 218, 0.9);
     margin: 0;
-    min-height: clamp(30px, 4.55vh, 44px);
+    min-height: clamp(30px, 4.55dvh, 44px);
     aspect-ratio: 1;
     position: relative;
-    transition: background 0.16s, color 0.16s;
+    transition: background 0.16s, color 0.16s, transform 0.16s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -517,20 +538,21 @@ body {
 :global(.react-calendar__month-view__days) {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(0.05em, 0.1vw, 0.1em);
-    height: clamp(220px, 35vh, 320px);
+    gap: 0.1em;
+    height: clamp(220px, 35dvh, 320px);
 }
 
 :global(.react-calendar__tile--active) {
     background: #e85bbf;
-    color: var(--white);
+    color:  var(--white);
     border: 1.5px solid #e85bbf;
+    transform: scale(1.05);
 }
 
 :global(.react-calendar__tile--now) {
     background: rgba(232, 91, 191, 0.46) !important;
     border: var(--pink) solid 1px !important;
-    color: var(--white) ;
+    color: var(--white);
 }
 
 :global(.react-calendar__tile:enabled:hover),
@@ -538,6 +560,7 @@ body {
     background: rgba(217, 217, 217, 0.7);
     color: var(--black);
     border: 1px solid var(--black);
+    transform: scale(1.05);
 }
 
 :global(.react-calendar__month-view__days__day--weekend) {
@@ -554,99 +577,60 @@ body {
     display: none;
 }
 
-:global(.react-calendar__year-view) {
-    width: 100%;
-}
-
 :global(.react-calendar__year-view__months) {
-    display: grid !important;
+    display: grid ! important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: clamp(0.05em, 0.1vw, 0.1em);
+    gap: 0.1em;
     text-align: center;
-    height: clamp(250px, 40vh, 370px);
+    height: clamp(250px, 40dvh, 370px);
 }
 
-:global(.react-calendar__tile){
+:global(.react-calendar__tile) {
     height: auto;
     background: rgba(255, 255, 255, 0.2);
     color: var(--white);
-    font-size: clamp(15px, 2vw, 20px);
+    font-size: clamp(0.9375rem, calc(0.85rem + 0.8vw), 1.25rem);
     font-weight: 600;
     transition: all 0.2s ease;
     cursor: pointer;
     font-family: 'Roboto Mono', monospace;
-    letter-spacing: clamp(0.05em, 0.06em, 0.08em);
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: clamp(0.5em, 1vh, 1em) !important;
+    padding: clamp(0.5em, calc(0.4em + 0.6dvh), 1em) !important;
+}
+
+:global(.react-calendar__tile:hover) {
+    transform: scale(1.05);
 }
 
 :global(.react-calendar__year-view .react-calendar__tile),
 :global(.react-calendar__decade-view .react-calendar__tile),
 :global(.react-calendar__century-view .react-calendar__tile) {
     padding: 0 !important;
-    min-height: clamp(40px, 8vh, 60px);
+    min-height: clamp(40px, 8dvh, 60px);
 }
 
 :global(.react-calendar__decade-view__years),
-:global(.react-calendar__century-view__decades){
+:global(.react-calendar__century-view__decades) {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: clamp(0.05em, 0.1vw, 0.1em);
-    text-align: center;
-    height: clamp(160px, 28vh, 200px);
+    gap: 0.1em;
+    text-align:  center;
+    height: clamp(160px, 28dvh, 200px);
 }
-
-/* ===== MEDIA QUERIES ===== */
-@media (max-width: 1200px) {
-    .calendar-content {
-        grid-template-columns: 1fr;
-    }
-
-    .calendar-box,
-    .panel-section {
-        max-width: 600px;
-    }
-}
-
-@media (max-width: 480px) {
-    .event-buttons {
-        flex-direction: column;
-    }
-
-    .event-component {
-        grid-template-columns: auto 1fr;
-    }
-
-    .event-descripsion {
-        text-align: left;
-    }
-
-    .event-descripsion-time {
-        text-align: start;
-        margin-top: 4px;
-    }
-
-    .event-button {
-        width: 100%;
-    }
-}
-
 
 /* ===== FILES LIST ===== */
 .files-list {
     width: 100%;
-    max-width: 320px;
+    max-width: min(320px, 90%);
     display: flex;
     flex-direction: column;
-    gap: clamp(3px, 1vh, 6px);
-    height: clamp(120px, 10vh, 200px);
-    /*max-height: clamp(120px, 20vh, 200px);*/
+    gap: clamp(3px, calc(2px + 0.5dvh), 6px);
+    height: clamp(120px, 15dvh, 200px);
     overflow-y: auto;
     padding-right: 5px;
-
-    /* firefox */
     scrollbar-width: thin;
-    scrollbar-color:  var(--pink) rgba(255, 255, 255, 0.05);
+    scrollbar-color: var(--pink) rgba(255, 255, 255, 0.05);
 }
 
 .files-list::-webkit-scrollbar {
@@ -671,24 +655,25 @@ body {
 .file-item {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: clamp(0.3rem, 1.5vw, 0.8rem);
+    gap: min(0.8rem, 1.5vw);
     align-items: center;
     width: 100%;
-    padding: clamp(3px, 1vw, 6px);
+    padding: min(6px, 1vw);
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(232, 91, 191, 0.3);
     border-radius: 8px;
-    transition: background 0.2s ease, border 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .file-item:hover {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(232, 91, 191, 0.5);
+    transform: translateX(4px);
 }
 
 .file-icon {
     color: var(--pink);
-    font-size: clamp(12px, 1.8vw, 14px);
+    font-size: clamp(0.75rem, calc(0.7rem + 0.6vw), 0.875rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -697,7 +682,7 @@ body {
 
 .file-name {
     font-family: 'Source Code Pro', monospace;
-    font-size:  clamp(12px, 1.3vw, 14px);
+    font-size: clamp(0.75rem, calc(0.7rem + 0.4vw), 0.875rem);
     color: var(--white);
     font-weight: 400;
     overflow: hidden;
@@ -709,7 +694,7 @@ body {
 
 .file-actions {
     display: flex;
-    gap: clamp(4px, 1vw, 8px);
+    gap: min(8px, 1vw);
     align-items: center;
 }
 
@@ -718,8 +703,8 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: clamp(12px, 1.5vw, 16px);
-    padding: clamp(3px, 0.6vw, 5px);
+    font-size: clamp(0.75rem, calc(0.7rem + 0.5vw), 1rem);
+    padding: min(5px, 0.8vw);
     transition: transform 0.2s ease, color 0.2s ease;
     display: flex;
     align-items: center;
@@ -734,7 +719,7 @@ body {
 
 .file-btn-download:hover {
     color: var(--light);
-    transform: scale(1.15);
+    transform: scale(1.2);
 }
 
 .file-btn-delete {
@@ -743,23 +728,25 @@ body {
 
 .file-btn-delete:hover {
     color: var(--light);
-    transform: scale(1.15);
+    transform: scale(1.2);
 }
 
 .file-btn-download:active,
 .file-btn-delete:active {
-    transform: scale(0.95);
+    transform: scale(0.9);
 }
 
+/* ===== TOGGLE SWITCH ===== */
 .notify-toggle {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 5px;
+    padding: min(5px, 1vw);
+    gap: 1rem;
 }
 
 .notify-label {
-    font-size: 14px;
+    font-size: clamp(0.875rem, calc(0.8rem + 0.3vw), 1rem);
     font-weight: 500;
     color: var(--white);
     margin:  0;
@@ -779,7 +766,7 @@ body {
     display: block;
     width: 35px;
     height: 17px;
-    background-color:  #ccc;
+    background-color: #ccc;
     border-radius:  34px;
     cursor: pointer;
     position: relative;
@@ -792,8 +779,8 @@ body {
     left: 2px;
     width: 13px;
     height: 13px;
-    background-color:  white;
-    border-radius:  50%;
+    background-color: white;
+    border-radius: 50%;
     transition: transform 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -810,68 +797,126 @@ body {
     opacity: 0.9;
 }
 
-.toggle-input:focus + .toggle-label {
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
-}
-
-/* mode list */
+/* ===== NOTIFICATION MODES DROPDOWN ===== */
 .notification-modes {
-  margin-top: 1rem;
-  position: relative;
+    margin-top: 1rem;
+    position: relative;
+    width: 100%;
+    max-width: min(320px, 90%);
 }
 
 .dropdown-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  cursor: pointer;
-  color: var(--white);
-  font-size: 0.95rem;
-  transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: min(0.75rem, 2vw) min(1rem, 2.5vw);
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--white);
+    font-size: clamp(0.9rem, calc(0.85rem + 0.3vw), 1rem);
+    transition: all 0.2s;
 }
 
 .dropdown-header:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: var(--pink);
+    background-color:  rgba(255, 255, 255, 0.08);
+    border-color: var(--pink);
+    transform: translateY(-2px);
 }
 
 .dropdown-list {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  max-height:  200px;
-  overflow-y: auto;
+    margin-top: 0.5rem;
+    padding:  0.5rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    max-height: min(200px, 25dvh);
+    overflow-y: auto;
 }
 
 .checkbox-item {
-  display: flex;
-  align-items: center;
-  padding: 0.6rem 0.75rem;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.2s;
-  color: var(--white);
-  font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    padding: min(0.6rem, 1.5vw) min(0.75rem, 2vw);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    color: var(--white);
+    font-size: clamp(0.875rem, calc(0.8rem + 0.3vw), 0.9rem);
 }
 
 .checkbox-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .checkbox-item input[type="checkbox"] {
-  margin-right: 0.75rem;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--pink);
+    margin-right: 0.75rem;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--pink);
 }
 
 .checkbox-item span {
-  user-select: none;
+    user-select: none;
+}
+
+/* ===== MEDIA QUERIES ===== */
+@media (max-width: 1200px) {
+    .calendar-content {
+        grid-template-columns: 1fr;
+    }
+
+    .calendar-box,
+    .panel-section {
+        max-width: min(600px, 95vw);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        grid-template-columns: auto 1fr auto;
+        padding: 0 min(1.5rem, 3vw);
+    }
+
+    .calendar-title {
+        font-size: clamp(1.25rem, calc(1rem + 1.5vw), 2rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .event-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .event-button {
+        width: 100%;
+    }
+
+    .event-component {
+        grid-template-columns: auto 1fr;
+        gap: min(1rem, 3vw);
+    }
+
+    .event-descripsion {
+        text-align: left;
+    }
+
+    .event-descripsion-time {
+        text-align: start;
+        margin-top: 4px;
+    }
+
+    .end-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .end-button,
+    .end-button-delete {
+        width: 100%;
+        min-width: unset;
+    }
 }
