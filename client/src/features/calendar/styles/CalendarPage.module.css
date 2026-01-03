@@ -183,7 +183,7 @@ body {
     color: var(--light);
     width: 100%;
     max-width: min(830px, 95vw);
-    min-height: clamp(400px, 60dvh, 650px);
+    min-height: clamp(380px, 50dvh, 650px);
     max-height: 70dvh;
     display: flex;
     flex-direction: column;
