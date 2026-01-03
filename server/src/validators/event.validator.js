@@ -14,7 +14,7 @@ export const createEventValidator = [
     .withMessage("Title must have at least 3 characters"),
 
   body("opis")
-    .optional()
+    .optional({ nullable: true })
     .isString(),
 
   body("data_start")
@@ -22,17 +22,16 @@ export const createEventValidator = [
     .withMessage("Invalid start date"),
 
   body("data_koncowa")
-    .optional()
+    .optional({ nullable: true })
     .isISO8601()
     .withMessage("Invalid end date"),
-
 
   body("rodzaj_wydarzenia_id")
     .isUUID()
     .withMessage("Invalid event category id"),
 
   body("rodzaj_powtarzania_id")
-    .optional()
+    .optional({ nullable: true })
     .isUUID()
     .withMessage("Invalid repeat type id"),
 
@@ -41,6 +40,7 @@ export const createEventValidator = [
     .isIn([0, 1])
     .withMessage("Automatic notifications must be 0 or 1"),
 ];
+
 
 
 export const updateEventValidator = [
