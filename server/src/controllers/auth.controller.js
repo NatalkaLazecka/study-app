@@ -40,7 +40,7 @@ export async function login(req, res) {
         const isValid = await bcrypt.compare(password, user.haslo);
         if (!isValid) return res.status(401).json({error: 'Invalid credentials'});
 
-        // server/src/controllers/auth.controller.js — fragment w funkcji login
+
         const token = generateToken(user);
 
 
@@ -50,8 +50,8 @@ export async function login(req, res) {
 
         res.cookie("access_token", token, {
             httpOnly: true,
-            secure: true,                   // true jeśli rzeczywiste HTTPS
-            sameSite: "none", // NONE dla cross-site, Lax dla dev/HTTP'
+            secure: true,
+            sameSite: "none",
             path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
