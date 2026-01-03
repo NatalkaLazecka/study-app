@@ -1,9 +1,23 @@
 import {useNavigate} from 'react-router-dom';
 import styles from './HomePage.module.css';
 import {CheckSquare, Calendar, Users, Table} from 'lucide-react';
+import {useEffect} from "react";
+import LoadingPage from "../../components/LoadingPage";
 
 export default function HomePage() {
     const navigate = useNavigate();
+    const [loading, setLoading] = React.useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (loading) {
+        return <LoadingPage/>;
+    }
 
     return (
         <div className={styles['home-root']}>
