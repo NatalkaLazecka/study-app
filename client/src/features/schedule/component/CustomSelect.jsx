@@ -84,7 +84,7 @@ export default function CustomSelect({
     const customStyles = {
         control: (base, state) => ({
             ...base,
-            border: '2px solid #fdfdfd',  // var(--white)
+            border: '1px solid #fdfdfd',  // var(--white)
             padding: '0',
             color: '#fdfdfd',
             background: 'rgba(255, 255, 255, 0.2)',
@@ -100,7 +100,7 @@ export default function CustomSelect({
                 : 'none',
             // animation: state.isFocused ?  'dashRotate 2s linear infinite' : 'none',
             '&:hover': {
-                border: '2px solid #e85bbf',  // var(--pink)
+                border: '1px solid #e85bbf',  // var(--pink)
                 boxShadow: '0 0 15px rgba(232, 91, 191, 0.6), inset 0 0 10px rgba(232, 91, 191, 0.2)',
             },
         }),
