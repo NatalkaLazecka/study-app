@@ -183,7 +183,7 @@ body {
     grid-template-columns: auto 1fr;
     align-items: start;
     color: var(--white);
-    padding: clamp(8px, 1.5vw, 12px);
+    padding: clamp(8px, 1.5vw, 12px) clamp(8px, 1.5vw, 12px) 0 clamp(8px, 1.5vw, 12px);
     text-align: start;
     gap: clamp(10px, 2vw, 20px);
     border-radius: 8px;
@@ -207,7 +207,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin-bottom: clamp(8px, 1.5vh, 15px);
     font-family: 'Source Code Pro', monospace;
 }
 
