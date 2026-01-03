@@ -34,7 +34,7 @@ router.get(
   "/:id",
   requireAuth,
   eventIdParamValidator,
-  validate,
+  // validate,
   getEventById
 );
 
