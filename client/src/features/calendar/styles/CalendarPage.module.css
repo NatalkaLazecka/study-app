@@ -379,7 +379,7 @@ body {
 }
 
 .end-buttons {
-    margin-top: clamp(0.6rem, calc(0.4rem + 1vh), 1rem);
+    margin-top: clamp(0.6rem, calc(0.4rem + 0.8vh), 1rem);
     gap: min(20px, 2vw);
     display: flex;
     flex-wrap: wrap;
@@ -390,7 +390,7 @@ body {
     border: var(--pink) solid 2px;
     border-radius: 12px;
     height: clamp(30px, 4dvh, 35px);
-    min-width: clamp(100px, calc(80px + 6vw), 120px);
+    min-width: clamp(100px, calc(80px + 5vw), 120px);
     background: rgba(255, 255, 255, 0.2);
     color: var(--white);
     font-family: 'Source Code Pro', monospace;
