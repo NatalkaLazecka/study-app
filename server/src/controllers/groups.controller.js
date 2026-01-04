@@ -648,7 +648,9 @@ export const getGroupAnnouncements = async (req, res) => {
             type: a.typ,
             content: a.tresc,
             created_at: a.data_stworzenia,
-            metadata: a.metadata ? JSON.parse(a.metadata) : null,
+            metadata: typeof a.metadata === 'string'
+                ? JSON.parse(a.metadata)
+                : a.metadata,
             author: {
                 id: a.student_id,
                 imie: a.imie,
