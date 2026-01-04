@@ -11,7 +11,11 @@ import {
     deleteGroup,
     removeMemberFromGroup,
     transferAdminRights,
-    leaveGroup
+    leaveGroup,
+    getGroupNotes,
+    createGroupNote,
+    deleteGroupNote,
+    getGroupAnnouncements
 } from "@/features/auth/api/groupApi";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -38,16 +42,80 @@ export default function GroupDetailsPage() {
     const [newMemberEmail, setNewMemberEmail] = useState("");
     const [addError, setAddError] = useState("");
 
+    const [notes, setNotes] = useState([]);
+    const [showNoteModal, setShowNoteModal] = useState(false);
+    const [noteTitle, setNoteTitle] = useState("");
+    const [noteContent, setNoteContent] = useState("");
+    const [noteError, setNoteError] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [announcements, setAnnouncements] = useState([]);
 
     useEffect(() => {
-        if (id) fetchGroupDetails(id);
-    }, [id, fetchGroupDetails]);
+        if (id) {
+            fetchGroupDetails(id);
+            loadNotes();
+            loadAnnouncements();
+        }
+    }, [id]);
 
     if (!currentGroup) {
         return <div className={styles.groupsRoot}>Loading…</div>;
     }
 
     const isAdmin = currentGroup.isCurrentUserAdmin;
+
+    const loadNotes = async () => {
+        try{
+            const data = await getGroupNotes(id);
+            setNotes(data);
+        } catch (err) {
+            console.error("Failed to load notes:", err);
+        }
+    }
+
+    const loadAnnouncements = async () => {
+        try{
+            const data = await getGroupAnnouncements(id);
+            setAnnouncements(data);
+        } catch (err) {
+            console.error("Failed to load announcements:", err);
+        }
+    }
+
+    const handleAddNote = async () => {
+        if (!noteTitle.trim()) {
+            setNoteError("Title is required");
+            return;
+        }
+
+        try {
+            await createGroupNote(id, {
+                tytul: noteTitle.trim(),
+                opis: noteContent.trim() || null
+            });
+
+            setShowNoteModal(false);
+            setNoteTitle("");
+            setNoteContent("");
+            setNoteError("");
+            await loadNotes();
+            await loadAnnouncements();
+        } catch (err) {
+            setNoteError(err.message || "Failed to create note");
+        }
+    };
+
+    const handleDeleteNote = async (noteId) => {
+        if (!window.confirm("Delete this note?")) return;
+
+        try {
+            await deleteGroupNote(id, noteId);
+            await loadNotes();
+            await loadAnnouncements();
+        } catch (err) {
+            alert(err.message || "Failed to delete note");
+        }
+    };
 
     const onLayoutChange = (lgLayout) => {
         setLayout(lgLayout);
@@ -69,6 +137,7 @@ export default function GroupDetailsPage() {
             setNewMemberEmail("");
             setAddError("");
             await fetchGroupDetails(id);
+            await loadAnnouncements();
         } catch (err) {
             setAddError(err.message || "Failed to add member");
         }
@@ -80,9 +149,32 @@ export default function GroupDetailsPage() {
         try {
             await removeMemberFromGroup(id, memberId);
             await fetchGroupDetails(id);
+            await loadAnnouncements();
         } catch (err) {
             alert(err.message || "Failed to remove member");
         }
+    };
+
+    if (!currentGroup) {
+        return <div className={styles["groups-root"]}>Loading…</div>;
+    }
+
+    const filteredNotes = notes.filter(n =>
+        n.tytul.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        n.opis?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const getAnnouncementIcon = (type) => {
+        const icons = {
+            user_added: "fa-user-plus",
+            user_removed: "fa-user-minus",
+            note_added: "fa-file-circle-plus",
+            note_deleted: "fa-file-circle-xmark",
+            group_created: "fa-circle-plus",
+            admin_transferred: "fa-crown",
+            announcement:  "fa-bullhorn"
+        };
+        return icons[type] || "fa-bell";
     };
 
     const handleLeaveGroup = async () => {
@@ -152,7 +244,10 @@ export default function GroupDetailsPage() {
                 rowHeight={12}
                 margin={[16, 16]}
                 breakpoints={{lg: 992}}
-                onLayoutChange={onLayoutChange}
+                onLayoutChange={(lgLayout) => {
+                    setLayout(lgLayout);
+                    localStorage.setItem(`layout_${currentGroup.id}`, JSON.stringify(lgLayout));
+                }}
                 draggableHandle=".widget-drag-handle"
             >
                 {/* MEMBERS */}
@@ -201,17 +296,116 @@ export default function GroupDetailsPage() {
                 {/* NOTES */}
                 <div key="notes">
                     <Widget title="Notes">
-                        <p className={styles["muted"]}>Notes coming soon…</p>
+                        <div className={styles["notes-header"]}>
+                            <input
+                                type="text"
+                                placeholder="Search notes..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className={styles["search-input"]}
+                            />
+                            <button
+                                className={styles["add-note-btn"]}
+                                onClick={() => setShowNoteModal(true)}
+                            >
+                                <i className="fa-solid fa-plus"/>
+                            </button>
+                        </div>
+
+                        <div className={styles["notes-list"]}>
+                            {filteredNotes.map((note) => (
+                                <div key={note.id} className={styles["note-item"]}>
+                                    <div className={styles["note-header"]}>
+                                        <h4>{note.tytul}</h4>
+                                        <button
+                                            className={styles["note-delete-btn"]}
+                                            onClick={() => handleDeleteNote(note.id)}
+                                            title="Delete note"
+                                        >
+                                            <i className="fa-solid fa-trash"/>
+                                        </button>
+                                    </div>
+                                    {note.opis && <p>{note.opis}</p>}
+                                    <small>
+                                        by {note.author.imie} {note.author.nazwisko}
+                                    </small>
+                                </div>
+                            ))}
+
+                            {filteredNotes.length === 0 && (
+                                <p className={styles["muted"]}>No notes yet</p>
+                            )}
+                        </div>
                     </Widget>
                 </div>
 
                 {/* ANNOUNCEMENTS */}
                 <div key="ann">
-                    <Widget title="Announcements">
-                        <p className={styles["muted"]}>Announcements coming soon…</p>
+                    <Widget title="Activity">
+                        <div className={styles["announcements-list"]}>
+                            {announcements.map((ann) => (
+                                <div key={ann.id} className={styles["announcement-item"]}>
+                                    <i className={`fa-solid ${getAnnouncementIcon(ann.type)}`}/>
+                                    <div className={styles["announcement-content"]}>
+                                        <p>{ann.content}</p>
+                                        <small>
+                                            {ann.author.imie} {ann.author.nazwisko} •{" "}
+                                            {new Date(ann.created_at).toLocaleDateString()}
+                                        </small>
+                                    </div>
+                                </div>
+                            ))}
+
+                            {announcements.length === 0 && (
+                                <p className={styles["muted"]}>No activity yet</p>
+                            )}
+                        </div>
                     </Widget>
                 </div>
             </ResponsiveGridLayout>
+
+            {/* MODAL - ADD NOTE */}
+            {showNoteModal && (
+                <div
+                    className={styles["modal-overlay"]}
+                    onClick={() => {
+                        setShowNoteModal(false);
+                        setNoteError("");
+                        setNoteTitle("");
+                        setNoteContent("");
+                    }}
+                >
+                    <div className={styles["modal"]} onClick={(e) => e.stopPropagation()}>
+                        <h2>New Note</h2>
+                        <input
+                            type="text"
+                            placeholder="Title..."
+                            value={noteTitle}
+                            onChange={(e) => setNoteTitle(e.target.value)}
+                            className={styles["modal-input"]}
+                        />
+                        <textarea
+                            placeholder="Content (optional)..."
+                            value={noteContent}
+                            onChange={(e) => setNoteContent(e. target.value)}
+                            className={styles["modal-textarea"]}
+                            rows={5}
+                        />
+                        {noteError && <p className={styles["error"]}>{noteError}</p>}
+                        <div className={styles["modal-buttons"]}>
+                            <button onClick={handleAddNote}>Create</button>
+                            <button onClick={() => {
+                                setShowNoteModal(false);
+                                setNoteError("");
+                                setNoteTitle("");
+                                setNoteContent("");
+                            }}>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* MODAL - ADD MEMBER */}
             {showAddModal && (

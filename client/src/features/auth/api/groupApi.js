@@ -55,3 +55,27 @@ export async function deleteGroup(groupId) {
     return res.json();
 }
 
+export async function getGroupNotes(groupId) {
+    const res = await apiFetch(`/api/groups/${groupId}/notes`);
+    return res.json();
+}
+
+export async function createGroupNote(groupId, data) {
+    const res = await apiFetch(`/api/groups/${groupId}/notes`, {
+        method: "POST",
+        body: JSON.stringify(data),
+    });
+    return res.json();
+}
+
+export async function deleteGroupNote(groupId, noteId) {
+    const res = await apiFetch(`/api/groups/${groupId}/notes/${noteId}`, {
+        method: "DELETE",
+    });
+    return res.json();
+}
+
+export async function getGroupAnnouncements(groupId) {
+    const res = await apiFetch(`/api/groups/${groupId}/announcements`);
+    return res.json();
+}
