@@ -73,10 +73,10 @@ export const getGroupDetails = async (req, res) => {
         }
 
         const [groupRows] = await pool.query(
-            `SELECT g.id, g.nazwa, g.administrator, k.nazwa as kategoria
+            `SELECT g.id, g.nazwa, g.administrator, g.kategoria_grupa_id, k.nazwa as kategoria
              FROM grupa g
                 LEFT JOIN kategoria_grupy k ON g.kategoria_grupa_id = k.id
-             WHERE id = ?`,
+             WHERE g.id = ?`,
             [groupId]
         );
 
@@ -87,7 +87,7 @@ export const getGroupDetails = async (req, res) => {
         const group = groupRows[0];
 
         const [members] = await pool.query(
-            `SELECT s.id, s.imie, s.nazwisko, s.e_mail, CASE WHEN s.id = ? THEN 1 ELSE 0 END AS is_admin
+            `SELECT s.id as student_id, s.imie, s.nazwisko, s.e_mail, CASE WHEN s.id = ? THEN 1 ELSE 0 END AS is_admin
              FROM grupa_student gs
                 JOIN student s ON s.id = gs.student_id
              WHERE gs.grupa_id = ?
@@ -101,7 +101,7 @@ export const getGroupDetails = async (req, res) => {
             administrator: group.administrator,
             kategoria: group.kategoria,
             members: members.map(m => ({
-                id: m.id,
+                id: m.student_id,
                 imie: m.imie,
                 nazwisko: m.nazwisko,
                 e_mail: m.e_mail,
@@ -111,6 +111,18 @@ export const getGroupDetails = async (req, res) => {
         });
     } catch (err) {
         console.error("getGroupDetails error:", err);
+        res.status(500).json({error: err.message});
+    }
+};
+
+export const getGroupCategories = async (req, res) => {
+    try {
+        const [categories] = await pool.query(
+            `SELECT id, nazwa FROM kategoria_grupy ORDER BY nazwa`
+        );
+        res.json(categories);
+    } catch (err) {
+        console.error("getGroupCategories error:", err);
         res.status(500).json({error: err.message});
     }
 };
