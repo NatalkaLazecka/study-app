@@ -50,20 +50,6 @@ export default function GroupDetailsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [announcements, setAnnouncements] = useState([]);
 
-    useEffect(() => {
-        if (id) {
-            fetchGroupDetails(id);
-            loadNotes();
-            loadAnnouncements();
-        }
-    }, [id]);
-
-    if (!currentGroup) {
-        return <div className={styles.groupsRoot}>Loading…</div>;
-    }
-
-    const isAdmin = currentGroup.isCurrentUserAdmin;
-
     const loadNotes = async () => {
         try{
             const data = await getGroupNotes(id);
@@ -81,6 +67,14 @@ export default function GroupDetailsPage() {
             console.error("Failed to load announcements:", err);
         }
     }
+
+    useEffect(() => {
+        if (id) {
+            fetchGroupDetails(id);
+            loadNotes();
+            loadAnnouncements();
+        }
+    }, [id]);
 
     const handleAddNote = async () => {
         if (!noteTitle.trim()) {
@@ -155,28 +149,6 @@ export default function GroupDetailsPage() {
         }
     };
 
-    if (!currentGroup) {
-        return <div className={styles["groups-root"]}>Loading…</div>;
-    }
-
-    const filteredNotes = notes.filter(n =>
-        n.tytul.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        n.opis?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const getAnnouncementIcon = (type) => {
-        const icons = {
-            user_added: "fa-user-plus",
-            user_removed: "fa-user-minus",
-            note_added: "fa-file-circle-plus",
-            note_deleted: "fa-file-circle-xmark",
-            group_created: "fa-circle-plus",
-            admin_transferred: "fa-crown",
-            announcement:  "fa-bullhorn"
-        };
-        return icons[type] || "fa-bell";
-    };
-
     const handleLeaveGroup = async () => {
         if (!window.confirm("Leave this group?")) return;
 
@@ -199,6 +171,30 @@ export default function GroupDetailsPage() {
         } catch (err) {
             alert(err.message || "Failed to delete group");
         }
+    };
+
+    if (!currentGroup) {
+        return <div className={styles["groups-root"]}>Loading…</div>;
+    }
+
+    const isAdmin = currentGroup.isCurrentUserAdmin;
+
+    const filteredNotes = notes.filter(n =>
+        n.tytul.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        n.opis?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const getAnnouncementIcon = (type) => {
+        const icons = {
+            user_added: "fa-user-plus",
+            user_removed: "fa-user-minus",
+            note_added: "fa-file-circle-plus",
+            note_deleted: "fa-file-circle-xmark",
+            group_created: "fa-circle-plus",
+            admin_transferred: "fa-crown",
+            announcement:  "fa-bullhorn"
+        };
+        return icons[type] || "fa-bell";
     };
 
     return (
@@ -327,7 +323,7 @@ export default function GroupDetailsPage() {
                                     </div>
                                     {note.opis && <p>{note.opis}</p>}
                                     <small>
-                                        by {note.author.imie} {note.author.nazwisko}
+                                        by {note.author.imie || 'Unknown'} {note.author.nazwisko || ''}
                                     </small>
                                 </div>
                             ))}
@@ -349,7 +345,7 @@ export default function GroupDetailsPage() {
                                     <div className={styles["announcement-content"]}>
                                         <p>{ann.content}</p>
                                         <small>
-                                            {ann.author.imie} {ann.author.nazwisko} •{" "}
+                                            {ann.author.imie || 'Unknown'} {ann.author.nazwisko || ''} •{" "}
                                             {new Date(ann.created_at).toLocaleDateString()}
                                         </small>
                                     </div>
