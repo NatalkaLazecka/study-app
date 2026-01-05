@@ -6,28 +6,41 @@ Aplikacja łączy w sobie funkcje kalendarza, listy zadań, planu zajęć oraz p
 Dzięki intuicyjnemu interfejsowi i responsywnemu designowi, StudY pozwala skutecznie zarządzać obowiązkami akademickimi 
 z dowolnego urządzenia.
 
+---
+
 # 2  Technologie
 
 ## 2.1  Frontend:
 - **React** (z React Router)
-- **JavaScript** (71. 4%)
-- **CSS Modules** (28.1%)
+- **JavaScript** (74.7%)
+- **CSS Modules** (25.0%)
+- **Other** (0.3%)
 - **Vite** (build tool)
 - **Zustand** (state management)
 - **React Grid Layout** (drag & drop)
 - **React DatePicker**
+- **React Select**
+- **Framer Motion** (animacje)
 - **Lucide React** (ikony)
 - **Font Awesome** (ikony)
 
 ## 2.2  Backend:
-- **Node. js** + **Express. js**
+- **Node.js** + **Express.js**
 - **MySQL** (baza danych)
 - **UUID** (generowanie unikalnych ID)
+- **Multer** (upload plików)
+- **Bcrypt.js** (hashowanie haseł)
+- **Cookie-Parser** (zarządzanie cookies)
+- **Express-Validator** (walidacja danych)
+- **Resend** (wysyłka emaili)
+- **Handlebars** (szablony emaili)
 
 ## 2.3  Inne: 
 - **RESTful API**
 - **JWT Authentication**
+- **Cookie-based sessions**
 
+---
 
 # 3  Funkcjonalności
 
@@ -49,10 +62,7 @@ z dowolnego urządzenia.
 - Tworzenie zadań z terminem wykonania
 - Oznaczanie priorytetu zadań (1-4 flame level)
 - Określanie wysiłku potrzebnego do wykonania zadania (1-4 circles)
-- Automatyczne powiadomienia przed deadline: 
-  - 7 dni przed terminem
-  - 3 dni przed terminem
-  - 1 dzień przed terminem
+- Automatyczne powiadomienia przed deadlinem z opcjami przypomnienia
 - Oznaczanie zadań jako wykonane
 - Sortowanie i filtrowanie zadań
 
@@ -76,6 +86,7 @@ z dowolnego urządzenia.
 - System oznaczania powiadomień jako przeczytane
 - Wyświetlanie powiadomień w menu nawigacyjnym
 
+---
 
 # 4  Instrukcja instalacji
 
@@ -115,9 +126,17 @@ npm install
 ```
 PORT=3001
 DB_HOST=localhost
+DB_PORT=3306
 DB_USER=your_username
 DB_PASSWORD=your_password
 DB_NAME=study_app
+NODE_ENV=development
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=7d
+CORS_ORIGIN=http://localhost:5173
+
+# Email (Resend)
+RESEND_API_KEY=your_resend_api_key
 ```
 
 ###  Frontend (client/.env):
@@ -130,7 +149,7 @@ VITE_RAILWAY_API_URL=http://localhost:3001
 ###  Backend:
 ```bash
 cd server
-npm start
+npm start        # lub npm run dev, jeśli chcesz obserwować zmiany w kodzie
 ```
 
 ###  Frontend:
@@ -141,6 +160,7 @@ npm run dev
 
 Aplikacja będzie dostępna pod adresem: `http://localhost:5173`
 
+---
 
 # 5  Instrukcja użytkowania
 
@@ -200,19 +220,32 @@ Po zalogowaniu zobaczysz kafelki z głównymi funkcjami:
    - Przeglądać ogłoszenia
    - Przeciągać widgety aby dostosować widok
 
+---
 
 # 6  Autorzy
 
 Natalka Lazecka - GitHub: [@NatalkaLazecka](https://github.com/NatalkaLazecka)
 Zuzanna Kurpik - GitHub: [@ZUZIAKURPIK](https://github.com/ZUZIAKURPIK)
 
+---
 
-# 7  Licencja
+# 7 Bezpieczeństwo
+
+## 7.1 Dobre praktyki
+- Nie commituj plików `.env` do repozytorium
+- Używaj silnych haseł do bazy danych
+- Regularnie aktualizuj zależności (`npm audit fix`)
+- Zmieniaj `JWT_SECRET` w środowisku produkcyjnym
+
+---
+
+# 8  Licencja
 
 Ten projekt został stworzony na potrzeby akademickie. 
 
+---
 
-# 8  Podziękowania
+# 9  Podziękowania
 
 Dziękuję za skorzystanie z aplikacji **StudY**!
 
