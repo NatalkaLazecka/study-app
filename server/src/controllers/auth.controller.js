@@ -19,9 +19,15 @@ export async function register(req, res) {
         }
 
         const id = uuid();
-        console.log('✅ Creating user:', { id, e_mail, imie, nazwisko });
+        console.log('✅ Creating user:', { id, e_mail, haslo:  haslo ?  `${haslo. substring(0, 3)}***` : 'MISSING! ', imie, nazwisko });
 
-        await createUser({id, e_mail, haslo, imie: imie || null, nazwisko: nazwisko || null});
+        await createUser({
+            id,
+            e_mail,
+            haslo,
+            imie: imie || null,
+            nazwisko: nazwisko || null
+        });
 
         console.log('✅ User created successfully');
         res.json({ok: true});
