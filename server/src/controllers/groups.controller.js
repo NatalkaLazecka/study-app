@@ -46,6 +46,8 @@ export const createGroup = async (req, res) => {
     const studentId = req.user.id;
     const {nazwa} = req.body;
 
+    console.log('[createGroup controller] Received request to create group with name:', nazwa);
+
     if (!nazwa || typeof nazwa !== 'string' || !nazwa.trim()) {
         return res.status(400).json({message: "Group name required"});
     }

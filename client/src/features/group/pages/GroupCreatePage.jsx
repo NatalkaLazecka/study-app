@@ -72,6 +72,8 @@ export default function GroupCreatePage() {
 
         setNameError("");
 
+        console.log('📝 [GroupCreatePage] Saving group with name:', name.trim());
+
         if (!name.trim()) {
             alert("Group name is required");
             return;
@@ -87,7 +89,6 @@ export default function GroupCreatePage() {
 
         try {
             const g = await createGroup(name.trim());
-            console.log('✅ [GroupCreatePage] Group created:', g);
 
             if (!g || !g.id) {
                 setNameError("Failed to create group");

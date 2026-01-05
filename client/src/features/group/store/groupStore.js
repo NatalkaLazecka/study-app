@@ -2,7 +2,7 @@ import {create} from "zustand";
 import {
     getMyGroups,
     getGroupById,
-    createGroup,
+    createGroup as createGroupApi,
 } from "../../auth/api/groupApi";
 
 export const useGroups = create((set) => ({
@@ -32,33 +32,11 @@ export const useGroups = create((set) => ({
         }
     },
 
-    // createGroup: async (name) => {
-    //     const group = await createGroup(name);
-    //     set((state) => ({groups: [...state.groups, group]}));
-    //     return group;
-    // },
-
     createGroup: async (name) => {
-        console.log('📝 [groupStore] createGroup:', name);
-
-        // ✅ WALIDACJA
-        if (!name || typeof name !== 'string') {
-            console.error('❌ [groupStore] Invalid name:', typeof name, name);
-            throw new Error('Group name must be a string');
-        }
-
-        try {
-            const group = await createGroup(name.trim());
-            console.log('✅ [groupStore] Group created:', group);
-
-            // Odśwież listę grup
-            await get().fetchGroups();
-
-            return group;
-        } catch (err) {
-            console.error('❌ [groupStore] createGroup error:', err);
-            throw err;
-        }
+        console.log('🌟 [groupStore] createGroup action called with name:', name);
+        const group = await createGroupApi(name);
+        set((state) => ({groups: [...state.groups, group]}));
+        return group;
     },
 
     clearCurrentGroup: () => set({currentGroup: null}),
