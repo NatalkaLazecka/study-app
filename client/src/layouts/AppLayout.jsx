@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import MenuBar from "@/components/MenuBar";
-import LogoutModal from "@/components/LogoutModal";
+import LogoutModal from "@/features/auth/components/LogoutModal";
 
 export default function AppLayout() {
   const [showLogout, setShowLogout] = useState(false);
