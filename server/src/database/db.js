@@ -16,7 +16,7 @@ const pool = mysql.createPool({
 
         checkServerIdentity: (host, cert) => {
             const fingerprint = crypto
-                .createHash("sha1")
+                .createHash("sha256")
                 .update(cert.raw)
                 .digest("hex")
                 .toUpperCase()
