@@ -52,16 +52,18 @@ export default function GroupCreatePage() {
         setSaving(true);
 
         try {
-            const g = await createGroup({name});
+            const g = await createGroup(name.trim());
             if (!g) {
                 setSaving(false);
                 return;
             }
 
             if (members.length > 0) {
+                console.log('👥 Adding members:', members);
                 for (const email of members) {
                     try {
                         await addMemberToGroup(g.id, email);
+                         console.log('✅ Added member:', email);
                     } catch (err) {
                         console.error(`Failed to add member ${email}:`, err);
                     }
