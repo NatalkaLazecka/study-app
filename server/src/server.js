@@ -16,8 +16,7 @@ import cookieParser from "cookie-parser";
 
 
 dotenv.config();
-console.log('[DEBUG] NODE_ENV=', process.env.NODE_ENV);
-console.log('[DEBUG] FRONTEND_URL=', process.env.FRONTEND_URL || FRONTEND_URL);
+
 
 const app = express()
 
@@ -39,6 +38,7 @@ app.use("/api/events", eventsRoutes);
 app.use("/api/schedule", scheduleRoutes);
 app.use("/api/notifications", notificationsRoutes);
 app.use('/api/auth', authRoutes);
+
 
 
 

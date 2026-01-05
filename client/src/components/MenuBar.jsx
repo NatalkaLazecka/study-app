@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import styles from './MenuBar.module.css';
 import NotificationComponent from '../features/notification/component/NotificationComponent';
 
-export default function MenuBar() {
+export default function MenuBar({ onLogoutClick }) {
     const navigate = useNavigate();
 
     return (
@@ -44,7 +44,8 @@ export default function MenuBar() {
                 <NotificationComponent/>
                 <button
                     className={styles['menu-icon-btn']}
-                    onClick={() => navigate('/profile')}
+                    onClick={onLogoutClick}
+                    title="Log out"
                 >
                     <i className="fa-regular fa-circle-user"></i>
                 </button>
