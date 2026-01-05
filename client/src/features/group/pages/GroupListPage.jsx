@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo} from "react";
 import {useNavigate} from "react-router-dom";
 import styles from "../../calendar/styles/CalendarPage.module.css";
+import groupsStyle from "../styles/GroupListPage.module.css";
 import {useGroups} from "../store/groupStore";
 import MenuBar from "../../../components/MenuBar";
 
@@ -38,7 +39,7 @@ export default function GroupListPage() {
 
                 <div className={styles["calendar-event-content"]}>
                     <div
-                        className={styles["input-box"]}
+                        className={groupsStyle["input-box"]}
                         style={{
                             maxWidth: 720,
                             margin: "0 auto",
