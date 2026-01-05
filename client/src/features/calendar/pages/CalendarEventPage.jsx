@@ -264,7 +264,7 @@ export default function CalendarEventPage() {
 
     return (
         <div>
-            <MenuBar/>
+
 
             <div className={styles["calendar-root"]}>
                 <div className={styles["header-section"]}>

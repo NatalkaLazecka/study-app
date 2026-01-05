@@ -19,7 +19,7 @@ export default function GroupListPage() {
 
     return (
         <div>
-            <MenuBar/>
+
 
             <div className={styles["calendar-root"]}>
                 <div className={styles["header-section"]}>

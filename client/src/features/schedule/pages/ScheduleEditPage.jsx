@@ -247,7 +247,7 @@ export default function ScheduleEditPage() {
 
     return (
         <div>
-            <MenuBar />
+
 
             <div className={styles['schedule-root']}>
                 <div className={styles['header-section']}>

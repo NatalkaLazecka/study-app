@@ -1,14 +1,11 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { Navigate, Outlet } from "react-router-dom";
 
-export function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+export function ProtectedRoute() {
+  const isAuth = true;
 
-  if (loading) return null; // albo spinner
-
-  if (!user) {
+  if (!isAuth) {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  return <Outlet />;
 }

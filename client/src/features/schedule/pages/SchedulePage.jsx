@@ -106,7 +106,7 @@ export default function SchedulePage() {
 
     return (
         <div>
-            <MenuBar/>
+
 
             <div className={styles["schedule-root"]}>
                 <div className={styles["header-section"]}>

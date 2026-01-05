@@ -130,7 +130,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
     return (
         <div>
-            <MenuBar/>
+
 
             <div className={calendarStyles["calendar-root"]}>
                 {/* HEADER */}
