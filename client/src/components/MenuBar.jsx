@@ -44,7 +44,8 @@ export default function MenuBar() {
                 <NotificationComponent/>
                 <button
                     className={styles['menu-icon-btn']}
-                    onClick={() => navigate('/profile')}
+                    onClick={onLogoutClick}
+                    title="Log out"
                 >
                     <i className="fa-regular fa-circle-user"></i>
                 </button>

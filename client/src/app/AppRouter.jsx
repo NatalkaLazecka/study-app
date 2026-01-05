@@ -8,7 +8,6 @@ import TodoListPage from '@/features/todo/pages/TodoListPage';
 import TodoDetailsPage from '@/features/todo/pages/TodoDetailsPage';
 import CalendarPage from "../features/calendar/pages/CalendarPage";
 import CalendarEventPage from "../features/calendar/pages/CalendarEventPage";
-import UserProfilePage from "../features/profile/pages/UserProfilePage";
 import GroupListPage from '@/features/group/pages/GroupListPage';
 import GroupCreatePage from '@/features/group/pages/GroupCreatePage';
 import GroupDetailsPage from '@/features/group/pages/GroupDetailsPage';
@@ -130,14 +129,7 @@ export default function AppRouter() {
           }
         />
 
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <UserProfilePage />
-            </ProtectedRoute>
-          }
-        />
+
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
