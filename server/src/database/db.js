@@ -10,12 +10,16 @@ const pool = mysql.createPool({
 
     ssl: {
         rejectUnauthorized: true,
-        ca: env.DB_SSL_CA,
+        ca: env.DB_SSL_CA?.replace(/\\n/g, "\n"),
+
     },
 
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
 }).promise();
+
+console.log("CA loaded length:", env.DB_SSL_CA?.length);
+
 
 export default pool;
