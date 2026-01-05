@@ -46,6 +46,7 @@ export default function GroupListPage() {
                             minHeight: 360,
                             display: "flex",
                             flexDirection: "column",
+                            alignItems: "center",
                             gap: 12,
                         }}
                     >
