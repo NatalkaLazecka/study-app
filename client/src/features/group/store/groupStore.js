@@ -1,43 +1,42 @@
-// features/group/store/groupStore.js
-import { create } from "zustand";
+import {create} from "zustand";
 import {
-  getMyGroups,
-  getGroupById,
-  createGroup,
+    getMyGroups,
+    getGroupById,
+    createGroup,
 } from "../../auth/api/groupApi";
 
 export const useGroups = create((set) => ({
-  groups: [],
-  currentGroup: null,
-  loading: false,
+    groups: [],
+    currentGroup: null,
+    loading: false,
 
-  fetchGroups: async () => {
-    set({ loading: true });
-    try {
-      const data = await getMyGroups();
-      set({ groups: data || [] });
-    } catch (err) {
-      console.error(err);
-      set({ groups: [] });
-    } finally {
-      set({ loading: false });
-    }
-  },
+    fetchGroups: async () => {
+        set({loading: true});
+        try {
+            const data = await getMyGroups();
+            set({groups: data || []});
+        } catch (err) {
+            console.error(err);
+            set({groups: []});
+        } finally {
+            set({loading: false});
+        }
+    },
 
-  fetchGroupDetails: async (groupId) => {
-    try {
-      const data = await getGroupById(groupId);
-      set({ currentGroup: data });
-    } catch (err) {
-      console.error(err);
-    }
-  },
+    fetchGroupDetails: async (groupId) => {
+        try {
+            const data = await getGroupById(groupId);
+            set({currentGroup: data});
+        } catch (err) {
+            console.error(err);
+        }
+    },
 
-  createGroup: async (name) => {
-    const group = await createGroup(name);
-    set((state) => ({ groups: [...state.groups, group] }));
-    return group;
-  },
+    createGroup: async (name) => {
+        const group = await createGroup(name);
+        set((state) => ({groups: [...state.groups, group]}));
+        return group;
+    },
 
-  clearCurrentGroup: () => set({ currentGroup: null }),
+    clearCurrentGroup: () => set({currentGroup: null}),
 }));

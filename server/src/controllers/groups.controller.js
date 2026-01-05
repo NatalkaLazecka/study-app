@@ -197,7 +197,8 @@ export const addUserToGroup = async (req, res) => {
         }
 
         await pool.query(
-            `INSERT IGNORE INTO grupa_student (id, student_id, grupa_id) VALUES (?, ?, ?)`,
+            `INSERT
+            IGNORE INTO grupa_student (id, student_id, grupa_id) VALUES (?, ?, ?)`,
             [uuidv4(), newStudent.id, groupId]
         );
 
@@ -256,7 +257,9 @@ export const removeUserFromGroup = async (req, res) => {
         }
 
         const [removedUser] = await pool.query(
-            `SELECT imie, nazwisko FROM student WHERE id = ? `,
+            `SELECT imie, nazwisko
+             FROM student
+             WHERE id = ? `,
             [memberId]
         );
 

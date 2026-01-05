@@ -6,11 +6,11 @@ import MenuBar from "../../../components/MenuBar";
 
 export default function GroupListPage() {
     const navigate = useNavigate();
-    const {groups, fetchGroups, loading} = useGroups();
+    const {groups, fetchGroups, loading, error} = useGroups();
 
     useEffect(() => {
         fetchGroups();
-    }, []);
+    }, [fetchGroups]);
 
     const safeGroups = useMemo(
         () => (Array.isArray(groups) ? groups : []),
@@ -19,7 +19,7 @@ export default function GroupListPage() {
 
     return (
         <div>
-
+            <MenuBar/>
 
             <div className={styles["calendar-root"]}>
                 <div className={styles["header-section"]}>
@@ -51,6 +51,19 @@ export default function GroupListPage() {
                         }}
                     >
                         <p className={styles["input-title"]}>My groups</p>
+
+                        {loading && (
+                            <div style={{textAlign: 'center', padding: '20px', opacity: 0.7}}>
+                                <i className="fa-solid fa-spinner fa-spin" style={{marginRight: '8px'}}/>
+                                Loading groups...
+                            </div>
+                        )}
+
+                        {error && (
+                            <div className={styles["err-message"]} style={{textAlign: 'center'}}>
+                                Failed to load groups: {error}
+                            </div>
+                        )}
 
                         <div
                             style={{
@@ -87,7 +100,7 @@ export default function GroupListPage() {
                                 </div>
                             ))}
 
-                            {safeGroups.length === 0 && (
+                            {!loading && safeGroups.length === 0 && (
                                 <div
                                     onClick={() => navigate("/groups/new")}
                                     style={{

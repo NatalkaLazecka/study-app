@@ -51,7 +51,7 @@ export default function GroupDetailsPage() {
     const [announcements, setAnnouncements] = useState([]);
 
     const loadNotes = async () => {
-        try{
+        try {
             const data = await getGroupNotes(id);
             setNotes(data);
         } catch (err) {
@@ -60,7 +60,7 @@ export default function GroupDetailsPage() {
     }
 
     const loadAnnouncements = async () => {
-        try{
+        try {
             const data = await getGroupAnnouncements(id);
             setAnnouncements(data);
         } catch (err) {
@@ -192,7 +192,7 @@ export default function GroupDetailsPage() {
             note_deleted: "fa-file-circle-xmark",
             group_created: "fa-circle-plus",
             admin_transferred: "fa-crown",
-            announcement:  "fa-bullhorn"
+            announcement: "fa-bullhorn"
         };
         return icons[type] || "fa-bell";
     };
@@ -383,7 +383,7 @@ export default function GroupDetailsPage() {
                         <textarea
                             placeholder="Content (optional)..."
                             value={noteContent}
-                            onChange={(e) => setNoteContent(e. target.value)}
+                            onChange={(e) => setNoteContent(e.target.value)}
                             className={styles["modal-textarea"]}
                             rows={5}
                         />
