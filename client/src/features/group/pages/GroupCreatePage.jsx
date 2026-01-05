@@ -11,7 +11,7 @@ export default function GroupCreatePage() {
 
     const [name, setName] = useState("");
     const [categoryId, setCategoryId] = useState(null);
-    const [category, setCategory] = useState("other");
+    const [categories, setCategories] = useState([]);
     const [loadingCategories, setLoadingCategories] = useState(true);
     const [saving, setSaving] = useState(false);
 
@@ -24,16 +24,22 @@ export default function GroupCreatePage() {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            try{
+            try {
                 const data = await getGroupCategories();
-                setCategory(data);
+                if (!Array.isArray(data)) {
+                    console.error('❌ Categories is not an array:', data);
+                    setCategories([]);
+                    return;
+                }
+                setCategories(data);
 
                 const defaultCategory = data.find(c => c.nazwa === 'other') || data[0];
                 if (defaultCategory) {
                     setCategoryId(defaultCategory.id);
                 }
-            }catch (err) {
+            } catch (err) {
                 console.error(' Failed to load categories:', err);
+                setCategories([]);
             } finally {
                 setLoadingCategories(false);
             }
@@ -69,7 +75,7 @@ export default function GroupCreatePage() {
     };
 
     const canSubmit = () => {
-        if (!name.  trim()) return false;
+        if (!name.trim()) return false;
         if (nameError) return false;
         if (memberAddErrors.length > 0) return false;
         if (memberError) return false;
@@ -195,21 +201,35 @@ export default function GroupCreatePage() {
                     {/* CATEGORY (UI-ONLY) */}
                     <div className={calendarStyles["input-box"]}>
                         <h2 className={calendarStyles["event-h2"]}>choose category: </h2>
-                        <div className={calendarStyles["event-buttons"]}>
-                            {category.map((cat) => (
-                                <button
-                                    key={cat.id}
-                                    type="button"
-                                    disabled={saving}
-                                    className={`${calendarStyles["event-button"]} ${
-                                        category === cat.id ? calendarStyles["event-button-active"] : ""
-                                    }`}
-                                    onClick={() => setCategory(key)}
-                                >
-                                    {cat.nazwa}
-                                </button>
-                            ))}
-                        </div>
+                        {loadingCategories && (
+                            <p className={groupStyles["helper-text"]}>
+                                <i className="fa-solid fa-spinner fa-spin" style={{marginRight: '8px'}}/>
+                                Loading categories...
+                            </p>
+                        )}
+
+                        {!loadingCategories && categories.length > 0 && (
+                            <div className={calendarStyles["event-buttons"]}>
+                                {categories.map((cat) => (
+                                    <button
+                                        key={cat.id}
+                                        type="button"
+                                        disabled={saving}
+                                        className={`${calendarStyles["event-button"]} ${
+                                            categoryId === cat.id ? calendarStyles["event-button-active"] : ""
+                                        }`}
+                                        onClick={() => setCategoryId(cat.id)}
+                                    >
+                                        {cat.nazwa}
+                                    </button>
+                                ))}
+                            </div>)}
+
+                        {!loadingCategories && categories.length === 0 && (
+                            <p className={groupStyles["error-message"]}>
+                                Failed to load categories. Please refresh the page.
+                            </p>
+                        )}
                     </div>
 
                     {/* ADD MEMBERS */}
