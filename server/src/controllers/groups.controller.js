@@ -34,6 +34,7 @@ export const getGroups = async (req, res) => {
             [studentId]
         );
 
+        console.log("getGroups:", rows);
         res.json(rows);
     } catch (err) {
         console.error("getGroups error:", err);

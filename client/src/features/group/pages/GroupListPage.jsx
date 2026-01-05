@@ -2,7 +2,6 @@ import React, {useEffect, useMemo} from "react";
 import {useNavigate} from "react-router-dom";
 import styles from "../../calendar/styles/CalendarPage.module.css";
 import {useGroups} from "../store/groupStore";
-import MenuBar from "../../../components/MenuBar";
 
 export default function GroupListPage() {
     const navigate = useNavigate();
@@ -19,17 +18,15 @@ export default function GroupListPage() {
 
     return (
         <div>
-            <MenuBar/>
-
             <div className={styles["calendar-root"]}>
                 <div className={styles["header-section"]}>
                     <button
                         className={styles["back-button"]}
                         onClick={() => navigate(-1)}
                     >
-            <span className={styles["back-text"]}>
-              stud<span className={styles["back-text-y"]}>y</span>
-            </span>
+                        <span className={styles["back-text"]}>
+                          stud<span className={styles["back-text-y"]}>y</span>
+                        </span>
                         <span className={styles["back-arrow"]}>&lt;</span>
                     </button>
                     <h1 className={styles["calendar-title"]}>GROUPS</h1>
