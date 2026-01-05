@@ -131,7 +131,7 @@ export default function TodoListPage() {
 
     return (
         <div>
-            <MenuBar />
+
 
             <div className={styles["todo-root"]}>
                 {/* HEADER */}
