@@ -6,7 +6,6 @@ const requiredEnv = [
   "DB_USER",
   "DB_PASSWORD",
   "DB_NAME",
-  "DB_SSL_CA",
 ];
 
 requiredEnv.forEach((key) => {
@@ -23,7 +22,6 @@ export const env = {
     password: process.env.DB_PASSWORD,
     name: process.env.DB_NAME,
   },
-  DB_SSL_CA: process.env.DB_SSL_CA,
 };
 export const PORT = process.env.PORT || 8080
 export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'

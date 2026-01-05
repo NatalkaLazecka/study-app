@@ -1,5 +1,9 @@
 import mysql from "mysql2";
-import {env} from "../config/env.js";
+import crypto from "crypto";
+import { env } from "../config/env.js";
+
+const EXPECTED_FINGERPRINT =
+  "1AEC008506459C14AF150CB020931725E525619B8C4C7851F5EE3618E851B7C3";
 
 const pool = mysql.createPool({
     host: env.db.host,
@@ -9,17 +13,30 @@ const pool = mysql.createPool({
     database: env.db.name,
 
     ssl: {
-        rejectUnauthorized: true,
-        ca: env.DB_SSL_CA?.replace(/\\n/g, "\n"),
-        servername: "pure-sunlight-477309-u3:us-central1:studydatabase",
+        rejectUnauthorized: false,
+
+        checkServerIdentity: (host, cert) => {
+            if (!cert || !cert.raw) {
+                throw new Error("No server certificate received");
+            }
+
+            const fingerprint = crypto
+                .createHash("sha256")
+                .update(cert.raw)
+                .digest("hex")
+                .toUpperCase();
+
+            if (fingerprint !== EXPECTED_FINGERPRINT) {
+                throw new Error(
+                    `TLS fingerprint mismatch: ${fingerprint}`
+                );
+            }
+        },
     },
 
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
 }).promise();
-
-console.log("CA loaded length:", env.DB_SSL_CA?.length);
-
 
 export default pool;
