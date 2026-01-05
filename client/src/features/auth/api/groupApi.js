@@ -13,7 +13,7 @@ export async function getGroupById(groupId) {
 export async function createGroup(name) {
     const res = await apiFetch("/api/groups", {
         method: "POST",
-        body: JSON.stringify({nazwa: name}),
+        body: JSON.stringify({ nazwa: name.trim() }),
     });
     return res.json();
 }

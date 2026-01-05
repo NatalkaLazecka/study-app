@@ -485,3 +485,119 @@
 .widget-body::-webkit-scrollbar-thumb:hover {
     background: #c74da6;
 }
+
+/* ===== GroupCreatePage - Member Input ===== */
+.member-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom:  12px;
+}
+
+.member-input-row input {
+    flex: 1;
+}
+
+.member-input-row button {
+    white-space: nowrap;
+}
+
+/* ===== Error States ===== */
+.input-error {
+    border-color: var(--red) !important;
+}
+
+.error-message {
+    color: var(--red);
+    font-size: 0.875rem;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.error-icon {
+    color: var(--red);
+    font-size: 0.75rem;
+}
+
+/* ===== Members To Add List ===== */
+.members-to-add {
+    margin-top: 12px;
+}
+
+.members-to-add-label {
+    font-size: 0.875rem;
+    opacity: 0.7;
+    margin-bottom: 8px;
+    margin-top: 0;
+}
+
+. members-to-add-list {
+    display: grid;
+    gap: 8px;
+}
+
+.member-to-add-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s;
+}
+
+. member-to-add-item-error {
+    background: rgba(255, 92, 92, 0.1);
+    border-color: rgba(255, 92, 92, 0.5);
+    align-items: flex-start;
+}
+
+.member-to-add-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.member-to-add-email {
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.member-to-add-error {
+    font-size: 0.75rem;
+    color: var(--red);
+    margin-top: 4px;
+    margin-left: 16px;
+    margin-bottom: 0;
+}
+
+.member-remove-btn {
+    background: transparent;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 1rem;
+    margin-left: 8px;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.member-remove-btn:hover {
+    color: #ff3030;
+    transform: scale(1.1);
+}
+
+.member-remove-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== Helper Text ===== */
+.helper-text {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    margin-top: 8px;
+    margin-bottom: 0;
+}

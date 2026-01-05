@@ -46,11 +46,23 @@ export const createGroup = async (req, res) => {
     const studentId = req.user.id;
     const {nazwa} = req.body;
 
-    if (!nazwa || !nazwa.trim()) {
+    if (!nazwa || typeof nazwa !== 'string' || !nazwa.trim()) {
         return res.status(400).json({message: "Group name required"});
     }
 
     try {
+        const [existing] = await pool.query(
+            `SELECT id FROM grupa WHERE nazwa = ? AND administrator = ?`,
+            [nazwa.trim(), studentId]
+        );
+
+        if (existing.length > 0){
+            console.log('[createGroup] Group with the same name already exists', name.trim());
+            return res.status(409).json({
+                message: `Group "${name.trim()}" already exists`
+            });
+        }
+
         const groupId = uuidv4();
 
         await pool.query(

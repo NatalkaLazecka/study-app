@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import styles from "../../calendar/styles/CalendarPage.module.css";
+import calendarStyles from "../../calendar/styles/CalendarPage.module.css";
+import groupStyles from "../styles/Group.module.css";
 import {useGroups} from "../store/groupStore";
 import {addMemberToGroup} from "../../auth/api/groupApi";
 
@@ -13,9 +14,12 @@ export default function GroupCreatePage() {
     const [category, setCategory] = useState("other");
     const [saving, setSaving] = useState(false);
 
+    const [nameError, setNameError] = useState("");
+
     const [members, setMembers] = useState([]);
     const [newMemberEmail, setNewMemberEmail] = useState("");
     const [memberError, setMemberError] = useState("");
+    const [memberAddErrors, setMemberAddErrors] = useState([]);
 
     const handleAddMember = () => {
         const email = newMemberEmail.trim();
@@ -29,7 +33,7 @@ export default function GroupCreatePage() {
             return;
         }
 
-        if (members.includes(email)) {
+        if (members. includes(email)) {
             setMemberError("Email already added.");
             return;
         }
@@ -41,9 +45,13 @@ export default function GroupCreatePage() {
 
     const handleRemoveMember = (email) => {
         setMembers(members.filter(m => m !== email));
+        setMemberAddErrors(memberAddErrors.filter(e => e. email !== email));
     };
 
     const save = async () => {
+        setNameError("");
+        setMemberAddErrors([]);
+
         if (!name.trim()) {
             alert("Group name is required");
             return;
@@ -52,80 +60,115 @@ export default function GroupCreatePage() {
         setSaving(true);
 
         try {
-            const g = await createGroup(name.trim());
-            if (!g) {
+            const g = await createGroup(name. trim());
+            if (! g || !g.id) {
+                setNameError("Failed to create group");
                 setSaving(false);
                 return;
             }
 
+            const failedMembers = [];
+
             if (members.length > 0) {
-                console.log('👥 Adding members:', members);
                 for (const email of members) {
                     try {
                         await addMemberToGroup(g.id, email);
-                         console.log('✅ Added member:', email);
                     } catch (err) {
                         console.error(`Failed to add member ${email}:`, err);
+                        failedMembers.push({
+                            email,
+                            error: err.message || "Failed to add member"
+                        });
                     }
                 }
             }
-            navigate(`/groups/${g.id}`);
+
+            if (failedMembers.length > 0) {
+                setMemberAddErrors(failedMembers);
+                setSaving(false);
+
+                const shouldContinue = window.confirm(
+                    `Group created, but ${failedMembers.length} member(s) couldn't be added:\n\n` +
+                    failedMembers.map(f => `• ${f.email}:  ${f.error}`).join('\n') +
+                    `\n\nGo to group page anyway?`
+                );
+
+                if (shouldContinue) {
+                    navigate(`/groups/${g.id}`);
+                }
+            } else {
+                navigate(`/groups/${g.id}`);
+            }
         } catch (err) {
-            console.error("Failed to create group:", err);
-            alert("Failed to create group. Please try again.");
+            console. error("Failed to create group:", err);
+            if (err.message.includes('already exists')) {
+                setNameError(`Group "${name. trim()}" already exists`);
+            } else if (err.message.includes('409')) {
+                setNameError("This group name is already taken");
+            } else {
+                setNameError(err.message || "Failed to create group");
+            }
             setSaving(false);
         }
     };
 
     return (
         <div>
-            <div className={styles["calendar-root"]}>
-                <div className={styles["header-section"]}>
+            <div className={calendarStyles["calendar-root"]}>
+                <div className={calendarStyles["header-section"]}>
                     <button
-                        className={styles["back-button"]}
+                        className={calendarStyles["back-button"]}
                         onClick={() => navigate(-1)}
                         disabled={saving}
                     >
-                        <span className={styles["back-text"]}>
-                          stud<span className={styles["back-text-y"]}>y</span>
+                        <span className={calendarStyles["back-text"]}>
+                          stud<span className={calendarStyles["back-text-y"]}>y</span>
                         </span>
-                        <span className={styles["back-arrow"]}>&lt;</span>
+                        <span className={calendarStyles["back-arrow"]}>&lt;</span>
                     </button>
-                    <h1 className={styles["calendar-title"]}>CREATE GROUP</h1>
+                    <h1 className={calendarStyles["calendar-title"]}>CREATE GROUP</h1>
                     <div/>
                 </div>
 
-                <div className={styles["calendar-event-content"]}>
+                <div className={calendarStyles["calendar-event-content"]}>
                     {/* GROUP NAME */}
-                    <div className={styles["input-box"]}>
-                        <p className={styles["input-title"]}>Group name *</p>
+                    <div className={calendarStyles["input-box"]}>
+                        <p className={calendarStyles["input-title"]}>Group name *</p>
                         <input
                             type="text"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className={styles["event-input"]}
+                            onChange={(e) => {
+                                setName(e. target.value);
+                                setNameError("");
+                            }}
+                            className={`${calendarStyles["event-input"]} ${nameError ? groupStyles["input-error"] : ""}`}
                             placeholder="Type group name..."
                             disabled={saving}
                         />
+                        {nameError && (
+                            <p className={groupStyles["error-message"]}>
+                                {nameError}
+                            </p>
+                        )}
                     </div>
 
                     {/* DESCRIPTION (UI-ONLY) */}
-                    <div className={styles["input-box"]}>
-                        <p className={styles["input-title"]}>Description</p>
+                    <div className={calendarStyles["input-box"]}>
+                        <p className={calendarStyles["input-title"]}>Description</p>
                         <input
                             type="text"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            className={styles["event-input"]}
+                            className={calendarStyles["event-input"]}
                             placeholder="Optional..."
                             disabled={saving}
                         />
                     </div>
 
                     {/* CATEGORY (UI-ONLY) */}
-                    <div className={styles["input-box"]}>
-                        <h2 className={styles["event-h2"]}>choose category: </h2>
-                        <div className={styles["event-buttons"]}>
+                    <div className={calendarStyles["input-box"]}>
+                        <h2 className={calendarStyles["event-h2"]}>choose category: </h2>
+                        <div className={calendarStyles["event-buttons"]}>
                             {[
                                 {key: "project", label: "project group"},
                                 {key: "school", label: "school group"},
@@ -136,8 +179,8 @@ export default function GroupCreatePage() {
                                     key={key}
                                     type="button"
                                     disabled={saving}
-                                    className={`${styles["event-button"]} ${
-                                        category === key ? styles["event-button-active"] : ""
+                                    className={`${calendarStyles["event-button"]} ${
+                                        category === key ? calendarStyles["event-button-active"] : ""
                                     }`}
                                     onClick={() => setCategory(key)}
                                 >
@@ -148,10 +191,10 @@ export default function GroupCreatePage() {
                     </div>
 
                     {/* ADD MEMBERS */}
-                    <div className={styles["input-box"]}>
-                        <p className={styles["input-title"]}>Add members (optional)</p>
+                    <div className={calendarStyles["input-box"]}>
+                        <p className={calendarStyles["input-title"]}>Add members (optional)</p>
 
-                        <div style={{display: 'flex', gap: '8px', marginBottom: '12px'}}>
+                        <div className={groupStyles["member-input-row"]}>
                             <input
                                 type="email"
                                 value={newMemberEmail}
@@ -165,86 +208,88 @@ export default function GroupCreatePage() {
                                         handleAddMember();
                                     }
                                 }}
-                                className={styles["event-input"]}
+                                className={calendarStyles["event-input"]}
                                 placeholder="Enter email address..."
                                 disabled={saving}
-                                style={{flex: 1}}
                             />
                             <button
                                 type="button"
                                 onClick={handleAddMember}
                                 disabled={saving}
-                                className={styles["event-button"]}
-                                style={{whiteSpace: 'nowrap'}}
+                                className={calendarStyles["event-button"]}
                             >
                                 + Add
                             </button>
                         </div>
 
                         {memberError && (
-                            <p className={styles["err-message"]} style={{marginTop: '4px'}}>
+                            <p className={groupStyles["error-message"]}>
                                 {memberError}
                             </p>
                         )}
 
                         {members.length > 0 && (
-                            <div style={{marginTop: '12px'}}>
-                                <p style={{fontSize: '0.875rem', opacity: 0.7, marginBottom: '8px'}}>
+                            <div className={groupStyles["members-to-add"]}>
+                                <p className={groupStyles["members-to-add-label"]}>
                                     Members to add ({members.length}):
                                 </p>
-                                <div style={{display: 'grid', gap: '8px'}}>
-                                    {members.map((email) => (
-                                        <div
-                                            key={email}
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                padding: '8px 12px',
-                                                background: 'rgba(255, 255, 255, 0.05)',
-                                                borderRadius: '8px',
-                                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                            }}
-                                        >
-                                            <span style={{fontSize: '0.875rem'}}>{email}</span>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemoveMember(email)}
-                                                disabled={saving}
-                                                style={{
-                                                    background: 'transparent',
-                                                    border: 'none',
-                                                    color: '#ff5c5c',
-                                                    cursor: 'pointer',
-                                                    padding: '4px 8px',
-                                                    fontSize: '1rem',
-                                                }}
-                                                title="Remove"
+                                <div className={groupStyles["members-to-add-list"]}>
+                                    {members.map((email) => {
+                                        const hasError = memberAddErrors.find(e => e.email === email);
+
+                                        return (
+                                            <div
+                                                key={email}
+                                                className={`${groupStyles["member-to-add-item"]} ${
+                                                    hasError ? groupStyles["member-to-add-item-error"] : ""
+                                                }`}
                                             >
-                                                <i className="fa-solid fa-xmark"/>
-                                            </button>
-                                        </div>
-                                    ))}
+                                                <div className={groupStyles["member-to-add-content"]}>
+                                                    <div className={groupStyles["member-to-add-email"]}>
+                                                        {hasError && (
+                                                            <i className={`fa-solid fa-circle-exclamation ${groupStyles["error-icon"]}`} />
+                                                        )}
+                                                        {email}
+                                                    </div>
+                                                    {hasError && (
+                                                        <p className={groupStyles["member-to-add-error"]}>
+                                                            {hasError. error}
+                                                        </p>
+                                                    )}
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveMember(email)}
+                                                    disabled={saving}
+                                                    className={groupStyles["member-remove-btn"]}
+                                                    title="Remove"
+                                                >
+                                                    <i className="fa-solid fa-xmark"/>
+                                                </button>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
 
-                        <p style={{fontSize: '0.75rem', opacity: 0.6, marginTop: '8px'}}>
+                        <p className={groupStyles["helper-text"]}>
                             You can also add members later from the group page
                         </p>
                     </div>
                 </div>
 
-                <div className={styles["end-buttons"]}>
+                <div className={calendarStyles["end-buttons"]}>
                     <button
-                        className={styles["end-button"]}
+                        className={calendarStyles["end-button"]}
                         onClick={save}
                         disabled={saving || !name.trim()}
                     >
                         {saving ? "CREATING..." : "CREATE GROUP"}
                     </button>
                     <button
-                        className={styles["end-button"]}
+                        className={calendarStyles["end-button"]}
                         onClick={() => navigate(-1)}
                         disabled={saving}
                     >
@@ -252,5 +297,6 @@ export default function GroupCreatePage() {
                     </button>
                 </div>
             </div>
-        </div>);
+        </div>
+    );
 }
