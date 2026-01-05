@@ -5,9 +5,15 @@ import { register } from '../api/authApi';
 export default function RegisterPage() {
   const navigate = useNavigate();
 
-  const handleRegister = async ({ email, password }) => {
+  const handleRegister = async ({ email, password, firstName, lastName }) => {
     try {
-        await register({ email, password, imie: "", nazwisko: "" });
+        await register({
+            imie: firstName,
+            nazwisko: lastName,
+            e_mail: email,
+            haslo: password,
+            haslo2: password,
+        });
 
       alert('Account created successfully! You can now log in.');
       navigate('/login');

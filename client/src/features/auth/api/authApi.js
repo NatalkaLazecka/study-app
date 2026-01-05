@@ -68,7 +68,9 @@ export async function register(data) {
   });
 
   if (!res.ok) {
-    throw new Error("Register failed");
+    const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+    console.error(' Registration failed:', res.status, errorData);
+    throw new Error(errorData.error || `Registration failed (${res.status})`);
   }
 
   return res.json();
