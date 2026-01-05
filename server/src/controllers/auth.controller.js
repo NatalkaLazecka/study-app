@@ -4,8 +4,6 @@ import {findUserByEmail, createUser, findUserById} from '../services/user.servic
 import {generateToken} from '../services/jwt.service.js';
 
 export async function register(req, res) {
-    console.log('📝 Registration request:', req.body);
-
     const {e_mail, haslo, imie, nazwisko} = req.body;
 
     if (!e_mail || !haslo) {
@@ -19,7 +17,6 @@ export async function register(req, res) {
         }
 
         const id = uuid();
-        console.log('✅ Creating user:', { id, e_mail, haslo:  haslo ?  `${haslo. substring(0, 3)}***` : 'MISSING! ', imie, nazwisko });
 
         await createUser({
             id,
@@ -29,7 +26,6 @@ export async function register(req, res) {
             nazwisko: nazwisko || null
         });
 
-        console.log('✅ User created successfully');
         res.json({ok: true});
     } catch (err) {
         console.error('Registration error:', err);
