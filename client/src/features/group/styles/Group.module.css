@@ -530,7 +530,7 @@
     margin-top: 0;
 }
 
-. members-to-add-list {
+.members-to-add-list {
     display: grid;
     gap: 8px;
 }
@@ -546,7 +546,7 @@
     transition: all 0.2s;
 }
 
-. member-to-add-item-error {
+.member-to-add-item-error {
     background: rgba(255, 92, 92, 0.1);
     border-color: rgba(255, 92, 92, 0.5);
     align-items: flex-start;
