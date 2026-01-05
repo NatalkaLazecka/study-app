@@ -96,7 +96,6 @@ export default function CalendarPage() {
 
     return (
         <div>
-            <MenuBar/>
 
             <div className={styles["calendar-root"]}>
                 <div className={styles["header-section"]}>
