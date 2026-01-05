@@ -731,3 +731,56 @@
 .checkbox-item span {
   user-select: none;
 }
+
+/* ===============================
+   Pagination
+   =============================== */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.8rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 18px rgba(255, 102, 196, 0.25);
+}
+
+.pageArrow {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: bold;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pageArrow:hover {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 15px rgba(255, 102, 196, 0.6);
+    transform: scale(1.1);
+}
+
+.pageArrow.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+.pageInfo {
+    color: var(--accent);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 8px rgba(255, 102, 196, 0.6);
+}

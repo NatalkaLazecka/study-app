@@ -2,7 +2,6 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import styles from "../styles/Todo.module.css";
 import MenuBar from "../../../components/MenuBar";
-// import { getStudentId } from "../../../utils/authService";
 
 import {
     getMyTasks,
@@ -19,13 +18,14 @@ export default function TodoListPage() {
     const [selectedDate, setSelectedDate] = useState("ALL");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const ITEMS_PER_PAGE = 6;
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         const loadTodos = async () => {
             try {
                 setLoading(true);
-                // const studentId = getStudentId();
-                // if (!studentId) return navigate("/login");
+
 
                 const data = await getMyTasks();
 
@@ -51,9 +51,13 @@ export default function TodoListPage() {
         loadTodos();
     }, [navigate]);
 
+    /* reset strony przy zmianie filtra */
+
+    useEffect(() => {
+        setCurrentPage(1);
+    },[selectedDate]);
+
     const toggleDone = async (id) => {
-        // const studentId = getStudentId();
-        // if (!studentId) return navigate("/login");
 
         const task = todos.find((t) => t.id === id);
         if (!task) return;
@@ -84,9 +88,6 @@ export default function TodoListPage() {
     };
 
     const handleDelete = async (id) => {
-        // const studentId = getStudentId();
-        // if (!studentId) return navigate("/login");
-
         await deleteTask(id);
         setTodos((prev) => prev.filter((t) => t.id !== id));
     };
@@ -100,6 +101,14 @@ export default function TodoListPage() {
                 )
         ),
     ];
+
+    const filteredTodos = todos.filter((t) =>
+        selectedDate === "ALL"
+        ? true
+        : new Date(t.deadline).toLocaleDateString("en-GB") === selectedDate );
+    const totalPages = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
+    const paginatedTodos = filteredTodos.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
 
     return (
         <div>
@@ -240,6 +249,44 @@ export default function TodoListPage() {
                     <p style={{color: "var(--white)", padding: "1rem", marginTop: "clamp(2rem,4vh,3rem)"}}>
                         No task to do
                     </p>
+                )}
+
+                {totalPages > 1 && (
+                    <div className={styles.pagination}>
+                        <button
+                            className={`${styles.pageArrow} ${
+                                currentPage === 1
+                                    ? styles.disabled
+                                    : ""
+                            }`}
+                            onClick={() =>
+                                setCurrentPage((p) =>
+                                    Math.max(1, p - 1)
+                                )
+                            }
+                        >
+                            ‹
+                        </button>
+
+                        <span className={styles.pageInfo}>
+                            {currentPage} / {totalPages}
+                        </span>
+
+                        <button
+                            className={`${styles.pageArrow} ${
+                                currentPage === totalPages
+                                    ? styles.disabled
+                                    : ""
+                            }`}
+                            onClick={() =>
+                                setCurrentPage((p) =>
+                                    Math.min(totalPages, p + 1)
+                                )
+                            }
+                        >
+                            ›
+                        </button>
+                    </div>
                 )}
 
                 {/* ADD NEW */}
