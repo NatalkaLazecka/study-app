@@ -63,10 +63,10 @@ export const createGroup = async (req, res) => {
             });
         }
 
-        if (kategoria_grupa_id) {
+        if (kategoria_grupy_id) {
             const [categoryCheck] = await pool.query(
                 `SELECT id FROM kategoria_grupy WHERE id = ? `,
-                [kategoria_grupa_id]
+                [kategoria_grupy_id]
             );
 
             if (categoryCheck.length === 0) {
