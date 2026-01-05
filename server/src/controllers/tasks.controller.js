@@ -159,7 +159,6 @@ export const getTaskById = async (req, res) => {
             [req.params.id, studentId]
         );
 
-        console.log("sql result: ", result);
         if (!result.length) {
             return res.status(404).json({message: "Zadanie nie znalezione"});
         }
@@ -204,11 +203,6 @@ export const addTask = async (req, res) => {
     try {
         const id = uuidv4();
 
-        console.log(`INSERT INTO zadanie (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie, student_id,
-                                          status_zadania_id, wysilek, grupa_id)
-                     VALUES (${id}, ${tytul}, ${tresc}, ${priorytet}, ${deadline}, ${automatyczne_powiadomienie || 0},
-                             ${studentId}, ${status_zadania_id}, ${wysilek}, ${grupa_id})`);
-
         await pool.query(
             `INSERT INTO zadanie
              (id, tytul, tresc, priorytet, deadline, automatyczne_powiadomienie,
@@ -221,9 +215,6 @@ export const addTask = async (req, res) => {
 
         if (tryby_powiadomien && tryby_powiadomien.length > 0) {
             for (const modeId of tryby_powiadomien) {
-                console.log(`INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
-                             VALUES (UUID(), ${id}, ${modeId}`);
-
                 await pool.query(
                     `INSERT INTO zadanie_tryb_powiadomien (id, zadanie_id, tryb_powiadomien_id)
                      VALUES (UUID(), ?, ?)`,
@@ -233,7 +224,6 @@ export const addTask = async (req, res) => {
         }
 
         if (automatyczne_powiadomienie === 1 && deadline && tryby_powiadomien && tryby_powiadomien.length > 0) {
-            console.log("addTask: tworzenie automatycznych powiadomień, createTaskNotifications(id, tytul, deadline, studentId, tryby_powiadomien)", id, tytul, deadline, studentId, tryby_powiadomien);
             await createTaskNotifications(id, tytul, deadline, studentId, tryby_powiadomien);
         }
 
@@ -264,12 +254,12 @@ export const updateTask = async (req, res) => {
     try {
         await pool.query(
             `UPDATE zadanie
-             SET tytul = ?,
-                 tresc = ?,
-                 priorytet = ?,
-                 deadline = ?,
-                 status_zadania_id = ?,
-                 wysilek = ?,
+             SET tytul                      = ?,
+                 tresc                      = ?,
+                 priorytet                  = ?,
+                 deadline                   = ?,
+                 status_zadania_id          = ?,
+                 wysilek                    = ?,
                  automatyczne_powiadomienie = ?
              WHERE id = ?
                AND student_id = ?`,
@@ -330,7 +320,6 @@ export const deleteTask = async (req, res) => {
             return res.status(404).json({message: "Zadanie nie znalezione lub brak uprawnień"});
         }
 
-
         res.json({message: "Zadanie usunięte"});
     } catch (err) {
         res.status(500).json({error: err.message});
@@ -339,7 +328,6 @@ export const deleteTask = async (req, res) => {
 
 export const getTasksByStudent = async (req, res) => {
     const studentId = req.user.id;
-
 
     try {
         const [result] = await pool.query(`

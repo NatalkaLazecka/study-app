@@ -1,4 +1,3 @@
-
 import express from "express";
 import {
   getEvents, getCategories, getEventFiles, getEventsByStudent,
@@ -22,69 +21,14 @@ router.get("/student", requireAuth, getEventsByStudent);
 router.get("/", getEvents);
 router.get("/categories", getCategories);
 
-router.post(
-  "/",
-  requireAuth,
-  createEventValidator,
-  validate,
-  addEvent
-);
+router.post("/", requireAuth, createEventValidator, validate, addEvent);
+router.get("/:id", requireAuth, eventIdParamValidator, getEventById);
+router.put("/:id", requireAuth, updateEventValidator, validate, updateEvent);
+router.delete("/:id", requireAuth, eventIdParamValidator, validate, deleteEvent);
 
-router.get(
-  "/:id",
-  requireAuth,
-  eventIdParamValidator,
-  // validate,
-  getEventById
-);
-
-router.put(
-  "/:id",
-  requireAuth,
-  updateEventValidator,
-  validate,
-  updateEvent
-);
-
-router.delete(
-  "/:id",
-  requireAuth,
-  eventIdParamValidator,
-  validate,
-  deleteEvent
-);
-
-router.get(
-  "/:eventId/files",
-  requireAuth,
-  eventIdParamValidator,
-  validate,
-  getEventFiles
-);
-
-router.post(
-  "/:eventId/files",
-  requireAuth,
-  eventIdParamValidator,
-  validate,
-  uploadMiddleware,
-  uploadEventFile
-);
-
-router.get(
-  "/files/:fileId/download",
-  requireAuth,
-  fileIdParamValidator,
-  validate,
-  downloadEventFile
-);
-
-router.delete(
-  "/files/:fileId",
-  requireAuth,
-  fileIdParamValidator,
-  validate,
-  deleteEventFile
-);
+router.get("/:eventId/files", requireAuth, eventIdParamValidator, validate, getEventFiles);
+router.post("/:eventId/files", requireAuth, eventIdParamValidator, validate, uploadMiddleware, uploadEventFile);
+router.get("/files/:fileId/download", requireAuth, fileIdParamValidator, validate, downloadEventFile);
+router.delete("/files/:fileId", requireAuth, fileIdParamValidator, validate, deleteEventFile);
 
 export default router;

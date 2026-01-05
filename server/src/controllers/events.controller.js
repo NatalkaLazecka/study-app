@@ -34,8 +34,6 @@ export const getEventsByStudent = async (req, res) => {
     try {
         const studentId = req.user.id;
 
-        console.log("getEventsByStudetn events.controller - studentId:", studentId);
-
         const [result] = await pool.query(`
             SELECT w.id,
                    w.tytul,
@@ -230,12 +228,6 @@ export const addEvent = async (req, res) => {
     try {
         const id = uuidv4();
 
-        console.log(`INSERT INTO wydarzenie (id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id,
-                                             rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia)
-                     VALUES (${id}, ${tytul}, ${opis}, ${data_start}, ${data_koncowa}, ${priorytet},
-                             ${rodzaj_wydarzenia_id}, ${rodzaj_powtarzania_id}, ${studentId},
-                             ${automatyczne_powiadomienia})`)
-
         await pool.query(
             `INSERT INTO wydarzenie (id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id,
                                      rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia)
@@ -245,9 +237,6 @@ export const addEvent = async (req, res) => {
 
         if (tryby_powiadomien && tryby_powiadomien.length > 0) {
             for (const modeId of tryby_powiadomien) {
-                console.log(`INSERT INTO wydarzenie_tryb_powiadomien (id, wydarzenie_id, tryb_powiadomien_id)
-                             VALUES (UUID(), ${id}, ${modeId}`);
-
                 await pool.query(
                     `INSERT INTO wydarzenie_tryb_powiadomien (id, wydarzenie_id, tryb_powiadomien_id)
                      VALUES (UUID(), ?, ?)`,
@@ -257,7 +246,6 @@ export const addEvent = async (req, res) => {
         }
 
         if (automatyczne_powiadomienia === 1 && data_start && tryby_powiadomien && tryby_powiadomien.length > 0) {
-            console.log("addEvent: tworzenie automatycznych powiadomień, createEventNotifications(id, tytul, data_start, studentId, tryby_powiadomien)", id, tytul, data_start, studentId, tryby_powiadomien);
             await createEventNotifications(id, tytul, data_start, studentId, tryby_powiadomien);
         }
 

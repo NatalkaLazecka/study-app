@@ -34,7 +34,6 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-    console.log("LOGIN BODY:", req.body);
     const {e_mail, haslo} = req.body;
 
     if (!e_mail || !haslo) {
@@ -48,9 +47,7 @@ export async function login(req, res) {
         const isValid = await bcrypt.compare(haslo, user.haslo);
         if (!isValid) return res.status(401).json({error: 'Invalid credentials'});
 
-
         const token = generateToken(user);
-
 
         res.cookie("access_token", token, {
             httpOnly: true,

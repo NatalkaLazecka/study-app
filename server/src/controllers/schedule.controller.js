@@ -2,7 +2,7 @@ import pool from "../database/db.js";
 import {v4 as uuidv4} from "uuid";
 
 export const getScheduleForStudent = async (req, res) => {
-     const studentId = req.user.id;
+    const studentId = req.user.id;
 
     try {
         const [result] = await pool.query(
@@ -39,7 +39,7 @@ export const getScheduleForStudent = async (req, res) => {
 }
 
 export const getTodayScheduleForStudent = async (req, res) => {
-     const studentId = req.user.id;
+    const studentId = req.user.id;
 
     try {
         const daysMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -77,7 +77,7 @@ export const getTodayScheduleForStudent = async (req, res) => {
 export const addSchedule = async (req, res) => {
     const {przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id} = req.body;
     const id = uuidv4();
-     const studentId = req.user.id;
+    const studentId = req.user.id;
 
     try {
         await pool.query(
@@ -94,11 +94,11 @@ export const addSchedule = async (req, res) => {
 
 export const updateSchedule = async (req, res) => {
     const {id} = req.params;
-    const { przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id} = req.body;
-     const studentId = req.user.id;
+    const {przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id} = req.body;
+    const studentId = req.user.id;
 
     try {
-        const result = await pool.query(
+        const [result] = await pool.query(
             "UPDATE plan_zajec SET student_id=?, przedmiot_id=?, prowadzacy_id=?, dzien_tygodnia=?, godzina=?, sala=?, typ_zajec_id=? WHERE id=?",
             [studentId, przedmiot_id, prowadzacy_id, dzien_tygodnia, godzina, sala, typ_zajec_id, id]
         );
@@ -117,7 +117,7 @@ export const deleteSchedule = async (req, res) => {
     const {id} = req.params;
 
     try {
-        const result = await pool.query("DELETE FROM plan_zajec WHERE id=?", [id]);
+        const [result] = await pool.query("DELETE FROM plan_zajec WHERE id=?", [id]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({message: "Schedule not found"});
@@ -130,10 +130,10 @@ export const deleteSchedule = async (req, res) => {
 }
 
 export const deleteAllSchedulesForStudent = async (req, res) => {
-     const studentId = req.user.id;
+    const studentId = req.user.id;
 
     try {
-        const result = await pool.query("DELETE FROM plan_zajec WHERE student_id=?", [studentId]);
+        const [result] = await pool.query("DELETE FROM plan_zajec WHERE student_id=?", [studentId]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({message: "No schedules found for the student"});
@@ -190,7 +190,7 @@ export const updateProfessor = async (req, res) => {
     }
 
     try {
-        const result = await pool.query("UPDATE prowadzacy SET imie=?, nazwisko=? WHERE id=?", [imie.trim(), nazwisko.trim(), id]);
+        const [result] = await pool.query("UPDATE prowadzacy SET imie=?, nazwisko=? WHERE id=?", [imie.trim(), nazwisko.trim(), id]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({message: "Professor not found"});
@@ -206,13 +206,13 @@ export const deleteProfessor = async (req, res) => {
     const {id} = req.params;
 
     try {
-        const schedules = await pool.query("SELECT COUNT(*) as count FROM plan_zajec WHERE prowadzacy_id=?", [id]);
+        const [schedules] = await pool.query("SELECT COUNT(*) as count FROM plan_zajec WHERE prowadzacy_id=?", [id]);
 
         if (schedules[0].count > 0) {
             return res.status(400).json({message: "Cannot delete professor. It is use in schedules."});
         }
 
-        const result = await pool.query("DELETE FROM prowadzacy WHERE id=?", [id]);
+        const [result] = await pool.query("DELETE FROM prowadzacy WHERE id=?", [id]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({message: "Professor not found"});
@@ -224,8 +224,6 @@ export const deleteProfessor = async (req, res) => {
     }
 }
 
-
-// ---- SUBJECT CONTROLLERS ---- //
 export const getAllSubject = async (req, res) => {
     try {
         const [result] = await pool.query(`SELECT id, nazwa
@@ -252,7 +250,6 @@ export const addSubject = async (req, res) => {
 
     try {
         await pool.query("INSERT INTO przedmiot (id, nazwa) VALUES (?, ?)", [id, nazwa.trim()]);
-
         res.status(201).json({id: id, nazwa: nazwa.trim()});
     } catch (err) {
         if (err.code === 'ER_DUP_ENTRY') {
@@ -271,7 +268,7 @@ export const updateSubject = async (req, res) => {
     }
 
     try {
-        const result = await pool.query("UPDATE przedmiot SET nazwa=? WHERE id=?", [nazwa.trim(), id]);
+        const [result] = await pool.query("UPDATE przedmiot SET nazwa=? WHERE id=?", [nazwa.trim(), id]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({message: "Subject not found"});
@@ -287,13 +284,13 @@ export const deleteSubject = async (req, res) => {
     const {id} = req.params;
 
     try {
-        const schedules = await pool.query("SELECT COUNT(*) as count FROM plan_zajec WHERE przedmiot_id=?", [id]);
+        const [schedules] = await pool.query("SELECT COUNT(*) as count FROM plan_zajec WHERE przedmiot_id=?", [id]);
 
         if (schedules[0].count > 0) {
             return res.status(400).json({message: "Cannot delete subject. It is use in schedules."});
         }
 
-        const result = await pool.query("DELETE FROM przedmiot WHERE id=?", [id]);
+        const [result] = await pool.query("DELETE FROM przedmiot WHERE id=?", [id]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({message: "Subject not found"});

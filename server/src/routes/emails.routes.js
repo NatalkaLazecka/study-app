@@ -19,7 +19,7 @@ router.post("/reset", async (req, res) => {
             return res.status(400).json({error: "Brak adresu e-mail"});
         }
 
-        const rows = await db.query("SELECT * FROM student WHERE e_mail = ?", [email]);
+        const [rows] = await db.query("SELECT * FROM student WHERE e_mail = ?", [email]);
         if (rows.length === 0) {
             return res.status(400).json({error: "Użytkownik nie istnieje"});
         }

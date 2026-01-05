@@ -6,7 +6,6 @@ Aplikacja łączy w sobie funkcje kalendarza, listy zadań, planu zajęć oraz p
 Dzięki intuicyjnemu interfejsowi i responsywnemu designowi, StudY pozwala skutecznie zarządzać obowiązkami akademickimi 
 z dowolnego urządzenia.
 
-
 # 2  Technologie
 
 ## 2.1  Frontend:

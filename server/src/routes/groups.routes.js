@@ -7,7 +7,6 @@ import {
     deleteGroup,
     removeUserFromGroup,
     leaveGroup,
-    transferAdmin,
     getGroupNotes,
     createGroupNote,
     deleteGroupNote,

@@ -1,10 +1,12 @@
 import { body, param } from "express-validator";
 
+
 export const groupIdValidator = [
   param("id")
     .isUUID()
     .withMessage("Invalid group ID format"),
 ];
+
 
 export const memberIdValidator = [
   param("memberId")
@@ -12,17 +14,20 @@ export const memberIdValidator = [
     .withMessage("Invalid member ID format"),
 ];
 
+
 export const noteIdValidator = [
   param("noteId")
     .isUUID()
     .withMessage("Invalid note ID format"),
 ];
 
+
 export const fileIdValidator = [
   param("fileId")
     .isUUID()
     .withMessage("Invalid file ID format"),
 ];
+
 
 export const createGroupValidator = [
   body("nazwa")
@@ -40,6 +45,7 @@ export const createGroupValidator = [
     .withMessage("Invalid category ID format"),
 ];
 
+
 export const addMemberValidator = [
   ... groupIdValidator,
   body("email")
@@ -48,10 +54,12 @@ export const addMemberValidator = [
     .normalizeEmail(),
 ];
 
+
 export const removeMemberValidator = [
   ...groupIdValidator,
   ... memberIdValidator,
 ];
+
 
 export const createNoteValidator = [
   ... groupIdValidator,
@@ -67,10 +75,12 @@ export const createNoteValidator = [
     .withMessage("Note description cannot exceed 5000 characters"),
 ];
 
+
 export const deleteNoteValidator = [
   ...groupIdValidator,
   ...noteIdValidator,
 ];
+
 
 export const getAnnouncementsValidator = [
   ...groupIdValidator,

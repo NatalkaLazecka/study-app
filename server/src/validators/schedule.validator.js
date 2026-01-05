@@ -43,6 +43,7 @@ export const createScheduleValidator = [
     .withMessage("Invalid class type id"),
 ];
 
+
 export const updateScheduleValidator = [
   ...idParamValidator,
   ...createScheduleValidator,
@@ -61,6 +62,7 @@ export const createProfessorValidator = [
     .withMessage("Last name must have at least 2 characters"),
 ];
 
+
 export const updateProfessorValidator = [
   ...idParamValidator,
   ...createProfessorValidator,
@@ -73,6 +75,7 @@ export const createSubjectValidator = [
     .notEmpty()
     .withMessage("Subject name is required"),
 ];
+
 
 export const updateSubjectValidator = [
   ...idParamValidator,

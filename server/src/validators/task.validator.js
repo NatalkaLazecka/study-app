@@ -1,10 +1,12 @@
 import {body, param} from "express-validator";
 
+
 export const taskIdValidator = [
     param("id")
         .isUUID()
         .withMessage("Invalid task id"),
 ];
+
 
 export const createTaskValidator = [
     body("tytul")
@@ -37,6 +39,7 @@ export const createTaskValidator = [
         .isUUID()
         .withMessage("Notification mode ID must be UUID"),
 ];
+
 
 export const updateTaskValidator = [
     ...taskIdValidator,

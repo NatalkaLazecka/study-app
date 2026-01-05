@@ -41,16 +41,19 @@ export const createEventValidator = [
     .withMessage("Automatic notifications must be 0 or 1"),
 ];
 
+
 export const updateEventValidator = [
   ...idParamValidator("id"),
   ...createEventValidator,
 ];
+
 
 export const eventIdParamValidator = [
   param("eventId")
     .isUUID()
     .withMessage("Invalid eventId"),
 ];
+
 
 export const fileIdParamValidator = [
   param("fileId")

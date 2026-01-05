@@ -17,42 +17,14 @@ import {
 
 import { validate } from "../middleware/validate.js";
 
-
 const router = express.Router();
 
 router.get("/notification-modes", requireAuth, getNotificationModes);
 router.get("/student",requireAuth, getTasksByStudent);
 router.get("/",requireAuth, getTasks);
-router.post(
-  "/",
-  requireAuth,
-  createTaskValidator,
-  validate,
-  addTask
-);
-
-router.get(
-  "/:id",
-  requireAuth,
-  taskIdValidator,
-  validate,
-  getTaskById
-);
-
-router.put(
-  "/:id",
-  requireAuth,
-  updateTaskValidator,
-  validate,
-  updateTask
-);
-
-router.delete(
-  "/:id",
-  requireAuth,
-  taskIdValidator,
-  validate,
-  deleteTask
-);
+router.post("/", requireAuth, createTaskValidator, validate, addTask);
+router.get("/:id", requireAuth, taskIdValidator, validate, getTaskById);
+router.put("/:id", requireAuth, updateTaskValidator, validate, updateTask);
+router.delete("/:id", requireAuth, taskIdValidator, validate, deleteTask);
 
 export default router;

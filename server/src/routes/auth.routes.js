@@ -6,20 +6,9 @@ import { validate } from '../middleware/validate.js';
 
 const router = express.Router();
 
-router.post(
-  '/register',
-  registerValidator,
-  validate,
-  register
-);
-
-router.post(
-  '/login',
-  loginValidator,
-  validate,
-  login
-);
+router.post('/register', registerValidator, validate, register);
+router.post('/login', loginValidator, validate, login);
 router.get('/me', requireAuth, me);
-
 router.get('/logout', requireAuth, logout);
+
 export default router;

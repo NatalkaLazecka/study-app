@@ -9,6 +9,7 @@ import {
     getStudentWeekType
 } from "../controllers/students.controller.js";
 import { requireAuth } from "../middleware/requireAuth.js";
+
 const router = express.Router();
 
 router.get("/getTypeForWeek",requireAuth, getStudentWeekType)

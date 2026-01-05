@@ -31,86 +31,21 @@ import { requireAuth } from "../middleware/requireAuth.js";
 const router = express.Router();
 
 router.get("/subjects", requireAuth, getAllSubject);
-
-router.post(
-  "/subject",
-  requireAuth,
-  createSubjectValidator,
-  validate,
-  addSubject
-);
-
-router.put(
-  "/subject/:id",
-  requireAuth,
-  updateSubjectValidator,
-  validate,
-  updateSubject
-);
-
-router.delete(
-  "/subject/:id",
-  requireAuth,
-  idParamValidator,
-  validate,
-  deleteSubject
-);
-
+router.post("/subject", requireAuth, createSubjectValidator, validate, addSubject);
+router.put("/subject/:id", requireAuth, updateSubjectValidator, validate, updateSubject);
+router.delete("/subject/:id", requireAuth, idParamValidator, validate, deleteSubject);
 
 router.get("/professors", requireAuth, getAllProfessor);
+router.post("/professor", requireAuth, createProfessorValidator, validate, addProfessor);
+router.put("/professor/:id", requireAuth, updateProfessorValidator, validate, updateProfessor);
 
-router.post(
-  "/professor",
-  requireAuth,
-  createProfessorValidator,
-  validate,
-  addProfessor
-);
-
-router.put(
-  "/professor/:id",
-  requireAuth,
-  updateProfessorValidator,
-  validate,
-  updateProfessor
-);
-
-router.delete(
-  "/professor/:id",
-  requireAuth,
-  idParamValidator,
-  validate,
-  deleteProfessor
-);
-
+router.delete("/professor/:id", requireAuth, idParamValidator, validate, deleteProfessor);
 
 router.get("/today", requireAuth, getTodayScheduleForStudent);
 router.get("/", requireAuth, getScheduleForStudent);
-
-router.post(
-  "/",
-  requireAuth,
-  createScheduleValidator,
-  validate,
-  addSchedule
-);
-
-router.put(
-  "/:id",
-  requireAuth,
-  updateScheduleValidator,
-  validate,
-  updateSchedule
-);
-
+router.post("/", requireAuth, createScheduleValidator, validate, addSchedule);
+router.put("/:id", requireAuth, updateScheduleValidator, validate, updateSchedule);
 router.delete("/all", requireAuth, deleteAllSchedulesForStudent);
-
-router.delete(
-  "/:id",
-  requireAuth,
-  idParamValidator,
-  validate,
-  deleteSchedule
-);
+router.delete("/:id", requireAuth, idParamValidator, validate, deleteSchedule);
 
 export default router;
