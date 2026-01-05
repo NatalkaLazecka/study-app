@@ -1,0 +1,52 @@
+.logoutOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.logoutModal {
+  background: rgba(30, 30, 30, 0.85);
+  border: 2px solid #e85bbf;
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 0 18px rgba(232, 91, 191, 0.3);
+  text-align: center;
+  max-width: 360px;
+  width: 90%;
+}
+
+.logoutModal p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #fbfbfb;
+}
+
+.logoutActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btnPrimary {
+  background: #e85bbf;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btnSecondary {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: 1.5px solid #b854b4;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
