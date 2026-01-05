@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import styles from './MenuBar.module.css';
 import NotificationComponent from '../features/notification/component/NotificationComponent';
 
-export default function MenuBar() {
+export default function MenuBar({ onLogoutClick }) {
     const navigate = useNavigate();
 
     return (
