@@ -65,6 +65,5 @@ export async function getNotificationModes() {
 
 export async function getEventById(eventId) {
   const res = await apiFetch(`/api/events/${eventId}`);
-  const data = await res.json();
-  return data;
+  return res.json();
 }

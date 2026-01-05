@@ -21,7 +21,6 @@ import {
     groupIdValidator,
     addMemberValidator,
     removeMemberValidator,
-    transferAdminValidator,
     createNoteValidator,
     deleteNoteValidator,
     getAnnouncementsValidator,
@@ -40,7 +39,6 @@ router.delete("/:id", requireAuth, groupIdValidator, validate, deleteGroup);
 router.post("/:id/add-user", requireAuth, addMemberValidator, validate, addUserToGroup);
 router.delete("/:id/members/:memberId", requireAuth, removeMemberValidator, validate, removeUserFromGroup);
 router.post("/:id/leave", requireAuth, groupIdValidator, validate, leaveGroup);
-router.put("/:id/transfer-admin", requireAuth, transferAdminValidator, validate, transferAdmin);
 
 router.get("/:id/notes", requireAuth, groupIdValidator, validate, getGroupNotes);
 router.post("/:id/notes", requireAuth, createNoteValidator, validate, createGroupNote);

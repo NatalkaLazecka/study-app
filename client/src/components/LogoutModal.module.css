@@ -44,7 +44,7 @@
 .btnSecondary {
   background: rgba(255,255,255,0.08);
   color: #fff;
-  border: 1.5px solid #b854b4;
+  border: 1px solid #b854b4;
   padding: 0.6rem 1.4rem;
   border-radius: 6px;
   font-weight: bold;

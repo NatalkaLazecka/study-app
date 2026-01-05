@@ -10,7 +10,6 @@ import {
     addMemberToGroup,
     deleteGroup,
     removeMemberFromGroup,
-    transferAdminRights,
     leaveGroup,
     getGroupNotes,
     createGroupNote,
@@ -22,8 +21,8 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DEFAULT_LAYOUT = [
     {i: "members", x: 0, y: 0, w: 4, h: 18},
-    {i: "notes", x: 4, y: 0, w: 5, h: 18},
-    {i: "ann", x: 9, y: 0, w: 3, h: 18},
+    {i: "notes", x: 4, y: 0, w: 4, h: 18},
+    {i: "ann", x: 8, y: 0, w: 4, h: 18},
 ];
 
 export default function GroupDetailsPage() {
@@ -70,9 +69,9 @@ export default function GroupDetailsPage() {
 
     useEffect(() => {
         if (id) {
-            fetchGroupDetails(id);
-            loadNotes();
-            loadAnnouncements();
+            void fetchGroupDetails(id);
+            void loadNotes();
+            void loadAnnouncements();
         }
     }, [id]);
 
@@ -261,7 +260,7 @@ export default function GroupDetailsPage() {
                         <div className={styles["members-list"]}>
                             {currentGroup.members.map((m) => (
                                 <div key={m.id} className={styles["member-item"]}>
-                                    <div className={styles.avatar}>
+                                    <div className={styles["avatar"]}>
                                         <i className="fa-regular fa-user"/>
                                     </div>
                                     <div className={styles["member-info"]}>

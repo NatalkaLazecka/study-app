@@ -4,7 +4,6 @@ import styles from "../styles/CalendarPage.module.css";
 import {useNavigate} from "react-router-dom";
 import CalendarEventComponent from "../component/CalendarEventComponent";
 import CalendarScheduleComponent from "../component/CalendarScheduleComponent";
-import MenuBar from "../../../components/MenuBar";
 
 import {
     getStudentEvents,
@@ -90,13 +89,11 @@ export default function CalendarPage() {
             }
         };
 
-        loadCalendarData();
+        void loadCalendarData();
     }, []);
-
 
     return (
         <div>
-
             <div className={styles["calendar-root"]}>
                 <div className={styles["header-section"]}>
                     <button

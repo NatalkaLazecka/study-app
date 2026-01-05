@@ -15,10 +15,6 @@ export default function HomePage() {
         return () => clearTimeout(timer);
     }, []);
 
-    // if (loading) {
-    //     return <LoadingPage />;
-    // }
-
     return (
         <div className={styles['home-root']}>
             <h1 className={styles['home-title']}>

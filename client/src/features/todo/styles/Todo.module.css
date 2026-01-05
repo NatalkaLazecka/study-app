@@ -8,6 +8,13 @@
     --glow: #b854b4;
 }
 
+.err-message {
+    color: var(--red);
+    font-family: 'Roboto Mono', monospace;
+    font-size: clamp(14px, 1.5vw, 16px);
+    margin-top: clamp(5px, 1.5vh, 10px);
+}
+
 /* =========================================
    Sekcja nagłówka
    ========================================= */
@@ -143,7 +150,7 @@
     appearance: none;
     width: clamp(16px, 2vw, 18px);
     height: clamp(16px, 2vw, 18px);
-    border: 1.5px solid var(--accent);
+    border: 1px solid var(--accent);
     border-radius: 3px;
     background: transparent;
     cursor: pointer;
@@ -183,7 +190,7 @@
 
 .todo-row {
     background: rgba(255, 255, 255, 0.06);
-    border: 1.5px solid var(--accent);
+    border: 1px solid var(--accent);
     border-radius: clamp(8px, 1.2vw, 12px);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 40px;
@@ -232,7 +239,7 @@
 .todo-add-button {
     margin-top: clamp(2rem, 4vh, 3rem);
     background: rgba(255, 255, 255, 0.04);
-    border: 1.5px solid var(--accent);
+    border: 1px solid var(--accent);
     color: var(--text);
     padding: clamp(0.7rem, 1.5vw, 1.1rem) clamp(1.5rem, 3vw, 2.8rem);
     border-radius: 10px;
@@ -353,7 +360,6 @@
 
 .edit-label {
     margin: 0 0 clamp(0.3rem, 0.7vh, 0.5rem) 0;
-    display: inline-block;
     background: #1E1E1E21;
     border: clamp(2px, 0.4vw, 4px) solid var(--accent);
     border-radius: clamp(8px, 1.2vw, 12px);

@@ -2,8 +2,6 @@ import styles from "../styles/SchedulePage.module.css";
 import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import ScheduleViewComponent from "../component/ScheduleViewComponent";
-import MenuBar from "../../../components/MenuBar";
-import {getStudentId} from "../../../utils/authService";
 
 import {
     getStudentSchedule,
@@ -18,16 +16,10 @@ export default function SchedulePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [fullWeek, setFullWeek] = useState(false);
-    // const studentId = getStudentId();
 
     useEffect(() => {
         const loadSchedule = async () => {
             try {
-                // if (!studentId) {
-                //     navigate("/login");
-                //     return;
-                // }
-
                 const data = await getStudentSchedule();
                 setSchedule(data);
             } catch (err) {
@@ -41,7 +33,7 @@ export default function SchedulePage() {
             }
         };
 
-        loadSchedule();
+        void loadSchedule();
     }, [navigate]);
 
     useEffect(() => {
@@ -53,7 +45,7 @@ export default function SchedulePage() {
             }
         };
 
-        fetchWeekType();
+        void fetchWeekType();
     }, []);
 
     const groupByDay = () => {
@@ -106,17 +98,15 @@ export default function SchedulePage() {
 
     return (
         <div>
-
-
             <div className={styles["schedule-root"]}>
                 <div className={styles["header-section"]}>
                     <button
                         className={styles["back-button"]}
                         onClick={() => navigate(-1)}
                     >
-            <span className={styles["back-text"]}>
-              stud<span className={styles["back-text-y"]}>y</span>
-            </span>
+                        <span className={styles["back-text"]}>stud
+                            <span className={styles["back-text-y"]}>y</span>
+                        </span>
                         <span className={styles["back-arrow"]}>&lt;</span>
                     </button>
 

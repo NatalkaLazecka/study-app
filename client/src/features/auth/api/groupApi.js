@@ -44,9 +44,7 @@ export async function addMemberToGroup(groupId, email) {
             throw new Error(errorMessage);
         }
 
-        const data = await res.json();
-
-        return data;
+        return await res.json();
     } catch (err) {
         console.error('❌ [groupApi] Exception:', err);
         throw err;
@@ -63,14 +61,6 @@ export async function removeMemberFromGroup(groupId, memberId) {
 export async function leaveGroup(groupId) {
     const res = await apiFetch(`/api/groups/${groupId}/leave`, {
         method: "POST",
-    });
-    return res.json();
-}
-
-export async function transferAdminRights(groupId, newAdminId) {
-    const res = await apiFetch(`/api/groups/${groupId}/transfer-admin`, {
-        method: "PUT",
-        body: JSON.stringify({newAdminId}),
     });
     return res.json();
 }

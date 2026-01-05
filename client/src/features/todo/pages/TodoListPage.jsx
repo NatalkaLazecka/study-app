@@ -1,7 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
 import styles from "../styles/Todo.module.css";
-import MenuBar from "../../../components/MenuBar";
 
 import {
     getMyTasks,
@@ -48,10 +47,9 @@ export default function TodoListPage() {
             }
         };
 
-        loadTodos();
+        void loadTodos();
     }, [navigate]);
 
-    /* reset strony przy zmianie filtra */
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedDate]);
@@ -67,7 +65,7 @@ export default function TodoListPage() {
 
         setTodos((prev) =>
             prev.map((t) =>
-                t.id === id ? { ...t, done: newDone } : t
+                t.id === id ? {...t, done: newDone} : t
             )
         );
 
@@ -86,7 +84,7 @@ export default function TodoListPage() {
             setTodos((prev) =>
                 prev.map((t) =>
                     t.id === id
-                        ? { ...t, done: !newDone }
+                        ? {...t, done: !newDone}
                         : t
                 )
             );
@@ -111,13 +109,12 @@ export default function TodoListPage() {
         ),
     ];
 
-    /* FILTER + PAGINATION */
     const filteredTodos = todos.filter((t) =>
         selectedDate === "ALL"
             ? true
             : new Date(t.deadline).toLocaleDateString(
-                  "en-GB"
-              ) === selectedDate
+            "en-GB"
+        ) === selectedDate
     );
 
     const totalPages = Math.ceil(
@@ -129,10 +126,33 @@ export default function TodoListPage() {
         currentPage * ITEMS_PER_PAGE
     );
 
+    if (loading) {
+        return (
+            <div className={styles["todo-root"]}>
+                <div className={styles["header-section"]}>
+                    <button
+                        className={styles["back-button"]}
+                        onClick={() => navigate(-1)}
+                    >
+                        <span className={styles["back-text"]}>stud
+                            <span className={styles["back-text-y"]}>y</span>
+                        </span>
+                        <span className={styles["back-arrow"]}>&lt;</span>
+                    </button>
+
+                    <h1 className={styles["todo-title"]}>MY TO-DO LIST</h1>
+                    <div/>
+                </div>
+                <p style={{color: "var(--white)", padding: "2rem", textAlign: "center"}}>
+                    Loading tasks...
+                </p>
+            </div>
+        );
+    }
+
+
     return (
         <div>
-
-
             <div className={styles["todo-root"]}>
                 {/* HEADER */}
                 <div className={styles["header-section"]}>
@@ -140,33 +160,38 @@ export default function TodoListPage() {
                         className={styles["back-button"]}
                         onClick={() => navigate(-1)}
                     >
-                        <span className={styles["back-text"]}>
-                            stud
-                            <span
-                                className={styles["back-text-y"]}
-                            >
-                                y
-                            </span>
+                        <span className={styles["back-text"]}>stud
+                            <span className={styles["back-text-y"]}>y</span>
                         </span>
-                        <span
-                            className={styles["back-arrow"]}
-                        >
-                            &lt;
-                        </span>
+                        <span className={styles["back-arrow"]}>&lt;</span>
                     </button>
 
-                    <h1
-                        className={styles["todo-title"]}
-                    >
-                        MY TO-DO LIST
-                    </h1>
-                    <div />
+                    <h1 className={styles["todo-title"]}>MY TO-DO LIST</h1>
+                    <div/>
                 </div>
 
+                {error && (
+                    <div className={styles["err-message"]}>
+                        <i className="fa-solid fa-triangle-exclamation" style={{marginRight: '8px'}}/>
+                        {error}
+                        <button
+                            onClick={() => setError("")}
+                            style={{
+                                float: 'right',
+                                background: 'none',
+                                border: 'none',
+                                color: '#ff4d6d',
+                                cursor: 'pointer',
+                                fontSize: '1.2rem'
+                            }}
+                        >
+                            ×
+                        </button>
+                    </div>
+                )}
+
                 {/* FILTER BAR */}
-                <div
-                    className={styles["dropdown-wrapper"]}
-                >
+                <div className={styles["dropdown-wrapper"]}>
                     <select
                         className={styles["todo-date"]}
                         value={selectedDate}
@@ -176,9 +201,7 @@ export default function TodoListPage() {
                             )
                         }
                     >
-                        <option value="ALL">
-                            ALL
-                        </option>
+                        <option value="ALL">ALL</option>
                         {uniqueDates.map(
                             (dateStr, index) => (
                                 <option
@@ -192,205 +215,84 @@ export default function TodoListPage() {
                     </select>
                 </div>
 
-                <div
-                    className={styles["todo-headers"]}
-                >
-                    <div
-                        className={
-                            styles["todo-header-btn"]
-                        }
-                    >
-                        TITLE
-                    </div>
-                    <div
-                        className={
-                            styles["todo-header-btn"]
-                        }
-                    >
-                        PRIORITY
-                    </div>
-                    <div
-                        className={
-                            styles["todo-header-btn"]
-                        }
-                    >
-                        EFFORT
-                    </div>
+                <div className={styles["todo-headers"]}>
+                    <div className={styles["todo-header-btn"]}>TITLE</div>
+                    <div className={styles["todo-header-btn"]}>PRIORITY</div>
+                    <div className={styles["todo-header-btn"]}>EFFORT</div>
                 </div>
 
                 {/* TABLE */}
                 {filteredTodos.length > 0 ? (
-                    <table
-                        className={
-                            styles["todo-table"]
-                        }
-                    >
+                    <table className={styles["todo-table"]}>
                         <tbody>
-                            {paginatedTodos.map(
-                                (t) => (
-                                    <tr
-                                        key={t.id}
-                                        className={`${styles["todo-row"]} ${
-                                            t.done
-                                                ? styles[
-                                                      "todo-done"
-                                                  ]
-                                                : ""
-                                        }`}
+                        {paginatedTodos.map(
+                            (t) => (
+                                <tr key={t.id} className={`${styles["todo-row"]} ${t.done ? styles["todo-done"] : ""}`}>
+                                    <td className={styles["todo-cell"]}
+                                        onClick={() => toggleDone(t.id)}
                                     >
-                                        <td
-                                            className={
-                                                styles[
-                                                    "todo-cell"
-                                                ]
-                                            }
-                                            onClick={() =>
-                                                toggleDone(
-                                                    t.id
-                                                )
-                                            }
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                className={
-                                                    styles[
-                                                        "todo-checkbox"
-                                                    ]
-                                                }
-                                                checked={
-                                                    t.done
-                                                }
-                                                readOnly
-                                            />
-                                            {t.tytul}
-                                        </td>
+                                        <input type="checkbox"
+                                               className={styles["todo-checkbox"]}
+                                               checked={t.done}
+                                               readOnly
+                                        />
+                                        {t.tytul}
+                                    </td>
 
-                                        <td
-                                            className={
-                                                styles[
-                                                    "todo-cell"
-                                                ]
-                                            }
-                                        >
-                                            {Array(3)
-                                                .fill(
-                                                    null
-                                                )
-                                                .map(
-                                                    (_, i) => (
-                                                        <span
-                                                            key={
-                                                                i
-                                                            }
-                                                            className={`${styles.emoji} ${
-                                                                i <
-                                                                t.priority
-                                                                    ? styles.activeFire
-                                                                    : ""
-                                                            }`}
-                                                        >
-                                                            <i className="fa-solid fa-fire" />
-                                                        </span>
-                                                    )
-                                                )}
-                                        </td>
+                                    <td className={styles["todo-cell"]}>
+                                        {Array(3)
+                                            .fill(null)
+                                            .map((_, i) => (
+                                                <span key={i}
+                                                      className={`${styles["emoji"]} ${i < t.priority ? styles["activeFire"] : ""}`}
+                                                >
+                                                    <i className="fa-solid fa-fire"/>
+                                                </span>)
+                                            )}
+                                    </td>
 
-                                        <td
-                                            className={
-                                                styles[
-                                                    "todo-cell"
-                                                ]
-                                            }
-                                        >
-                                            {Array(4)
-                                                .fill(
-                                                    null
-                                                )
-                                                .map(
-                                                    (_, i) => {
-                                                        const active =
-                                                            i <
-                                                            t.effort;
-                                                        return (
-                                                            <span
-                                                                key={
-                                                                    i
-                                                                }
-                                                                className={`${styles.emoji} ${
-                                                                    active
-                                                                        ? styles.activeCircle
-                                                                        : ""
-                                                                }`}
-                                                            >
-                                                                <i
-                                                                    className={
-                                                                        active
-                                                                            ? "fa-solid fa-circle"
-                                                                            : "fa-regular fa-circle"
-                                                                    }
-                                                                />
-                                                            </span>
-                                                        );
-                                                    }
-                                                )}
-                                        </td>
+                                    <td className={styles["todo-cell"]}>
+                                        {Array(4)
+                                            .fill(null)
+                                            .map((_, i) => {
+                                                const active = i < t.effort;
+                                                return (
+                                                    <span key={i}
+                                                          className={`${styles["emoji"]} ${active ? styles["activeCircle"] : ""}`}>
+                                                        <i className={active ? "fa-solid fa-circle" : "fa-regular fa-circle"}/>
+                                                    </span>
+                                                );
+                                            })}
+                                    </td>
 
-                                        <td
-                                            className={
-                                                styles[
-                                                    "todo-cell"
-                                                ]
-                                            }
+                                    <td className={styles["todo-cell"]}>
+                                        <span className={styles["edit-icon"]}
+                                              onClick={() => navigate(`/todo/edit/${t.id}`)}
                                         >
-                                            <span
-                                                className={
-                                                    styles[
-                                                        "edit-icon"
-                                                    ]
-                                                }
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/todo/edit/${t.id}`
-                                                    )
-                                                }
-                                            >
-                                                <i className="fa-solid fa-arrow-right" />
-                                            </span>
+                                            <i className="fa-solid fa-arrow-right"/>
+                                        </span>
 
-                                            <span
-                                                className={
-                                                    styles[
-                                                        "delete-icon"
-                                                    ]
-                                                }
-                                                onClick={() =>
-                                                    handleDelete(
-                                                        t.id
-                                                    )
-                                                }
-                                                style={{
-                                                    marginLeft:
-                                                        "10px",
-                                                    color:
-                                                        "#ff4d6d",
-                                                }}
-                                            >
-                                                <i className="fa-solid fa-trash" />
-                                            </span>
-                                        </td>
-                                    </tr>
-                                )
-                            )}
+                                        <span className={styles["delete-icon"]}
+                                              onClick={() => handleDelete(t.id)}
+                                              style={{
+                                                  marginLeft: "10px",
+                                                  color: "#ff4d6d",
+                                              }}
+                                        >
+                                            <i className="fa-solid fa-trash"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            )
+                        )}
                         </tbody>
                     </table>
                 ) : (
-                    <p
-                        style={{
-                            color: "var(--white)",
-                            padding: "1rem",
-                            marginTop:
-                                "clamp(2rem,4vh,3rem)",
-                        }}
+                    <p style={{
+                        color: "var(--white)",
+                        padding: "1rem",
+                        marginTop: "clamp(2rem,4vh,3rem)",
+                    }}
                     >
                         No task to do
                     </p>
@@ -398,55 +300,17 @@ export default function TodoListPage() {
 
                 {/* PAGINATION */}
                 {totalPages > 1 && (
-                    <div
-                        className={
-                            styles.pagination
-                        }
-                    >
-                        <button
-                            className={`${styles.pageArrow} ${
-                                currentPage === 1
-                                    ? styles.disabled
-                                    : ""
-                            }`}
-                            onClick={() =>
-                                setCurrentPage(
-                                    (p) =>
-                                        Math.max(
-                                            1,
-                                            p - 1
-                                        )
-                                )
-                            }
+                    <div className={styles["pagination"]}>
+                        <button className={`${styles["pageArrow"]} ${currentPage === 1 ? styles["disabled"] : ""}`}
+                                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                         >
                             ‹
                         </button>
 
-                        <span
-                            className={
-                                styles.pageInfo
-                            }
-                        >
-                            {currentPage} /{" "}
-                            {totalPages}
-                        </span>
+                        <span className={styles["pageInfo"]}>{currentPage} /{" "}{totalPages}</span>
 
-                        <button
-                            className={`${styles.pageArrow} ${
-                                currentPage ===
-                                totalPages
-                                    ? styles.disabled
-                                    : ""
-                            }`}
-                            onClick={() =>
-                                setCurrentPage(
-                                    (p) =>
-                                        Math.min(
-                                            totalPages,
-                                            p + 1
-                                        )
-                                )
-                            }
+                        <button className={`${styles["pageArrow"]} ${currentPage === totalPages ? styles["disabled"] : ""}`}
+                                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                         >
                             ›
                         </button>
@@ -454,19 +318,10 @@ export default function TodoListPage() {
                 )}
 
                 {/* ADD NEW */}
-                <button
-                    className={
-                        styles["todo-add-button"]
-                    }
-                    onClick={() =>
-                        navigate("/todo/new")
-                    }
+                <button className={styles["todo-add-button"]}
+                        onClick={() => navigate("/todo/new")}
                 >
-                    <span
-                        className={
-                            styles["plus-icon"]
-                        }
-                    >
+                    <span className={styles["plus-icon"]}>
                         ＋
                     </span>
                     add new task

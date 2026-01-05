@@ -1,4 +1,10 @@
-/* Przycisk powiadomień */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --gray: #b0b0b0;
+}
+
 .notification-button {
   position: relative;
   background: none;
@@ -47,7 +53,6 @@
   font-family: 'Roboto Mono', monospace;
 }
 
-/* Tło przyciemniające */
 .overlay {
   position: fixed;
   top: 0;
@@ -69,7 +74,6 @@
   }
 }
 
-/* Panel powiadomień */
 .panel {
   position: fixed;
   top: 0;
@@ -78,7 +82,7 @@
   max-width: 90vw;
   height: 100vh;
   background: rgba(255, 255, 255, 0.06);
-  border-left: 1.5px solid #e85bbf;
+  border-left: 1px solid #e85bbf;
   box-shadow: -4px 0 20px rgba(232, 91, 191, 0.3), 0 0 18px rgba(232, 91, 191, 0.2) inset;
   z-index: 1000;
   animation: slideIn 0.3s ease;
@@ -97,13 +101,12 @@
   }
 }
 
-/* Nagłówek panelu */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1.5px solid rgba(232, 91, 191, 0.4);
+  border-bottom: 1px solid rgba(232, 91, 191, 0.4);
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -139,7 +142,6 @@
   background: rgba(232, 91, 191, 0.15);
 }
 
-/* Zawartość panelu */
 .content {
   flex: 1;
   overflow-y: auto;
@@ -163,8 +165,7 @@
 
 .notification-item {
   position: relative;
-  padding: 1.2rem 1.5rem;
-  padding-left: 2.5rem;
+  padding: 1.2rem 1.5rem 1.2rem 2.5rem;
   border-bottom: 1px solid rgba(246, 211, 244, 0.15);
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -225,10 +226,10 @@
   background: transparent;
   border: none;
   color: var(--gray);
-  font-size: clamp(1. 1rem, 1.3vw, 1.2rem);
+  font-size: clamp(1.1rem, 1.3vw, 1.2rem);
   cursor: pointer;
   padding: 0;
-  width: clamp(24px, 2. 5vw, 28px);
+  width: clamp(24px, 2.5vw, 28px);
   height: clamp(24px, 2.5vw, 28px);
   display: flex;
   align-items: center;
@@ -265,10 +266,9 @@
   opacity: 0.6;
 }
 
-/* Stopka panelu */
 .footer {
   padding: 1.2rem 1.5rem;
-  border-top: 1.5px solid rgba(232, 91, 191, 0.4);
+  border-top: 1px solid rgba(232, 91, 191, 0.4);
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -293,7 +293,6 @@
   box-shadow: 0 0 12px rgba(232, 91, 191, 0.3);
 }
 
-/* Responsywność */
 @media (max-width: 768px) {
   .panel {
     width: 100vw;

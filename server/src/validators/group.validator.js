@@ -53,13 +53,6 @@ export const removeMemberValidator = [
   ... memberIdValidator,
 ];
 
-export const transferAdminValidator = [
-  ...groupIdValidator,
-  body("newAdminId")
-    .isUUID()
-    .withMessage("Invalid new admin ID format"),
-];
-
 export const createNoteValidator = [
   ... groupIdValidator,
   body("tytul")

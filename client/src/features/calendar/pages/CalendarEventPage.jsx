@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styles from "../styles/CalendarPage.module.css";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import MenuBar from "../../../components/MenuBar";
 
 import {
     getEventCategories,
@@ -48,7 +47,7 @@ export default function CalendarEventPage() {
                 setError(err.message);
             }
         };
-        loadCategories();
+        void loadCategories();
     }, []);
 
     useEffect(() => {
@@ -60,7 +59,7 @@ export default function CalendarEventPage() {
                 console.error("Error loading notification modes:", err);
             }
         };
-        loadModes();
+        void loadModes();
     }, []);
 
     useEffect(() => {
@@ -89,7 +88,7 @@ export default function CalendarEventPage() {
                 }
             };
 
-            loadEvent();
+            void loadEvent();
         } else {
             const dateFromUrl = searchParams.get("date");
             const titleFromUrl = searchParams.get("title");
@@ -141,7 +140,7 @@ export default function CalendarEventPage() {
 
     useEffect(() => {
         if (eventId) {
-            fetchFiles();
+            void fetchFiles();
         }
     }, [eventId]);
 

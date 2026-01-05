@@ -8,7 +8,7 @@ export default function GroupListPage() {
     const {groups, fetchGroups, loading, error} = useGroups();
 
     useEffect(() => {
-        fetchGroups();
+        void fetchGroups();
     }, [fetchGroups]);
 
     const safeGroups = useMemo(

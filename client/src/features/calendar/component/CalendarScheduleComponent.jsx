@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import styles from '../styles/CalendarPage.module.css';
 
 export default function CalendarScheduleComponent({ time, subject, room, dotColor}) {

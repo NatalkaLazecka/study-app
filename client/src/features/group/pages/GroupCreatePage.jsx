@@ -44,7 +44,7 @@ export default function GroupCreatePage() {
                 setLoadingCategories(false);
             }
         }
-        fetchCategories();
+        void fetchCategories();
     }, []);
 
     const handleAddMember = () => {
@@ -80,7 +80,7 @@ export default function GroupCreatePage() {
         if (memberAddErrors.length > 0) return false;
         if (memberError) return false;
         if (saving) return false;
-        if (!categoryId) return false;
+        if (categoryId) return true;
 
         return true;
     };
@@ -194,7 +194,7 @@ export default function GroupCreatePage() {
                         )}
                     </div>
 
-                    {/* CATEGORY (UI-ONLY) */}
+                    {/* CATEGORY */}
                     <div className={calendarStyles["input-box"]}>
                         <h2 className={calendarStyles["event-h2"]}>choose category: </h2>
                         {loadingCategories && (

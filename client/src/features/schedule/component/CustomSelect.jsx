@@ -64,8 +64,6 @@ const CustomOption = (props) => {
     );
 }
 
-
-// Custom Select Component //
 export default function CustomSelect({
                                          value,
                                          onChange,
@@ -84,7 +82,7 @@ export default function CustomSelect({
     const customStyles = {
         control: (base, state) => ({
             ...base,
-            border: '1px solid #fdfdfd',  // var(--white)
+            border: '1px solid #fdfdfd',
             padding: '0',
             color: '#fdfdfd',
             background: 'rgba(255, 255, 255, 0.2)',
@@ -98,9 +96,8 @@ export default function CustomSelect({
             boxShadow: state.isFocused
                 ? '0 0 15px rgba(232, 91, 191, 0.6), inset 0 0 10px rgba(232, 91, 191, 0.2)'
                 : 'none',
-            // animation: state.isFocused ?  'dashRotate 2s linear infinite' : 'none',
             '&:hover': {
-                border: '1px solid #e85bbf',  // var(--pink)
+                border: '1px solid #e85bbf',
                 boxShadow: '0 0 15px rgba(232, 91, 191, 0.6), inset 0 0 10px rgba(232, 91, 191, 0.2)',
             },
         }),
@@ -134,8 +131,8 @@ export default function CustomSelect({
         }),
         menu: (base) => ({
             ...base,
-            backgroundColor: '#f6d3f4',  // var(--light)
-            border: '2px solid #e85bbf',  // var(--pink)
+            backgroundColor: '#f6d3f4',
+            border: '2px solid #e85bbf',
             borderRadius: '8px',
             boxShadow: '0 4px 15px rgba(232, 91, 191, 0.4)',
             marginTop: '4px',
@@ -166,9 +163,9 @@ export default function CustomSelect({
             backgroundColor: state.isSelected
                 ? '#c5c5c5'
                 : state.isFocused
-                    ? '#fdfdfd'  // var(--white)
-                    : '#f6d3f4',  // var(--light)
-            color: '#0c0c0c',  // var(--black)
+                    ? '#fdfdfd'
+                    : '#f6d3f4',
+            color: '#0c0c0c',
             fontFamily: "'Source Code Pro', monospace",
             fontSize: '14px',
             padding: '2px 10px',

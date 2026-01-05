@@ -360,53 +360,6 @@ export const leaveGroup = async (req, res) => {
     }
 };
 
-export const transferAdmin = async (req, res) => {
-    const groupId = req.params.id;
-    const {newAdminId} = req.body;
-    const studentId = req.user.id;
-
-    try {
-        const [group] = await pool.query(
-            `SELECT administrator
-             FROM grupa
-             WHERE id = ?`,
-            [groupId]
-        );
-
-        if (group.length === 0) {
-            return res.status(404).json({message: "Group not found"});
-        }
-
-        if (group[0].administrator !== studentId) {
-            return res.status(403).json({message: "Only admin can transfer rights"});
-        }
-
-        const [membership] = await pool.query(
-            `SELECT 1
-             FROM grupa_student
-             WHERE grupa_id = ?
-               AND student_id = ?`,
-            [groupId, newAdminId]
-        );
-
-        if (membership.length === 0) {
-            return res.status(400).json({message: "New admin must be a group member"});
-        }
-
-        await pool.query(
-            `UPDATE grupa
-             SET administrator = ?
-             WHERE id = ?`,
-            [newAdminId, groupId]
-        );
-
-        res.json({message: "Admin rights transferred"});
-    } catch (err) {
-        console.error("transferAdmin error:", err);
-        res.status(500).json({error: err.message});
-    }
-};
-
 export const deleteGroup = async (req, res) => {
     const groupId = req.params.id;
     const studentId = req.user.id;

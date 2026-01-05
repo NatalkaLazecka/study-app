@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import CustomSelect from "../component/CustomSelect";
 import styles from "../styles/SchedulePage.module.css";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import MenuBar from "../../../components/MenuBar";
 
 import {
     getStudentSchedule,
@@ -32,7 +31,6 @@ export default function ScheduleEditPage() {
     const [time, setTime] = useState("");
     const [room, setRoom] = useState("");
     const [classType, setClassType] = useState("");
-    // const [studentId, setStudentId] = useState("");
     const [scheduleId, setScheduleId] = useState("");
 
     const [subjects, setSubjects] = useState([]);
@@ -70,7 +68,7 @@ export default function ScheduleEditPage() {
             }
         };
 
-        fetchWeekType();
+        void fetchWeekType();
     }, []);
 
     useEffect(() => {
@@ -89,7 +87,7 @@ export default function ScheduleEditPage() {
             }
         };
 
-        loadData();
+        void loadData();
     }, [searchParams]);
 
     useEffect(() => {
@@ -119,7 +117,7 @@ export default function ScheduleEditPage() {
             }
         };
 
-        loadSchedule();
+        void loadSchedule();
     }, [scheduleId]);
 
     const validateForm = () => {

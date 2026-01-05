@@ -2,8 +2,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import calendarStyles from "../../calendar/styles/CalendarPage.module.css";
 import todoStyles from "../styles/Todo.module.css";
-import MenuBar from "../../../components/MenuBar";
-
 
 import {
     getTaskById,
@@ -40,7 +38,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
                 console.error("Error loading notification modes:", err);
             }
         };
-        loadModes();
+        void loadModes();
     }, []);
 
     useEffect(() => {
@@ -48,9 +46,6 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
         const loadTask = async () => {
             try {
-                // const studentId = getStudentId();
-                // if (!studentId) return navigate("/login");
-
                 const task = await getTaskById(id);
 
                 setTitle(task.tytul ?? "");
@@ -72,7 +67,7 @@ export default function TodoDetailsPage({mode = "edit"}) {
             }
         };
 
-        loadTask();
+        void loadTask();
     }, [id, mode, navigate]);
 
     const handleModeToggle = (modeId) => {
@@ -88,9 +83,6 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
         try {
             setLoading(true);
-            // const studentId = getStudentId();
-            // if (!studentId) return navigate("/login");
-
             const payload = {
                 tytul: title,
                 tresc: desc,
@@ -118,9 +110,6 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
     const handleDelete = async () => {
         try {
-            // const studentId = getStudentId();
-            // if (!studentId) return navigate("/login");
-
             await deleteTask(id);
             navigate("/todo");
         } catch (err) {
@@ -130,8 +119,6 @@ export default function TodoDetailsPage({mode = "edit"}) {
 
     return (
         <div>
-
-
             <div className={calendarStyles["calendar-root"]}>
                 {/* HEADER */}
                 <div className={calendarStyles["header-section"]}>
@@ -139,9 +126,9 @@ export default function TodoDetailsPage({mode = "edit"}) {
                         className={calendarStyles["back-button"]}
                         onClick={() => navigate(-1)}
                     >
-            <span className={calendarStyles["back-text"]}>
-              stud<span className={calendarStyles["back-text-y"]}>y</span>
-            </span>
+                        <span className={calendarStyles["back-text"]}>
+                          stud<span className={calendarStyles["back-text-y"]}>y</span>
+                        </span>
                         <span className={calendarStyles["back-arrow"]}>&lt;</span>
                     </button>
 
@@ -257,8 +244,8 @@ export default function TodoDetailsPage({mode = "edit"}) {
                                     <span
                                         key={i}
                                         onClick={() => setPriority(i + 1)}
-                                        className={`${todoStyles.emoji} ${
-                                            i < priority ? todoStyles.activeFire : ""
+                                        className={`${todoStyles["emoji"]} ${
+                                            i < priority ? todoStyles["activeFire"] : ""
                                         }`}
                                         role="button"
                                     >
@@ -280,8 +267,8 @@ export default function TodoDetailsPage({mode = "edit"}) {
                                         <span
                                             key={i}
                                             onClick={() => setEffort(i + 1)}
-                                            className={`${todoStyles.emoji} ${
-                                                active ? todoStyles.activeCircle : ""
+                                            className={`${todoStyles["emoji"]} ${
+                                                active ? todoStyles["activeCircle"] : ""
                                             }`}
                                             role="button"
                                         >

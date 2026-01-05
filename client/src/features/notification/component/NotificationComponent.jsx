@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import styles from "../styles/NotificationComponent.module.css";
-import {getStudentId} from "../../../utils/authService";
 
 import {
     getNotifications,
@@ -15,11 +14,8 @@ export default function NotificationComponent() {
     const [loading, setLoading] = useState(false);
 
     const unreadCount = notifications.filter((n) => n.unread === 0).length;
-    // const studentId = getStudentId();
 
     const fetchNotifications = async () => {
-
-
         setLoading(true);
         try {
             const data = await getNotifications();
@@ -67,13 +63,13 @@ export default function NotificationComponent() {
     };
 
     useEffect(() => {
-            fetchNotifications();
+            void fetchNotifications();
             const interval = setInterval(fetchNotifications, 30000);
             return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
-        if (isOpen) fetchNotifications();
+        if (isOpen) void fetchNotifications();
     }, [isOpen]);
 
     useEffect(() => {
