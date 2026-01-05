@@ -43,7 +43,7 @@ export const getGroups = async (req, res) => {
 
 export const createGroup = async (req, res) => {
     const studentId = req.user.id;
-    const {nazwa, kategoria_grupy_id} = req.body;
+    const {nazwa, kategoria_grupa_id} = req.body;
 
     if (!nazwa || typeof nazwa !== 'string' || !nazwa.trim()) {
         return res.status(400).json({message: "Group name required"});
@@ -63,10 +63,10 @@ export const createGroup = async (req, res) => {
             });
         }
 
-        if (kategoria_grupy_id) {
+        if (kategoria_grupa_id) {
             const [categoryCheck] = await pool.query(
                 `SELECT id FROM kategoria_grupy WHERE id = ? `,
-                [kategoria_grupy_id]
+                [kategoria_grupa_id]
             );
 
             if (categoryCheck.length === 0) {
@@ -77,9 +77,9 @@ export const createGroup = async (req, res) => {
         const groupId = uuidv4();
 
         await pool.query(
-            `INSERT INTO grupa (id, nazwa, kategoria_grupy_id, administrator)
+            `INSERT INTO grupa (id, nazwa, kategoria_grupa_id, administrator)
              VALUES (?, ?, ?, ?)`,
-            [groupId, safeName, kategoria_grupy_id || null, studentId]
+            [groupId, safeName, kategoria_grupa_id || null, studentId]
         );
 
         await pool.query(
@@ -91,7 +91,7 @@ export const createGroup = async (req, res) => {
         res.status(201).json({
             id: groupId,
             nazwa: safeName,
-            kategoria_grupy_id: kategoria_grupy_id,
+            kategoria_grupa_id: kategoria_grupa_id,
             administrator: studentId,
         });
     } catch (err) {

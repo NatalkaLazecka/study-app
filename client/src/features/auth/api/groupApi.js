@@ -18,7 +18,7 @@ export async function getGroupCategories() {
 export async function createGroup(name, categoryId) {
     const res = await apiFetch("/api/groups", {
         method: "POST",
-        body: JSON.stringify({nazwa: name.trim(), kategoria_grupy_id: categoryId}),
+        body: JSON.stringify({nazwa: name.trim(), kategoria_grupa_id: categoryId}),
     });
     return res.json();
 }
