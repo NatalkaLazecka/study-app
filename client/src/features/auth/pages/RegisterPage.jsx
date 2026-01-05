@@ -12,6 +12,7 @@ export default function RegisterPage() {
             nazwisko: lastName,
             e_mail: email,
             haslo: password,
+            haslo2: password,
         });
 
       alert('Account created successfully! You can now log in.');
