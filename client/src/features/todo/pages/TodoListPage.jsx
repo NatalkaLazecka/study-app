@@ -1,5 +1,5 @@
-import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import styles from "../styles/Todo.module.css";
 import MenuBar from "../../../components/MenuBar";
 
@@ -18,6 +18,7 @@ export default function TodoListPage() {
     const [selectedDate, setSelectedDate] = useState("ALL");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
     const ITEMS_PER_PAGE = 6;
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -25,8 +26,6 @@ export default function TodoListPage() {
         const loadTodos = async () => {
             try {
                 setLoading(true);
-
-
                 const data = await getMyTasks();
 
                 setTodos(
@@ -38,7 +37,8 @@ export default function TodoListPage() {
                         done: task.status_zadania_id === STATUS_DONE,
                         priority: task.priorytet,
                         effort: task.wysilek,
-                        automatyczne_powiadomienie: task.automatyczne_powiadomienie || 0,
+                        automatyczne_powiadomienie:
+                            task.automatyczne_powiadomienie || 0,
                     }))
                 );
             } catch (err) {
@@ -52,21 +52,23 @@ export default function TodoListPage() {
     }, [navigate]);
 
     /* reset strony przy zmianie filtra */
-
     useEffect(() => {
         setCurrentPage(1);
-    },[selectedDate]);
+    }, [selectedDate]);
 
     const toggleDone = async (id) => {
-
         const task = todos.find((t) => t.id === id);
         if (!task) return;
 
         const newDone = !task.done;
-        const newStatus = newDone ? STATUS_DONE : STATUS_ON_GOING;
+        const newStatus = newDone
+            ? STATUS_DONE
+            : STATUS_ON_GOING;
 
         setTodos((prev) =>
-            prev.map((t) => (t.id === id ? {...t, done: newDone} : t))
+            prev.map((t) =>
+                t.id === id ? { ...t, done: newDone } : t
+            )
         );
 
         try {
@@ -77,11 +79,16 @@ export default function TodoListPage() {
                 deadline: task.deadline,
                 wysilek: task.effort,
                 status_zadania_id: newStatus,
-                automatyczne_powiadomienie: task.automatyczne_powiadomienie || 0,
+                automatyczne_powiadomienie:
+                    task.automatyczne_powiadomienie || 0,
             });
         } catch (err) {
             setTodos((prev) =>
-                prev.map((t) => (t.id === id ? {...t, done: !newDone} : t))
+                prev.map((t) =>
+                    t.id === id
+                        ? { ...t, done: !newDone }
+                        : t
+                )
             );
             setError(err.message);
         }
@@ -97,22 +104,34 @@ export default function TodoListPage() {
             todos
                 .filter((t) => t.deadline)
                 .map((t) =>
-                    new Date(t.deadline).toLocaleDateString("en-GB")
+                    new Date(t.deadline).toLocaleDateString(
+                        "en-GB"
+                    )
                 )
         ),
     ];
 
+    /* FILTER + PAGINATION */
     const filteredTodos = todos.filter((t) =>
         selectedDate === "ALL"
-        ? true
-        : new Date(t.deadline).toLocaleDateString("en-GB") === selectedDate );
-    const totalPages = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
-    const paginatedTodos = filteredTodos.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+            ? true
+            : new Date(t.deadline).toLocaleDateString(
+                  "en-GB"
+              ) === selectedDate
+    );
 
+    const totalPages = Math.ceil(
+        filteredTodos.length / ITEMS_PER_PAGE
+    );
+
+    const paginatedTodos = filteredTodos.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
         <div>
-            <MenuBar/>
+            <MenuBar />
 
             <div className={styles["todo-root"]}>
                 {/* HEADER */}
@@ -121,138 +140,269 @@ export default function TodoListPage() {
                         className={styles["back-button"]}
                         onClick={() => navigate(-1)}
                     >
-            <span className={styles["back-text"]}>
-              stud<span className={styles["back-text-y"]}>y</span>
-            </span>
-                        <span className={styles["back-arrow"]}>&lt;</span>
+                        <span className={styles["back-text"]}>
+                            stud
+                            <span
+                                className={styles["back-text-y"]}
+                            >
+                                y
+                            </span>
+                        </span>
+                        <span
+                            className={styles["back-arrow"]}
+                        >
+                            &lt;
+                        </span>
                     </button>
 
-                    <h1 className={styles["todo-title"]}>MY TO-DO LIST</h1>
-                    <div/>
+                    <h1
+                        className={styles["todo-title"]}
+                    >
+                        MY TO-DO LIST
+                    </h1>
+                    <div />
                 </div>
 
-
                 {/* FILTER BAR */}
-                <div className={styles["dropdown-wrapper"]}>
+                <div
+                    className={styles["dropdown-wrapper"]}
+                >
                     <select
                         className={styles["todo-date"]}
                         value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
+                        onChange={(e) =>
+                            setSelectedDate(
+                                e.target.value
+                            )
+                        }
                     >
-                        <option value="ALL">ALL</option>
-                        {uniqueDates.map((dateStr, index) => (
-                            <option key={index} value={dateStr}>
-                                {dateStr}
-                            </option>
-                        ))}
+                        <option value="ALL">
+                            ALL
+                        </option>
+                        {uniqueDates.map(
+                            (dateStr, index) => (
+                                <option
+                                    key={index}
+                                    value={dateStr}
+                                >
+                                    {dateStr}
+                                </option>
+                            )
+                        )}
                     </select>
                 </div>
 
-                <div className={styles["todo-headers"]}>
-                    <div className={styles["todo-header-btn"]}>TITLE</div>
-                    <div className={styles["todo-header-btn"]}>PRIORITY</div>
-                    <div className={styles["todo-header-btn"]}>EFFORT</div>
+                <div
+                    className={styles["todo-headers"]}
+                >
+                    <div
+                        className={
+                            styles["todo-header-btn"]
+                        }
+                    >
+                        TITLE
+                    </div>
+                    <div
+                        className={
+                            styles["todo-header-btn"]
+                        }
+                    >
+                        PRIORITY
+                    </div>
+                    <div
+                        className={
+                            styles["todo-header-btn"]
+                        }
+                    >
+                        EFFORT
+                    </div>
                 </div>
+
                 {/* TABLE */}
-                {todos.length > 0 ? (
-                    <table className={styles["todo-table"]}>
+                {filteredTodos.length > 0 ? (
+                    <table
+                        className={
+                            styles["todo-table"]
+                        }
+                    >
                         <tbody>
-                        {todos
-                            .filter((t) =>
-                                selectedDate === "ALL"
-                                    ? true
-                                    : new Date(t.deadline).toLocaleDateString("en-GB") ===
-                                    selectedDate
-                            )
-                            .map((t) => (
-                                <tr
-                                    key={t.id}
-                                    className={`${styles["todo-row"]} ${
-                                        t.done ? styles["todo-done"] : ""
-                                    }`}
-                                >
-                                    <td
-                                        className={styles["todo-cell"]}
-                                        onClick={() => toggleDone(t.id)}
+                            {paginatedTodos.map(
+                                (t) => (
+                                    <tr
+                                        key={t.id}
+                                        className={`${styles["todo-row"]} ${
+                                            t.done
+                                                ? styles[
+                                                      "todo-done"
+                                                  ]
+                                                : ""
+                                        }`}
                                     >
-                                        <input
-                                            type="checkbox"
-                                            className={styles["todo-checkbox"]}
-                                            checked={t.done}
-                                            readOnly
-                                        />
-                                        {t.tytul}
-                                    </td>
-
-                                    <td className={styles["todo-cell"]}>
-                                        {Array(3)
-                                            .fill(null)
-                                            .map((_, i) => (
-                                                <span
-                                                    key={i}
-                                                    className={`${styles.emoji} ${
-                                                        i < t.priority ? styles.activeFire : ""
-                                                    }`}
-                                                >
-                              <i className="fa-solid fa-fire"/>
-                            </span>
-                                            ))}
-                                    </td>
-
-                                    <td className={styles["todo-cell"]}>
-                                        {Array(4)
-                                            .fill(null)
-                                            .map((_, i) => {
-                                                const active = i < t.effort;
-                                                return (
-                                                    <span
-                                                        key={i}
-                                                        className={`${styles.emoji} ${
-                                                            active ? styles.activeCircle : ""
-                                                        }`}
-                                                    >
-                                <i
-                                    className={
-                                        active
-                                            ? "fa-solid fa-circle"
-                                            : "fa-regular fa-circle"
-                                    }
-                                />
-                              </span>
-                                                );
-                                            })}
-                                    </td>
-
-                                    <td className={styles["todo-cell"]}>
-                        <span
-                            className={styles["edit-icon"]}
-                            onClick={() =>
-                                navigate(`/todo/edit/${t.id}`)
-                            }
-                        >
-                          <i className="fa-solid fa-arrow-right"/>
-                        </span>
-
-                                        <span
-                                            className={styles["delete-icon"]}
-                                            onClick={() => handleDelete(t.id)}
-                                            style={{marginLeft: "10px", color: "#ff4d6d"}}
+                                        <td
+                                            className={
+                                                styles[
+                                                    "todo-cell"
+                                                ]
+                                            }
+                                            onClick={() =>
+                                                toggleDone(
+                                                    t.id
+                                                )
+                                            }
                                         >
-                          <i className="fa-solid fa-trash"/>
-                        </span>
-                                    </td>
-                                </tr>
-                            ))}
+                                            <input
+                                                type="checkbox"
+                                                className={
+                                                    styles[
+                                                        "todo-checkbox"
+                                                    ]
+                                                }
+                                                checked={
+                                                    t.done
+                                                }
+                                                readOnly
+                                            />
+                                            {t.tytul}
+                                        </td>
+
+                                        <td
+                                            className={
+                                                styles[
+                                                    "todo-cell"
+                                                ]
+                                            }
+                                        >
+                                            {Array(3)
+                                                .fill(
+                                                    null
+                                                )
+                                                .map(
+                                                    (_, i) => (
+                                                        <span
+                                                            key={
+                                                                i
+                                                            }
+                                                            className={`${styles.emoji} ${
+                                                                i <
+                                                                t.priority
+                                                                    ? styles.activeFire
+                                                                    : ""
+                                                            }`}
+                                                        >
+                                                            <i className="fa-solid fa-fire" />
+                                                        </span>
+                                                    )
+                                                )}
+                                        </td>
+
+                                        <td
+                                            className={
+                                                styles[
+                                                    "todo-cell"
+                                                ]
+                                            }
+                                        >
+                                            {Array(4)
+                                                .fill(
+                                                    null
+                                                )
+                                                .map(
+                                                    (_, i) => {
+                                                        const active =
+                                                            i <
+                                                            t.effort;
+                                                        return (
+                                                            <span
+                                                                key={
+                                                                    i
+                                                                }
+                                                                className={`${styles.emoji} ${
+                                                                    active
+                                                                        ? styles.activeCircle
+                                                                        : ""
+                                                                }`}
+                                                            >
+                                                                <i
+                                                                    className={
+                                                                        active
+                                                                            ? "fa-solid fa-circle"
+                                                                            : "fa-regular fa-circle"
+                                                                    }
+                                                                />
+                                                            </span>
+                                                        );
+                                                    }
+                                                )}
+                                        </td>
+
+                                        <td
+                                            className={
+                                                styles[
+                                                    "todo-cell"
+                                                ]
+                                            }
+                                        >
+                                            <span
+                                                className={
+                                                    styles[
+                                                        "edit-icon"
+                                                    ]
+                                                }
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/todo/edit/${t.id}`
+                                                    )
+                                                }
+                                            >
+                                                <i className="fa-solid fa-arrow-right" />
+                                            </span>
+
+                                            <span
+                                                className={
+                                                    styles[
+                                                        "delete-icon"
+                                                    ]
+                                                }
+                                                onClick={() =>
+                                                    handleDelete(
+                                                        t.id
+                                                    )
+                                                }
+                                                style={{
+                                                    marginLeft:
+                                                        "10px",
+                                                    color:
+                                                        "#ff4d6d",
+                                                }}
+                                            >
+                                                <i className="fa-solid fa-trash" />
+                                            </span>
+                                        </td>
+                                    </tr>
+                                )
+                            )}
                         </tbody>
                     </table>
                 ) : (
-                    <p style={{color: "var(--white)", padding: "1rem", marginTop: "clamp(2rem,4vh,3rem)"}}>
+                    <p
+                        style={{
+                            color: "var(--white)",
+                            padding: "1rem",
+                            marginTop:
+                                "clamp(2rem,4vh,3rem)",
+                        }}
+                    >
                         No task to do
                     </p>
                 )}
 
+                {/* PAGINATION */}
                 {totalPages > 1 && (
-                    <div className={styles.pagination}>
+                    <div
+                        className={
+                            styles.pagination
+                        }
+                    >
                         <button
                             className={`${styles.pageArrow} ${
                                 currentPage === 1
@@ -260,27 +410,41 @@ export default function TodoListPage() {
                                     : ""
                             }`}
                             onClick={() =>
-                                setCurrentPage((p) =>
-                                    Math.max(1, p - 1)
+                                setCurrentPage(
+                                    (p) =>
+                                        Math.max(
+                                            1,
+                                            p - 1
+                                        )
                                 )
                             }
                         >
                             ‹
                         </button>
 
-                        <span className={styles.pageInfo}>
-                            {currentPage} / {totalPages}
+                        <span
+                            className={
+                                styles.pageInfo
+                            }
+                        >
+                            {currentPage} /{" "}
+                            {totalPages}
                         </span>
 
                         <button
                             className={`${styles.pageArrow} ${
-                                currentPage === totalPages
+                                currentPage ===
+                                totalPages
                                     ? styles.disabled
                                     : ""
                             }`}
                             onClick={() =>
-                                setCurrentPage((p) =>
-                                    Math.min(totalPages, p + 1)
+                                setCurrentPage(
+                                    (p) =>
+                                        Math.min(
+                                            totalPages,
+                                            p + 1
+                                        )
                                 )
                             }
                         >
@@ -291,10 +455,21 @@ export default function TodoListPage() {
 
                 {/* ADD NEW */}
                 <button
-                    className={styles["todo-add-button"]}
-                    onClick={() => navigate("/todo/new")}
+                    className={
+                        styles["todo-add-button"]
+                    }
+                    onClick={() =>
+                        navigate("/todo/new")
+                    }
                 >
-                    <span className={styles["plus-icon"]}>＋</span> add new task
+                    <span
+                        className={
+                            styles["plus-icon"]
+                        }
+                    >
+                        ＋
+                    </span>
+                    add new task
                 </button>
             </div>
         </div>
