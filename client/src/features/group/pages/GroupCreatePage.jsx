@@ -27,7 +27,7 @@ export default function GroupCreatePage() {
             try {
                 const data = await getGroupCategories();
                 if (!Array.isArray(data)) {
-                    console.error('❌ Categories is not an array:', data);
+                    console.error('Categories is not an array:', data);
                     setCategories([]);
                     return;
                 }
@@ -101,10 +101,10 @@ export default function GroupCreatePage() {
         setSaving(true);
 
         try {
-            const g = await createGroup({
-                name: name.trim(),
-                categoryId: categoryId
-            });
+            const g = await createGroup(
+                {name: name.trim()},
+                {categoryId: categoryId}
+            );
 
             if (!g || !g.id) {
                 setNameError("Failed to create group");
@@ -144,7 +144,6 @@ export default function GroupCreatePage() {
                 navigate(`/groups/${g.id}`);
             }
         } catch (err) {
-            console.error('[GroupCreatePage] Error:', err);
             console.error('[GroupCreatePage] Error message:', err.message);
 
             if (err.message.includes('already exists')) {
