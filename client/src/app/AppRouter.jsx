@@ -11,9 +11,9 @@ import CalendarEventPage from "@/features/calendar/pages/CalendarEventPage";
 import GroupListPage from "@/features/group/pages/GroupListPage";
 import GroupCreatePage from "@/features/group/pages/GroupCreatePage";
 import GroupDetailsPage from "@/features/group/pages/GroupDetailsPage";
-import ScheduleEditPage from "@/features/schedule/pages/ScheduleEditPage";
 import SchedulePage from "@/features/schedule/pages/SchedulePage";
-import { ErrorBoundary } from "@/components/ErrorBoundary.jsx";
+import ScheduleEditPage from "@/features/schedule/pages/ScheduleEditPage";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import AppLayout from "@/layouts/AppLayout";
 
@@ -27,25 +27,21 @@ export default function AppRouter() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        {/* PROTECTED + LAYOUT */}
-        <Route
-          element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/todo" element={<TodoListPage />} />
-          <Route path="/todo/new" element={<TodoDetailsPage mode="new" />} />
-          <Route path="/todo/edit/:id" element={<TodoDetailsPage mode="edit" />} />
-          <Route path="/calendar" element={<CalendarPage />} />
-          <Route path="/calendar/event" element={<CalendarEventPage />} />
-          <Route path="/schedule" element={<SchedulePage />} />
-          <Route path="/schedule/edit" element={<ScheduleEditPage />} />
-          <Route path="/groups" element={<GroupListPage />} />
-          <Route path="/groups/new" element={<GroupCreatePage />} />
-          <Route path="/groups/:id" element={<GroupDetailsPage />} />
+        {/* PROTECTED */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/todo" element={<TodoListPage />} />
+            <Route path="/todo/new" element={<TodoDetailsPage mode="new" />} />
+            <Route path="/todo/edit/:id" element={<TodoDetailsPage mode="edit" />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/calendar/event" element={<CalendarEventPage />} />
+            <Route path="/schedule" element={<SchedulePage />} />
+            <Route path="/schedule/edit" element={<ScheduleEditPage />} />
+            <Route path="/groups" element={<GroupListPage />} />
+            <Route path="/groups/new" element={<GroupCreatePage />} />
+            <Route path="/groups/:id" element={<GroupDetailsPage />} />
+          </Route>
         </Route>
 
         {/* FALLBACK */}
