@@ -48,7 +48,7 @@ export const useGroups = create((set) => ({
         }
 
         try {
-            const group = await createGroupApi(name. trim());
+            const group = await createGroup(name.trim());
             console.log('✅ [groupStore] Group created:', group);
 
             // Odśwież listę grup
@@ -56,7 +56,7 @@ export const useGroups = create((set) => ({
 
             return group;
         } catch (err) {
-            console. error('❌ [groupStore] createGroup error:', err);
+            console.error('❌ [groupStore] createGroup error:', err);
             throw err;
         }
     },
