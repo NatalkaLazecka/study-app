@@ -32,7 +32,7 @@ export const useGroups = create((set) => ({
         }
     },
 
-    createGroup: async (name, categoryId, description) => {
+    createGroup: async (name, categoryId) => {
         const group = await createGroupApi(name, categoryId);
         set((state) => ({groups: [...state.groups, group]}));
         return group;

@@ -101,10 +101,7 @@ export default function GroupCreatePage() {
         setSaving(true);
 
         try {
-            const g = await createGroup(
-                {name: name.trim()},
-                {categoryId: categoryId}
-            );
+            const g = await createGroup(name.trim(), categoryId);
 
             if (!g || !g.id) {
                 setNameError("Failed to create group");
