@@ -85,7 +85,7 @@ export const createGroup = async (req, res) => {
 
         await pool.query(
             `INSERT INTO grupa_student (id, student_id, grupa_id)
-             VALUES (?, ?, ?)`,
+             VALUES (?, ?, ?, ?)`,
             [uuidv4(), studentId, groupId]
         );
 
