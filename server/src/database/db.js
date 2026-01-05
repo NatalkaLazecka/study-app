@@ -1,5 +1,5 @@
 import mysql from "mysql2";
-import { env } from "../config/env.js";
+import {env} from "../config/env.js";
 
 const pool = mysql.createPool({
     host: env.db.host,
@@ -11,7 +11,7 @@ const pool = mysql.createPool({
     ssl: {
         rejectUnauthorized: true,
         ca: env.DB_SSL_CA?.replace(/\\n/g, "\n"),
-
+        servername: "pure-sunlight-477309-u3:us-central1:studydatabase",
     },
 
     waitForConnections: true,
