@@ -33,7 +33,7 @@ export default function GroupCreatePage() {
             return;
         }
 
-        if (members. includes(email)) {
+        if (members.includes(email)) {
             setMemberError("Email already added.");
             return;
         }
@@ -45,7 +45,7 @@ export default function GroupCreatePage() {
 
     const handleRemoveMember = (email) => {
         setMembers(members.filter(m => m !== email));
-        setMemberAddErrors(memberAddErrors.filter(e => e. email !== email));
+        setMemberAddErrors(memberAddErrors.filter(e => e.email !== email));
     };
 
     const save = async () => {
@@ -57,11 +57,19 @@ export default function GroupCreatePage() {
             return;
         }
 
+        console.log('📝 [GroupCreatePage] Creating group:', {
+            name,
+            type: typeof name,
+            trimmed: name.trim()
+        });
+
         setSaving(true);
 
         try {
-            const g = await createGroup(name. trim());
-            if (! g || !g.id) {
+            const g = await createGroup(name.trim());
+            console.log('✅ [GroupCreatePage] Group created:', g);
+
+            if (!g || !g.id) {
                 setNameError("Failed to create group");
                 setSaving(false);
                 return;
@@ -100,9 +108,11 @@ export default function GroupCreatePage() {
                 navigate(`/groups/${g.id}`);
             }
         } catch (err) {
-            console. error("Failed to create group:", err);
+            console.error('[GroupCreatePage] Error:', err);
+            console.error('[GroupCreatePage] Error message:', err.message);
+
             if (err.message.includes('already exists')) {
-                setNameError(`Group "${name. trim()}" already exists`);
+                setNameError(`Group "${name.trim()}" already exists`);
             } else if (err.message.includes('409')) {
                 setNameError("This group name is already taken");
             } else {
@@ -138,7 +148,7 @@ export default function GroupCreatePage() {
                             type="text"
                             value={name}
                             onChange={(e) => {
-                                setName(e. target.value);
+                                setName(e.target.value);
                                 setNameError("");
                             }}
                             className={`${calendarStyles["event-input"]} ${nameError ? groupStyles["input-error"] : ""}`}
@@ -247,13 +257,13 @@ export default function GroupCreatePage() {
                                                 <div className={groupStyles["member-to-add-content"]}>
                                                     <div className={groupStyles["member-to-add-email"]}>
                                                         {hasError && (
-                                                            <i className={`fa-solid fa-circle-exclamation ${groupStyles["error-icon"]}`} />
+                                                            <i className={`fa-solid fa-circle-exclamation ${groupStyles["error-icon"]}`}/>
                                                         )}
                                                         {email}
                                                     </div>
                                                     {hasError && (
                                                         <p className={groupStyles["member-to-add-error"]}>
-                                                            {hasError. error}
+                                                            {hasError.error}
                                                         </p>
                                                     )}
                                                 </div>

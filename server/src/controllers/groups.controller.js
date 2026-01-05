@@ -50,16 +50,18 @@ export const createGroup = async (req, res) => {
         return res.status(400).json({message: "Group name required"});
     }
 
+    const safeName = nazwa.trim();
+
     try {
         const [existing] = await pool.query(
             `SELECT id FROM grupa WHERE nazwa = ? AND administrator = ?`,
-            [nazwa.trim(), studentId]
+            [safeName, studentId]
         );
 
         if (existing.length > 0){
-            console.log('[createGroup] Group with the same name already exists', name.trim());
+            console.log('[createGroup] Group with the same name already exists', safeName);
             return res.status(409).json({
-                message: `Group "${name.trim()}" already exists`
+                message: `Group "${safeName}" already exists`
             });
         }
 
@@ -68,7 +70,7 @@ export const createGroup = async (req, res) => {
         await pool.query(
             `INSERT INTO grupa (id, nazwa, administrator)
              VALUES (?, ?, ?)`,
-            [groupId, nazwa.trim(), studentId]
+            [groupId, safeName, studentId]
         );
 
         await pool.query(
@@ -79,7 +81,7 @@ export const createGroup = async (req, res) => {
 
         res.status(201).json({
             id: groupId,
-            nazwa: nazwa.trim(),
+            nazwa: safeName,
             administrator: studentId,
         });
     } catch (err) {

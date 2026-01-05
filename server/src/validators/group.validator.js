@@ -27,8 +27,12 @@ export const fileIdValidator = [
 export const createGroupValidator = [
   body("nazwa")
     .trim()
+    .notEmpty()
+    .withMessage("Group name is required")
     .isLength({ min: 3, max: 255 })
-    .withMessage("Group name must be between 3 and 255 characters"),
+    .withMessage("Group name must be between 3 and 255 characters")
+    .isString()
+    .withMessage("Group name must be a string"),
 
   body("kategoria_grupa_id")
     .optional({ nullable: true })
