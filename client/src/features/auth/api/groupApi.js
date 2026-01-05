@@ -1,4 +1,4 @@
-import { apiFetch } from "./apiClient";
+import {apiFetch} from "./apiClient";
 
 export async function getMyGroups() {
     const res = await apiFetch("/api/groups");
@@ -10,98 +10,47 @@ export async function getGroupById(groupId) {
     return res.json();
 }
 
-export async function createGroup(name) {
-    console.log('📤 [groupApi] createGroup called with name:', name);
+export async function getGroupCategories() {
+    const res = await apiFetch("/api/groups/categories");
+    return res.json();
+}
+
+export async function createGroup(name, categoryId) {
     const res = await apiFetch("/api/groups", {
         method: "POST",
-        body: JSON.stringify({ nazwa: name.trim() }),
+        body: JSON.stringify({nazwa: name.trim(), kategoria_grupy_id: categoryId}),
     });
     return res.json();
 }
 
-// export async function createGroup(name) {
-//   console.log('📤 [groupApi] createGroup called:', { name, type: typeof name });
-//
-//   if (!name || typeof name !== 'string') {
-//     throw new Error('Group name must be a non-empty string');
-//   }
-//
-//   const safeName = name.trim();
-//
-//   if (! safeName) {
-//     throw new Error('Group name cannot be empty');
-//   }
-//
-//   console.log('📤 [groupApi] Sending request:', { nazwa: safeName });
-//
-//   try {
-//     const res = await apiFetch("/api/groups", {
-//       method: "POST",
-//       body: JSON. stringify({ nazwa: safeName }),
-//     });
-//
-//     console.log('📥 [groupApi] Response status:', res.status);
-//
-//     if (! res.ok) {
-//       const errorData = await res.json().catch(() => ({}));
-//       console.error('❌ [groupApi] Error response:', errorData);
-//
-//       // Propaguj dokładny komunikat z backendu
-//       throw new Error(errorData.message || `HTTP ${res.status}`);
-//     }
-//
-//     const data = await res. json();
-//     console.log('✅ [groupApi] Success:', data);
-//
-//     return data;
-//   } catch (err) {
-//     console.error('❌ [groupApi] Exception:', err);
-//     throw err;
-//   }
-// }
-
-// export async function addMemberToGroup(groupId, email) {
-//     const res = await apiFetch(`/api/groups/${groupId}/add-user`, {
-//         method: "POST",
-//         body: JSON.stringify({email}),
-//     });
-//     return res.json();
-// }
-
 export async function addMemberToGroup(groupId, email) {
-  console.log('📤 [groupApi] addMemberToGroup:', { groupId, email });
+    try {
+        const res = await apiFetch(`/api/groups/${groupId}/add-user`, {
+            method: "POST",
+            body: JSON.stringify({email}),
+        });
 
-  try {
-    const res = await apiFetch(`/api/groups/${groupId}/add-user`, {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    });
+        if (!res.ok) {
+            let errorMessage = `HTTP ${res.status}`;
 
-    console.log('📥 [groupApi] Response status:', res.status);
+            try {
+                const errorData = await res.json();
+                console.error('[groupApi] Error data:', errorData);
+                errorMessage = errorData.message || errorMessage;
+            } catch (parseErr) {
+                console.error('[groupApi] Failed to parse error:', parseErr);
+            }
 
-    if (!res.ok) {
-      // ✅ POPRAWIONE PARSOWANIE BŁĘDÓW
-      let errorMessage = `HTTP ${res.status}`;
+            throw new Error(errorMessage);
+        }
 
-      try {
-        const errorData = await res.json();
-        console.error('❌ [groupApi] Error data:', errorData);
-        errorMessage = errorData.message || errorMessage;
-      } catch (parseErr) {
-        console.error('❌ [groupApi] Failed to parse error:', parseErr);
-      }
+        const data = await res.json();
 
-      throw new Error(errorMessage);
+        return data;
+    } catch (err) {
+        console.error('❌ [groupApi] Exception:', err);
+        throw err;
     }
-
-    const data = await res.json();
-    console.log('✅ [groupApi] Member added successfully');
-
-    return data;
-  } catch (err) {
-    console.error('❌ [groupApi] Exception:', err);
-    throw err;
-  }
 }
 
 export async function removeMemberFromGroup(groupId, memberId) {

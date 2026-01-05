@@ -1,17 +1,18 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import calendarStyles from "../../calendar/styles/CalendarPage.module.css";
 import groupStyles from "../styles/Group.module.css";
 import {useGroups} from "../store/groupStore";
-import {addMemberToGroup} from "../../auth/api/groupApi";
+import {addMemberToGroup, getGroupCategories} from "../../auth/api/groupApi";
 
 export default function GroupCreatePage() {
     const navigate = useNavigate();
     const {createGroup} = useGroups();
 
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
+    const [categoryId, setCategoryId] = useState(null);
     const [category, setCategory] = useState("other");
+    const [loadingCategories, setLoadingCategories] = useState(true);
     const [saving, setSaving] = useState(false);
 
     const [nameError, setNameError] = useState("");
@@ -20,6 +21,25 @@ export default function GroupCreatePage() {
     const [newMemberEmail, setNewMemberEmail] = useState("");
     const [memberError, setMemberError] = useState("");
     const [memberAddErrors, setMemberAddErrors] = useState([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try{
+                const data = await getGroupCategories();
+                setCategory(data);
+
+                const defaultCategory = data.find(c => c.nazwa === 'other') || data[0];
+                if (defaultCategory) {
+                    setCategoryId(defaultCategory.id);
+                }
+            }catch (err) {
+                console.error(' Failed to load categories:', err);
+            } finally {
+                setLoadingCategories(false);
+            }
+        }
+        fetchCategories();
+    }, []);
 
     const handleAddMember = () => {
         const email = newMemberEmail.trim();
@@ -54,6 +74,7 @@ export default function GroupCreatePage() {
         if (memberAddErrors.length > 0) return false;
         if (memberError) return false;
         if (saving) return false;
+        if (!categoryId) return false;
 
         return true;
     };
@@ -71,24 +92,13 @@ export default function GroupCreatePage() {
         }
 
         setNameError("");
-
-        console.log('📝 [GroupCreatePage] Saving group with name:', name.trim());
-
-        if (!name.trim()) {
-            alert("Group name is required");
-            return;
-        }
-
-        console.log('📝 [GroupCreatePage] Creating group:', {
-            name,
-            type: typeof name,
-            trimmed: name.trim()
-        });
-
         setSaving(true);
 
         try {
-            const g = await createGroup(name.trim());
+            const g = await createGroup({
+                name: name.trim(),
+                categoryId: categoryId
+            });
 
             if (!g || !g.id) {
                 setNameError("Failed to create group");
@@ -103,7 +113,6 @@ export default function GroupCreatePage() {
                     try {
                         await addMemberToGroup(g.id, email);
                     } catch (err) {
-                        console.error(`Failed to add member ${email}:`, err);
                         failedMembers.push({
                             email,
                             error: err.message || "Failed to add member"
@@ -183,39 +192,21 @@ export default function GroupCreatePage() {
                         )}
                     </div>
 
-                    {/* DESCRIPTION (UI-ONLY) */}
-                    <div className={calendarStyles["input-box"]}>
-                        <p className={calendarStyles["input-title"]}>Description</p>
-                        <input
-                            type="text"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            className={calendarStyles["event-input"]}
-                            placeholder="Optional..."
-                            disabled={saving}
-                        />
-                    </div>
-
                     {/* CATEGORY (UI-ONLY) */}
                     <div className={calendarStyles["input-box"]}>
                         <h2 className={calendarStyles["event-h2"]}>choose category: </h2>
                         <div className={calendarStyles["event-buttons"]}>
-                            {[
-                                {key: "project", label: "project group"},
-                                {key: "school", label: "school group"},
-                                {key: "friends", label: "friends"},
-                                {key: "other", label: "other"},
-                            ].map(({key, label}) => (
+                            {category.map((cat) => (
                                 <button
-                                    key={key}
+                                    key={cat.id}
                                     type="button"
                                     disabled={saving}
                                     className={`${calendarStyles["event-button"]} ${
-                                        category === key ? calendarStyles["event-button-active"] : ""
+                                        category === cat.id ? calendarStyles["event-button-active"] : ""
                                     }`}
                                     onClick={() => setCategory(key)}
                                 >
-                                    {label}
+                                    {cat.nazwa}
                                 </button>
                             ))}
                         </div>

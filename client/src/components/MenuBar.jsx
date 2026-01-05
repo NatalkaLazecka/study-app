@@ -47,7 +47,7 @@ export default function MenuBar({ onLogoutClick }) {
                     onClick={onLogoutClick}
                     title="Log out"
                 >
-                    <i className="fa-regular fa-circle-user"></i>
+                    <i className="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
         </div>
