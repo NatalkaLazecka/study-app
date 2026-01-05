@@ -60,12 +60,48 @@ export async function createGroup(name) {
   }
 }
 
+// export async function addMemberToGroup(groupId, email) {
+//     const res = await apiFetch(`/api/groups/${groupId}/add-user`, {
+//         method: "POST",
+//         body: JSON.stringify({email}),
+//     });
+//     return res.json();
+// }
+
 export async function addMemberToGroup(groupId, email) {
+  console.log('📤 [groupApi] addMemberToGroup:', { groupId, email });
+
+  try {
     const res = await apiFetch(`/api/groups/${groupId}/add-user`, {
-        method: "POST",
-        body: JSON.stringify({email}),
+      method: "POST",
+      body: JSON.stringify({ email }),
     });
-    return res.json();
+
+    console.log('📥 [groupApi] Response status:', res.status);
+
+    if (!res.ok) {
+      // ✅ POPRAWIONE PARSOWANIE BŁĘDÓW
+      let errorMessage = `HTTP ${res.status}`;
+
+      try {
+        const errorData = await res.json();
+        console.error('❌ [groupApi] Error data:', errorData);
+        errorMessage = errorData.message || errorMessage;
+      } catch (parseErr) {
+        console.error('❌ [groupApi] Failed to parse error:', parseErr);
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    const data = await res.json();
+    console.log('✅ [groupApi] Member added successfully');
+
+    return data;
+  } catch (err) {
+    console.error('❌ [groupApi] Exception:', err);
+    throw err;
+  }
 }
 
 export async function removeMemberFromGroup(groupId, memberId) {

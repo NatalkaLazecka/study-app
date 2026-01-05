@@ -48,9 +48,29 @@ export default function GroupCreatePage() {
         setMemberAddErrors(memberAddErrors.filter(e => e.email !== email));
     };
 
+    const canSubmit = () => {
+        if (!name.  trim()) return false;
+        if (nameError) return false;
+        if (memberAddErrors.length > 0) return false;
+        if (memberError) return false;
+        if (saving) return false;
+
+        return true;
+    };
+
     const save = async () => {
+        if (!canSubmit()) {
+            if (memberAddErrors.length > 0) {
+                alert("Please remove members with errors before creating the group");
+            } else if (nameError) {
+                alert("Please fix the group name error");
+            } else {
+                alert("Please fill in all required fields");
+            }
+            return;
+        }
+
         setNameError("");
-        setMemberAddErrors([]);
 
         if (!name.trim()) {
             alert("Group name is required");
@@ -281,6 +301,15 @@ export default function GroupCreatePage() {
                                         );
                                     })}
                                 </div>
+                            </div>
+                        )}
+
+                        {memberAddErrors.length > 0 && (
+                            <div className={groupStyles["validation-warning"]}>
+                                <i className="fa-solid fa-triangle-exclamation"/>
+                                <span>
+                                    Remove members with errors before creating the group
+                                </span>
                             </div>
                         )}
 
