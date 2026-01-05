@@ -34,7 +34,6 @@ export const getGroups = async (req, res) => {
             [studentId]
         );
 
-        console.log("getGroups:", rows);
         res.json(rows);
     } catch (err) {
         console.error("getGroups error:", err);
@@ -79,13 +78,13 @@ export const createGroup = async (req, res) => {
 
         await pool.query(
             `INSERT INTO grupa (id, nazwa, kategoria_grupy_id, administrator)
-             VALUES (?, ?, ?)`,
+             VALUES (?, ?, ?, ?)`,
             [groupId, safeName, kategoria_grupy_id || null, studentId]
         );
 
         await pool.query(
             `INSERT INTO grupa_student (id, student_id, grupa_id)
-             VALUES (?, ?, ?, ?)`,
+             VALUES (?, ?, ?)`,
             [uuidv4(), studentId, groupId]
         );
 
