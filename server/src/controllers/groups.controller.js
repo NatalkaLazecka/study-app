@@ -403,6 +403,31 @@ export const deleteGroup = async (req, res) => {
             return res.status(403).json({message: "Only admin can delete group"});
         }
 
+        const [notes] = await pool.query(
+            `SELECT id
+             FROM notatka
+             WHERE grupa_id = ?`,
+            [groupId]
+        );
+
+        if (notes.length > 0) {
+            const noteIds = notes.map(n => n.id);
+            await pool.query(
+                `DELETE
+                 FROM plik_notatka
+                 WHERE notatka_id IN (?)`,
+                [noteIds]
+            );
+        }
+
+        await pool.query(`DELETE
+                          FROM notatka
+                          WHERE grupa_id = ?`, [groupId]
+        );
+        await pool.query(`DELETE
+                         FROM ogloszenie
+                         WHERE grupa_id = ? `, [groupId]
+        );
         await pool.query(`DELETE
                           FROM grupa_student
                           WHERE grupa_id = ? `, [groupId]);
