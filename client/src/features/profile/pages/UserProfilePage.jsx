@@ -1,270 +1,65 @@
-import React, {useState, useEffect} from 'react';
-import {User, Upload, Save} from 'lucide-react';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import styles from '../styles/UserProfile.module.css';
-import {useNavigate} from 'react-router-dom';
+import React, { useState } from "react";
+import styles from "../styles/UserProfile.module.css";
+import { useNavigate } from "react-router-dom";
 import MenuBar from "../../../components/MenuBar";
 
 export default function UserProfilePage() {
     const navigate = useNavigate();
-    const [image, setImage] = useState(null);
-    const [userInfo, setUserInfo] = useState({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        phone: '',
-        address: '',
-        nation: '',
-        gender: '',
-        language: '',
-        dob: null,
-        twitter: '',
-        facebook: '',
-        linkedin: '',
-        google: '',
-        slogan: '',
-    });
+    const [showConfirm, setShowConfirm] = useState(false);
 
-    useEffect(() => {
-        document.body.setAttribute('data-theme', 'dark');
-    }, []);
+   const handleLogout = async () => {
+    try {
+        await fetch(
+            `${import.meta.env.VITE_API_URL}/auth/logout`,
+            {
+                method: "POST",
+                credentials: "include",
+            }
+        );
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+        navigate("/login");
+    } catch (err) {
+        console.error("Logout failed", err);
+    }
+};
 
-    const handleInfoChange = (e) => {
-        setUserInfo({
-            ...userInfo,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleSave = () => {
-        alert('Data saved!');
-    };
 
     return (
-        <div className={styles['profile-root']}>
-            <MenuBar/>
+        <div className={styles["profile-root"]}>
+            <MenuBar />
 
-            <div className={styles['profile-maincard']}>
-                {/* LEFT COLUMN */}
-                <div className={styles['profile-left']}>
-                    <div className={styles['profile-avatar-row']}>
-                        <div className={styles['profile-image-container']}>
-                            {image ? (
-                                <img src={image} alt="Profile" className={styles['profile-image']}/>
-                            ) : (
-                                <div className={styles['profile-image-placeholder']}>
-                                    <User size={48}/>
-                                </div>
-                            )}
-                        </div>
-                        <label className={styles['profile-upload-btn']}>
-                            <Upload size={20}/>
-                            <input
-                                type="file"
-                                style={{display: 'none'}}
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                            />
-                        </label>
-                    </div>
-                    <div className={styles['profile-form-left']}>
-                        <div className={styles['profile-row']}>
-                            <div>
-                                <label className={styles['profile-sublabel']}>First Name</label>
-                                <input
-                                    name="firstName"
-                                    value={userInfo.firstName}
-                                    onChange={handleInfoChange}
-                                    className={styles['profile-input']}
-                                    placeholder="First name"
-                                />
-                            </div>
-                            <div>
-                                <label className={styles['profile-sublabel']}>Last Name</label>
-                                <input
-                                    name="lastName"
-                                    value={userInfo.lastName}
-                                    onChange={handleInfoChange}
-                                    className={styles['profile-input']}
-                                    placeholder="Last name"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Email</label>
-                            <input
-                                name="email"
-                                value={userInfo.email}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="Email"
-                            />
-                        </div>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Phone</label>
-                            <input
-                                name="phone"
-                                value={userInfo.phone}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="Phone"
-                            />
-                        </div>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Address</label>
-                            <input
-                                name="address"
-                                value={userInfo.address}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="Address"
-                            />
-                        </div>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Nation</label>
-                            <input
-                                name="nation"
-                                value={userInfo.nation}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="Country"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* RIGHT COLUMN */}
-                <div className={styles['profile-right']}>
-                    <div className={styles['profile-row']}>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Gender</label>
-                            <select
-                                name="gender"
-                                value={userInfo.gender}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                            >
-                                <option value="">Select gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                                <option value="prefer_not_say">Prefer not to say</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Language</label>
-                            <select
-                                name="language"
-                                value={userInfo.language}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="Language"
-                            >
-                                <option value="">Select language</option>
-                                <option value="english">English</option>
-                                <option value="polish">Polish</option>
-                            </select>
-
-
-                        </div>
-                    </div>
-                    <div>
-                        <label className={styles['profile-sublabel']}>Date of Birth</label>
-                        <DatePicker
-                            selected={userInfo.dob}
-                            onChange={(date) => setUserInfo({...userInfo, dob: date})}
-                            dateFormat="yyyy-MM-dd"
-                            className={styles['profile-input']}
-                            placeholderText="Select date"
-                            showMonthDropdown
-                            showYearDropdown
-                            dropdownMode="select"
-                            maxDate={new Date()}
-                        />
-                    </div>
-                    <div className={styles['profile-row']}>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Twitter</label>
-                            <input
-                                name="twitter"
-                                value={userInfo.twitter}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="twitter.com/..."
-                            />
-                        </div>
-                        <div>
-                            <label className={styles['profile-sublabel']}>LinkedIn</label>
-                            <input
-                                name="linkedin"
-                                value={userInfo.linkedin}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="linkedin.com/in/..."
-                            />
-                        </div>
-                    </div>
-                    <div className={styles['profile-row']}>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Facebook</label>
-                            <input
-                                name="facebook"
-                                value={userInfo.facebook}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="facebook.com/..."
-                            />
-                        </div>
-                        <div>
-                            <label className={styles['profile-sublabel']}>Google</label>
-                            <input
-                                name="google"
-                                value={userInfo.google}
-                                onChange={handleInfoChange}
-                                className={styles['profile-input']}
-                                placeholder="Google account"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className={styles['profile-sublabel']}>Slogan</label>
-                        <input
-                            name="slogan"
-                            value={userInfo.slogan}
-                            onChange={handleInfoChange}
-                            className={styles['profile-input']}
-                            placeholder="Your slogan"
-                        />
-                    </div>
-                    <div className={styles['profile-btns-row']}>
-                        <button
-                            className={`${styles['profile-btn']} ${styles['profile-btn-secondary']}`}
-                            onClick={() => navigate('/home')}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            className={`${styles['profile-btn']} ${styles['profile-btn-primary']}`}
-                            onClick={handleSave}
-                        >
-                            <Save size={18}/>
-                            Save
-                        </button>
-                    </div>
-                </div>
+            <div className={styles["profile-maincard"]}>
+                <button
+                    className={`${styles["profile-btn"]} ${styles["profile-btn-primary"]}`}
+                    onClick={() => setShowConfirm(true)}
+                >
+                    Log out
+                </button>
             </div>
+
+            {showConfirm && (
+                <div className={styles["logout-overlay"]}>
+                    <div className={styles["logout-modal"]}>
+                        <p>Are you sure you want to leave?</p>
+
+                        <div className={styles["logout-actions"]}>
+                            <button
+                                className={`${styles["profile-btn"]} ${styles["profile-btn-secondary"]}`}
+                                onClick={() => setShowConfirm(false)}
+                            >
+                                No
+                            </button>
+
+                            <button
+                                className={`${styles["profile-btn"]} ${styles["profile-btn-primary"]}`}
+                                onClick={handleLogout}
+                            >
+                                Yes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
