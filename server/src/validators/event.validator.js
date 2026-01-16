@@ -49,7 +49,7 @@ export const updateEventValidator = [
 
 
 export const eventIdParamValidator = [
-  param("eventId")
+  param("id")
     .isUUID()
     .withMessage("Invalid eventId"),
 ];
