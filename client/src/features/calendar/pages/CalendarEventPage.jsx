@@ -372,7 +372,7 @@ export default function CalendarEventPage() {
                             onChange={setSelectedRepeatMode}
                             options={repeatModes.map(mode => ({
                                 value: mode.id,
-                                label: mode.name
+                                label: mode.nazwa
                             }))}
                             placeholder="No repeat"
                             isSearchable={false}
