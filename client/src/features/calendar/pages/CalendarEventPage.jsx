@@ -42,8 +42,6 @@ export default function CalendarEventPage() {
     const [repeatModes, setRepeatModes] = useState([]);
     const [selectedRepeatMode, setSelectedRepeatMode] = useState("");
 
-    console.log("CalendarEventPage mounted");
-
     useEffect(() => {
         const loadCategories = async () => {
             try {
@@ -69,12 +67,9 @@ export default function CalendarEventPage() {
     }, []);
 
     useEffect(() => {
-        console.log("useEffect repeatModes runs");
-
         const loadRepeatModes = async () => {
             try {
                 const modes = await getRepeatModes();
-                console.log("repeatModes z API", modes);
                 setRepeatModes(modes);
             } catch (err) {
                 console.error("Error loading repeat modes:", err);

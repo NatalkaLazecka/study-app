@@ -215,9 +215,9 @@ const createEventNotifications = async (eventId, eventTitle, startDate, studentI
 export const getRepeatModes = async (req, res) => {
     try{
         const [result] = await pool.query(
-            'SELECT id, nazwa FROM rodzaj_powtarzania ORDER BY id asc'
+            'SELECT id, nazwa FROM rodzaj_powtarzania ORDER BY id'
         );
-        res.json(result);
+        res.status(200).json(result);
     } catch (err) {
         res.status(500).json({error: err.message});
     }
