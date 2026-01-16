@@ -29,7 +29,7 @@ export default function CalendarPage() {
     };
 
     const getEventForDate = (date) => {
-        const filtered = date.toLocaleDateString("sv-SE");
+        const filtered = date.toISOString().slice(0, 10);
         return events.filter((e) => e.data_start === filtered);
     };
 

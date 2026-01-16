@@ -379,6 +379,13 @@ export const deleteEvent = async (req, res) => {
     const studentId = req.user.id;
 
     try {
+        const [rows] = await pool.query('SELECT * FROM wydarzenie WHERE id = ?', [req.params.id]);
+        console.log('Kasuję event', req.params.id, 'Znalazłem w bazie:', rows.length);
+
+        if (!rows.length) {
+            return res.status(404).json({ error: "Event not found" });
+        }
+
         await pool.query(
             'DELETE FROM aktywnosc_w_ramach_wydarzenia WHERE wydarzenie_id = ?',
             [req.params.id]
