@@ -213,7 +213,7 @@ const createEventNotifications = async (eventId, eventTitle, startDate, studentI
 };
 
 export const getRepeatModes = async (req, res) => {
-    try{
+    try {
         const [result] = await pool.query(
             'SELECT id, nazwa FROM rodzaj_powtarzania ORDER BY id'
         );
@@ -223,48 +223,109 @@ export const getRepeatModes = async (req, res) => {
     }
 };
 
-export const addEvent = async (req, res) => {
-    const {
-        tytul,
-        opis,
-        data_start,
-        data_koncowa,
-        priorytet,
-        rodzaj_wydarzenia_id,
-        rodzaj_powtarzania_id,
-        automatyczne_powiadomienia,
-        tryby_powiadomien
-    } = req.body;
-    const studentId = req.user.id;
-    try {
-        const id = uuidv4();
-
-        await pool.query(
-            `INSERT INTO wydarzenie (id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id,
-                                     rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, studentId, automatyczne_powiadomienia]
-        );
-
-        if (tryby_powiadomien && tryby_powiadomien.length > 0) {
-            for (const modeId of tryby_powiadomien) {
-                await pool.query(
-                    `INSERT INTO wydarzenie_tryb_powiadomien (id, wydarzenie_id, tryb_powiadomien_id)
-                     VALUES (UUID(), ?, ?)`,
-                    [id, modeId]
-                );
-            }
-        }
-
-        if (automatyczne_powiadomienia === 1 && data_start && tryby_powiadomien && tryby_powiadomien.length > 0) {
-            await createEventNotifications(id, tytul, data_start, studentId, tryby_powiadomien);
-        }
-
-        res.status(201).json({message: "Wydarzenie dodane", id});
-    } catch (err) {
-        res.status(500).json({error: err.message, full: err});
+function generateRepeats({ startDate, endDate, repeatType }) {
+    const result = [];
+    let current = new Date(startDate);
+    endDate = new Date(endDate);
+    if (!repeatType) {
+        result.push(new Date(current));
+        return result;
     }
-};
+
+    function addStep(date) {
+        switch (repeatType) {
+            case 'every day':
+                date.setDate(date.getDate() + 1);
+                break;
+            case 'every week':
+                date.setDate(date.getDate() + 7);
+                break;
+            case 'every month':
+                date.setMonth(date.getMonth() + 1);
+                break;
+            case 'every year':
+                date.setFullYear(date.getFullYear() + 1);
+                break;
+            default:
+                return null;
+        }
+        return date;
+    }
+
+    while (current <= endDate) {
+        result.push(new Date(current));
+        current = addStep(new Date(current));
+        if (result.length > 500) break;
+    }
+
+    return result;
+}
+
+export const addEvent = async (req, res) => {
+        const {
+            tytul,
+            opis,
+            data_start,
+            data_koncowa,
+            priorytet,
+            rodzaj_wydarzenia_id,
+            rodzaj_powtarzania_id,
+            automatyczne_powiadomienia,
+            tryby_powiadomien
+        } = req.body;
+        const studentId = req.user.id;
+        try {
+            let repeatType = null;
+            if (rodzaj_powtarzania_id) {
+                const [rows] = await pool.query(
+                    'SELECT nazwa FROM rodzaj_powtarzania WHERE id = ?',
+                    [rodzaj_powtarzania_id]
+                );
+                repeatType = rows[0]?.nazwa || null;
+            }
+
+            const d_start = data_start;
+            const d_end = data_koncowa || data_start;
+
+            const dates = repeatType
+                ? generateRepeats({startDate: d_start, endDate: d_end, repeatType})
+                : [new Date(d_start)];
+
+            let lastEventId = null;
+            for (const dateVal of dates) {
+                const eventId = uuidv4();
+                lastEventId = eventId;
+                const dateStr = dateVal.toISOString().slice(0, 10);
+
+                await pool.query(
+                    `INSERT INTO wydarzenie (id, tytul, opis, data_start, data_koncowa, priorytet, rodzaj_wydarzenia_id,
+                                             rodzaj_powtarzania_id, student_id, automatyczne_powiadomienia)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                    [eventId, tytul, opis, dateStr, dateStr, priorytet, rodzaj_wydarzenia_id, rodzaj_powtarzania_id, studentId, automatyczne_powiadomienia]
+                );
+
+                if (tryby_powiadomien && tryby_powiadomien.length > 0) {
+                    for (const modeId of tryby_powiadomien) {
+                        await pool.query(
+                            `INSERT INTO wydarzenie_tryb_powiadomien (id, wydarzenie_id, tryb_powiadomien_id)
+                             VALUES (UUID(), ?, ?)`,
+                            [eventId, modeId]
+                        );
+                    }
+                }
+
+                if (automatyczne_powiadomienia === 1 && data_start && tryby_powiadomien && tryby_powiadomien.length > 0) {
+                    await createEventNotifications(eventId, tytul, dateStr, studentId, tryby_powiadomien);
+                }
+            }
+
+            res.status(201).json({message: "Wydarzenie dodane", id: lastEventId});
+        } catch
+            (err) {
+            res.status(500).json({error: err.message, full: err});
+        }
+    }
+;
 
 export const updateEvent = async (req, res) => {
     const {
