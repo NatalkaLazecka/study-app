@@ -17,6 +17,7 @@ import {
 } from "../../auth/api/eventsApi.js";
 import todoStyles from "../../todo/styles/Todo.module.css";
 import calendarStyles from "../styles/CalendarPage.module.css";
+import CustomSelect from "../../schedule/component/CustomSelect";
 
 export default function CalendarEventPage() {
     const [eventId, setEventId] = useState("");
@@ -366,18 +367,17 @@ export default function CalendarEventPage() {
 
                     <div className={styles["input-box"]}>
                         <p className={styles["input-title"]}>Repeat</p>
-                        <select
+                        <CustomSelect
                             value={selectedRepeatMode}
-                            onChange={e => setSelectedRepeatMode(e.target.value)}
-                            className={styles["event-input"]}
-                        >
-                            <option value="">No repeat</option>
-                            {repeatModes.map(mode => (
-                                <option key={mode.id} value={mode.id}>
-                                    {mode.nazwa}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={setSelectedRepeatMode}
+                            options={repeatModes.map(mode => ({
+                                value: mode.id,
+                                label: mode.name
+                            }))}
+                            placeholder="No repeat"
+                            isSearchable={false}
+                            isClearable={false}
+                        />
                     </div>
 
                     {autoNotify && (
