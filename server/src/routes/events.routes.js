@@ -20,7 +20,7 @@ router.get("/notification-modes", requireAuth, getNotificationModes);
 router.get("/student", requireAuth, getEventsByStudent);
 router.get("/", getEvents);
 router.get("/categories", getCategories);
-router.get("/repeat-modes", getRepeatModes)
+router.get("/repeatModes", getRepeatModes);
 
 router.post("/", requireAuth, createEventValidator, validate, addEvent);
 router.get("/:id", requireAuth, eventIdParamValidator, getEventById);

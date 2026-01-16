@@ -69,7 +69,7 @@ export async function getEventById(eventId) {
 }
 
 export const getRepeatModes = async () => {
-    const res = await fetch("/api/events/repeat-modes");
+    const res = await fetch("/api/events/repeatModes");
     if (!res.ok) throw new Error("Failed to fetch repeat modes");
     return await res.json();
 };
