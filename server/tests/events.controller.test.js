@@ -8,11 +8,20 @@ vi.mock('../src/database/db.js', () => ({
 vi.mock('uuid', () => ({
     v4: () => 'MOCKED_UUID'
 }));
-vi.mock('fs', () => ({
-    existsSync: vi.fn(() => true),
-    unlinkSync: vi.fn(),
-    mkdirSync: vi.fn()
-}));
+vi.mock('fs', () => {
+    const actual = {
+        existsSync: vi.fn(() => true),
+        unlinkSync: vi.fn(),
+        mkdirSync: vi.fn()
+    };
+    return {
+        __esModule: true,
+        default: actual,
+        existsSync: actual.existsSync,
+        unlinkSync: actual.unlinkSync,
+        mkdirSync: actual.mkdirSync
+    };
+});
 vi.mock('path', () => {
     const actual = {
         join: (...parts) => parts.join('/'),

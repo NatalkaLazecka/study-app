@@ -236,7 +236,7 @@ export default function TodoListPage() {
                                                checked={t.done}
                                                readOnly
                                         />
-                                        {t.tytul}
+                                        {t.tytul }
                                     </td>
 
                                     <td className={styles["todo-cell"]}>
