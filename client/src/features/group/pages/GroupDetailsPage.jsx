@@ -6,6 +6,9 @@ import "react-resizable/css/styles.css";
 
 import styles from "../styles/Group.module.css";
 import {useGroups} from "../store/groupStore";
+import calendarStyles from "@/features/calendar/styles/CalendarPage.module.css";
+import todoStyles from "@/features/todo/styles/Todo.module.css";
+import {getNotificationModes} from "@/features/auth/api/todoApi";
 import {
     addMemberToGroup,
     deleteGroup,
@@ -61,6 +64,18 @@ export default function GroupDetailsPage() {
     const [groupTodos, setGroupTodos] = useState([]);
     const [todoInput, setTodoInput] = useState("");
     const [todoError, setTodoError] = useState("");
+    const [showGroupTodoModal, setShowGroupTodoModal] = useState(false);
+    const [editTask, setEditTask] = useState(null);
+    const [title, setTitle] = useState("");
+    const [desc, setDesc] = useState("");
+    const [priority, setPriority] = useState(2);
+    const [effort, setEffort] = useState(3);
+    const [date, setDate] = useState("");
+    const [autoNotify, setAutoNotify] = useState(false);
+    const [notificationModes, setNotificationModes] = useState([]);
+    const [selectedModes, setSelectedModes] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const loadNotes = async () => {
         try {
@@ -89,12 +104,22 @@ export default function GroupDetailsPage() {
         }
     }
 
+    const loadModes = async () => {
+        try {
+            const modes = await getNotificationModes();
+            setNotificationModes(modes);
+        } catch (err) {
+            console.error("Failed to load Modes: ", err);
+        }
+    };
+
     useEffect(() => {
         if (id) {
             void fetchGroupDetails(id);
             void loadNotes();
             void loadAnnouncements();
             void loadGroupTodos();
+            void loadModes();
         }
     }, [id]);
 
@@ -195,6 +220,47 @@ export default function GroupDetailsPage() {
         }
     };
 
+    const openEditModal = (task) => {
+        setEditTask(task);
+        setTitle(task?.tytul || "");
+        setDesc(task?.tresc || "");
+        setPriority(task?.priorytet ?? 2);
+        setEffort(task?.wysilek ?? 3);
+        setDate(task?.deadline ? task.deadline.split("T")[0] : "");
+        setAutoNotify(task?.automatyczne_powiadomienie === 1);
+        setSelectedModes(task?.tryby_powiadomien?.map(t => t.id) || []);
+        setShowGroupTodoModal(true);
+        setError("");
+    };
+
+    const handleSaveGroupTask = async () => {
+        if (!title || !date) return setError("Missing required fields");
+        setLoading(true);
+        try {
+            const payload = {
+                tytul: title,
+                tresc: desc,
+                priorytet: priority,
+                wysilek: effort,
+                deadline: date,
+                automatyczne_powiadomienie: autoNotify ? 1 : 0,
+                tryby_powiadomien: selectedModes,
+            };
+            if (editTask) {
+                await updateGroupTask(id, editTask.id, payload);
+            } else {
+                await addGroupTask(id, payload);
+            }
+            setShowGroupTodoModal(false);
+            setEditTask(null);
+            await loadGroupTodos();
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleAddTodo = async () => {
         if (!todoInput.trim()) {
             setTodoError("Task cannot be empty");
@@ -211,24 +277,26 @@ export default function GroupDetailsPage() {
         }
     }
 
-    const handleToggleTodo = async (taskId, done) => {
-        try {
-            await toggleGroupsTask(id, taskId, !done);
-            await loadGroupTodos();
-        } catch (err) {
-            alert(err.message || "Failed to update done task");
-        }
-    }
+    const handleToggleDone = async (task) => {
+        await updateGroupTask(id, task.id, {
+            ...task,
+            zrobione: task.zrobione ? 0 : 1,
+        });
+        await loadGroupTodos();
+    };
 
-    const handleDeleteTodo = async (taskId) => {
+    const handleModeToggle = (modeId) => {
+        setSelectedModes(prev =>
+            prev.includes(modeId)
+                ? prev.filter(id => id !== modeId)
+                : [...prev, modeId]
+        );
+    };
+    const handleDeleteGroupTask = async (taskId) => {
         if (!window.confirm("Delete this task?")) return;
-        try {
-            await deleteGroupTask(id, taskId);
-            await loadGroupTodos();
-        } catch (err) {
-            alert(err.message || "Failed to delete task");
-        }
-    }
+        await deleteGroupTask(id, taskId);
+        await loadGroupTodos();
+    };
 
     const handleUpdateTodo = async (taskId, newTitle) => {
         try {
@@ -428,57 +496,157 @@ export default function GroupDetailsPage() {
                 {/* To-Do for group */}
                 <div key="group-todo">
                     <Widget title="Group To-Do">
-                        <div className={styles["todo-header"]}>
-                            <input
-                                type="text"
-                                placeholder="Add a task..."
-                                value={todoInput}
-                                onChange={e => setTodoInput(e.target.value)}
-                                className={styles["todo-input"]}
-                                onKeyDown={e => {
-                                    if (e.key === "Enter") handleAddTodo();
-                                }}
-                            />
-                            <button className={styles["add-todo-btn"]} onClick={handleAddTodo}>
-                                <i className="fa-solid fa-plus"/>
+                        <div style={{maxHeight: 400, overflowY: "auto"}}>
+                            <button
+                                className={todoStyles["todo-add-button"]}
+                                onClick={() => openEditModal(null)}
+                            >
+                                <span className={todoStyles["plus-icon"]}>＋</span>
+                                add new task
                             </button>
-                        </div>
-                        {todoError && <p className={styles["error"]}>{todoError}</p>}
-                        <ul className={styles["todo-list"]}>
-                            {groupTodos.map(todo => (
-                                <li key={todo.id} className={styles["todo-item"]}>
-                                    <input
-                                        type="checkbox"
-                                        checked={todo.zrobione}
-                                        onChange={() => handleToggleTodo(todo.id, todo.zrobione)}
-                                    />
-                                    <span
-                                        className={todo.zrobione ? styles["todo-done"] : ""}
-                                        contentEditable
-                                        suppressContentEditableWarning
-                                        onBlur={e => {
-                                            const newTitle = e.target.textContent.trim();
-                                            if (newTitle && newTitle !== todo.tytul) {
-                                                handleUpdateTodo(todo.id, newTitle);
-                                            }
-                                        }}
-                                    >
-                                        {todo.tytul}
+                            <table className={todoStyles["todo-table"]}>
+                                <tbody>
+                                {groupTodos.map((t) => (
+                                    <tr key={t.id} className={t.zrobione ? todoStyles["todo-done"] : ""}>
+                                        <td className={todoStyles["todo-cell"]}>
+                                            <input
+                                                type="checkbox"
+                                                checked={!!t.zrobione}
+                                                onChange={() => handleToggleDone(t)}
+                                            />
+                                            {t.tytul}
+                                        </td>
+                                        <td className={todoStyles["todo-cell"]}>
+                                            {Array(3).fill(null).map((_, i) => (
+                                                <span key={i}
+                                                      className={`${todoStyles["emoji"]} ${i < (t.priorytet || 0) ? todoStyles["activeFire"] : ""}`}>
+                                    <i className="fa-solid fa-fire"/>
+                                </span>
+                                            ))}
+                                        </td>
+                                        <td className={todoStyles["todo-cell"]}>
+                                            {Array(4).fill(null).map((_, i) => {
+                                                const active = i < (t.wysilek || 0);
+                                                return (
+                                                    <span key={i}
+                                                          className={`${todoStyles["emoji"]} ${active ? todoStyles["activeCircle"] : ""}`}>
+                                        <i className={active ? "fa-solid fa-circle" : "fa-regular fa-circle"}/>
                                     </span>
-                                    <button
-                                        className={styles["todo-delete-btn"]}
-                                        onClick={() => handleDeleteTodo(todo.id)}
-                                        title="Delete task"
-                                    >
-                                        <i className="fa-solid fa-trash"/>
-                                    </button>
-                                </li>
-                            ))}
+                                                );
+                                            })}
+                                        </td>
+                                        <td className={todoStyles["todo-cell"]}>
+                                            {t.deadline ? new Date(t.deadline).toLocaleDateString("en-GB") : ""}
+                                        </td>
+                                        <td className={todoStyles["todo-cell"]}>
+                            <span className={todoStyles["edit-icon"]}
+                                  onClick={() => openEditModal(t)}>
+                                <i className="fa-solid fa-arrow-right"/>
+                            </span>
+                                            <span className={todoStyles["delete-icon"]}
+                                                  onClick={() => handleDeleteGroupTask(t.id)}
+                                                  style={{marginLeft: "10px", color: "#ff4d6d"}}>
+                                <i className="fa-solid fa-trash"/>
+                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
                             {groupTodos.length === 0 && (
                                 <p className={styles["muted"]}>No group tasks yet</p>
                             )}
-                        </ul>
+                        </div>
                     </Widget>
+
+                    {/* MODAL */}
+                    {showGroupTodoModal && (
+                        <div className={calendarStyles["modal-overlay"]} onClick={() => setShowGroupTodoModal(false)}>
+                            <div className={calendarStyles["modal"]} onClick={e => e.stopPropagation()}>
+                                <h2>{editTask ? "Edit Group Task" : "New Group Task"}</h2>
+                                <input
+                                    type="text"
+                                    className={calendarStyles["event-input"]}
+                                    placeholder="Title *"
+                                    value={title}
+                                    onChange={e => setTitle(e.target.value)}
+                                />
+                                <textarea
+                                    className={calendarStyles["event-input"]}
+                                    placeholder="Description"
+                                    value={desc}
+                                    onChange={e => setDesc(e.target.value)}
+                                    style={{height: "100px"}}
+                                />
+                                <input
+                                    type="date"
+                                    className={calendarStyles["event-input"]}
+                                    value={date}
+                                    onChange={e => setDate(e.target.value)}
+                                />
+                                <div style={{margin: "10px 0"}}>
+                                    <span>Priority: </span>
+                                    {Array(3).fill(null).map((_, i) => (
+                                        <span
+                                            key={i}
+                                            onClick={() => setPriority(i + 1)}
+                                            className={`${todoStyles["emoji"]} ${i < priority ? todoStyles["activeFire"] : ""}`}
+                                            role="button"
+                                        >
+                            <i className="fa-solid fa-fire"/>
+                        </span>
+                                    ))}
+                                </div>
+                                <div style={{margin: "10px 0"}}>
+                                    <span>Effort: </span>
+                                    {Array(4).fill(null).map((_, i) => (
+                                        <span
+                                            key={i}
+                                            onClick={() => setEffort(i + 1)}
+                                            className={`${todoStyles["emoji"]} ${i < effort ? todoStyles["activeCircle"] : ""}`}
+                                            role="button"
+                                        >
+                            <i className={i < effort ? "fa-solid fa-circle" : "fa-regular fa-circle"}/>
+                        </span>
+                                    ))}
+                                </div>
+                                <div>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={autoNotify}
+                                            onChange={e => setAutoNotify(e.target.checked)}
+                                        />
+                                        Automatic notifications
+                                    </label>
+                                </div>
+                                {autoNotify && (
+                                    <div>
+                                        <p>Notification Modes</p>
+                                        {notificationModes.map(mode => (
+                                            <label key={mode.id} style={{display: "block"}}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedModes.includes(mode.id)}
+                                                    onChange={() => handleModeToggle(mode.id)}
+                                                />
+                                                {mode.nazwa}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                                {error && <p className={styles["error"]}>{error}</p>}
+                                <div className={calendarStyles["modal-buttons"]}>
+                                    <button onClick={handleSaveGroupTask} disabled={loading}>
+                                        {loading ? "Saving..." : "Save"}
+                                    </button>
+                                    <button onClick={() => setShowGroupTodoModal(false)} disabled={loading}>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </ResponsiveGridLayout>
 
