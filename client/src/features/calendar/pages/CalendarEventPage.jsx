@@ -80,7 +80,7 @@ export default function CalendarEventPage() {
     }, []);
 
     useEffect(() => {
-        const id = searchParams.get("id");
+        const id = searchParams.get("eventId");
 
         if (id) {
             setEventId(id);

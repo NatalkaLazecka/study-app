@@ -96,7 +96,7 @@ export const getEventById = async (req, res) => {
                       LEFT JOIN rodzaj_wydarzenia r ON w.rodzaj_wydarzenia_id = r.id
              WHERE w.id = ?
                AND w.student_id = ? `,
-            [req.params.id, studentId]
+            [req.params.eventId, studentId]
         );
 
         if (!result.length) {
@@ -380,7 +380,6 @@ export const deleteEvent = async (req, res) => {
 
     try {
         const [rows] = await pool.query('SELECT * FROM wydarzenie WHERE id = ?', [req.params.id]);
-        console.log('Kasuję event', req.params.id, 'Znalazłem w bazie:', rows.length);
 
         if (!rows.length) {
             return res.status(404).json({ error: "Event not found" });
