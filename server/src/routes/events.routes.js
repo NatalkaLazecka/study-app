@@ -23,7 +23,7 @@ router.get("/categories", getCategories);
 router.get("/repeatModes", getRepeatModes);
 
 router.post("/", requireAuth, createEventValidator, validate, addEvent);
-router.get("/:id", requireAuth, eventIdParamValidator, getEventById);
+router.get("/:eventId", requireAuth, eventIdParamValidator, getEventById);
 router.put("/:id", requireAuth, updateEventValidator, validate, updateEvent);
 router.delete("/:id", requireAuth, eventIdParamValidator, validate, deleteEvent);
 
