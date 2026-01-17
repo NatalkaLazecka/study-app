@@ -21,7 +21,7 @@ import {
     addGroupTask,
     updateGroupTask,
     deleteGroupTask,
-    toggleGroupsTask,
+    toggleGroupTask,
     getGroupTasks
 } from "@/features/auth/api/todoApi";
 
