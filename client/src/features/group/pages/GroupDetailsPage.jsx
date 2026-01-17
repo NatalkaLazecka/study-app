@@ -18,7 +18,7 @@ import {
 } from "@/features/auth/api/groupApi";
 
 import {
-    addGroupsTask,
+    addGroupTask,
     updateGroupTask,
     deleteGroupTask,
     toggleGroupsTask,
@@ -202,7 +202,7 @@ export default function GroupDetailsPage() {
         }
 
         try {
-            await addGroupsTask(id, {tytul: todoInput.trim()});
+            await addGroupTask(id, {tytul: todoInput.trim()});
             setTodoInput("");
             setTodoError("");
             await loadGroupTodos();
