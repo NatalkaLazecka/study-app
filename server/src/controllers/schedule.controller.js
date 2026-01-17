@@ -13,7 +13,6 @@ export const getScheduleForStudent = async (req, res) => {
                     pz.prowadzacy_id,
                     p.imie     as prowadzacy_imie,
                     p.nazwisko as prowadzacy_nazwisko,
-                    p.e_mail   as prowadzacy_email,
                     pz.dzien_tygodnia,
                     pz.godzina,
                     pz.sala,
@@ -148,7 +147,7 @@ export const deleteAllSchedulesForStudent = async (req, res) => {
 
 export const getAllProfessor = async (req, res) => {
     try {
-        const [result] = await pool.query(`SELECT id, imie, nazwisko, e_mail
+        const [result] = await pool.query(`SELECT id, imie, nazwisko
                                            FROM prowadzacy
                                            ORDER BY nazwisko, imie`);
 
