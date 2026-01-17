@@ -17,12 +17,21 @@ import {
     getGroupAnnouncements
 } from "@/features/auth/api/groupApi";
 
+import {
+    addGroupsTask,
+    updateGroupTask,
+    deleteGroupTask,
+    toggleGroupsTask,
+    getGroupTasks
+} from "@/features/auth/api/todoApi";
+
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DEFAULT_LAYOUT = [
     {i: "members", x: 0, y: 0, w: 4, h: 18},
     {i: "notes", x: 4, y: 0, w: 4, h: 18},
     {i: "ann", x: 8, y: 0, w: 4, h: 18},
+    {i: "group-todo", x: 0, y: 18, w: 12, h: 12},
 ];
 
 export default function GroupDetailsPage() {
@@ -49,6 +58,10 @@ export default function GroupDetailsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [announcements, setAnnouncements] = useState([]);
 
+    const [groupTodos, setGroupTodos] = useState([]);
+    const [todoInput, setTodoInput] = useState("");
+    const [todoError, setTodoError] = useState("");
+
     const loadNotes = async () => {
         try {
             const data = await getGroupNotes(id);
@@ -67,11 +80,21 @@ export default function GroupDetailsPage() {
         }
     }
 
+    const loadGroupTodos = async () => {
+        try {
+            const data = await getGroupTasks(id);
+            setGroupTodos(data);
+        } catch (err) {
+            console.error("Failed to load group todos: ", err);
+        }
+    }
+
     useEffect(() => {
         if (id) {
             void fetchGroupDetails(id);
             void loadNotes();
             void loadAnnouncements();
+            void loadGroupTodos();
         }
     }, [id]);
 
@@ -171,6 +194,50 @@ export default function GroupDetailsPage() {
             alert(err.message || "Failed to delete group");
         }
     };
+
+    const handleAddTodo = async () => {
+        if (!todoInput.trim()) {
+            setTodoError("Task cannot be empty");
+            return;
+        }
+
+        try {
+            await addGroupsTask(id, {tytul: todoInput.trim()});
+            setTodoInput("");
+            setTodoError("");
+            await loadGroupTodos();
+        } catch (err) {
+            setTodoError(err.message || "Failed to add task to todos");
+        }
+    }
+
+    const handleToggleTodo = async (taskId, done) => {
+        try {
+            await toggleGroupsTask(id, taskId, !done);
+            await loadGroupTodos();
+        } catch (err) {
+            alert(err.message || "Failed to update done task");
+        }
+    }
+
+    const handleDeleteTodo = async (taskId) => {
+        if (!window.confirm("Delete this task?")) return;
+        try {
+            await deleteGroupTask(id, taskId);
+            await loadGroupTodos();
+        } catch (err) {
+            alert(err.message || "Failed to delete task");
+        }
+    }
+
+    const handleUpdateTodo = async (taskId, newTitle) => {
+        try {
+            await updateGroupTask(id, taskId, {tytul: newTitle});
+            await loadGroupTodos();
+        } catch (err) {
+            alert(err.message || "Failed to update task");
+        }
+    }
 
     if (!currentGroup) {
         return <div className={styles["groups-root"]}>Loading…</div>;
@@ -355,6 +422,62 @@ export default function GroupDetailsPage() {
                                 <p className={styles["muted"]}>No activity yet</p>
                             )}
                         </div>
+                    </Widget>
+                </div>
+
+                {/* To-Do for group */}
+                <div key="group-todo">
+                    <Widget title="Group To-Do">
+                        <div className={styles["todo-header"]}>
+                            <input
+                                type="text"
+                                placeholder="Add a task..."
+                                value={todoInput}
+                                onChange={e => setTodoInput(e.target.value)}
+                                className={styles["todo-input"]}
+                                onKeyDown={e => {
+                                    if (e.key === "Enter") handleAddTodo();
+                                }}
+                            />
+                            <button className={styles["add-todo-btn"]} onClick={handleAddTodo}>
+                                <i className="fa-solid fa-plus"/>
+                            </button>
+                        </div>
+                        {todoError && <p className={styles["error"]}>{todoError}</p>}
+                        <ul className={styles["todo-list"]}>
+                            {groupTodos.map(todo => (
+                                <li key={todo.id} className={styles["todo-item"]}>
+                                    <input
+                                        type="checkbox"
+                                        checked={todo.zrobione}
+                                        onChange={() => handleToggleTodo(todo.id, todo.zrobione)}
+                                    />
+                                    <span
+                                        className={todo.zrobione ? styles["todo-done"] : ""}
+                                        contentEditable
+                                        suppressContentEditableWarning
+                                        onBlur={e => {
+                                            const newTitle = e.target.textContent.trim();
+                                            if (newTitle && newTitle !== todo.tytul) {
+                                                handleUpdateTodo(todo.id, newTitle);
+                                            }
+                                        }}
+                                    >
+                                        {todo.tytul}
+                                    </span>
+                                    <button
+                                        className={styles["todo-delete-btn"]}
+                                        onClick={() => handleDeleteTodo(todo.id)}
+                                        title="Delete task"
+                                    >
+                                        <i className="fa-solid fa-trash"/>
+                                    </button>
+                                </li>
+                            ))}
+                            {groupTodos.length === 0 && (
+                                <p className={styles["muted"]}>No group tasks yet</p>
+                            )}
+                        </ul>
                     </Widget>
                 </div>
             </ResponsiveGridLayout>

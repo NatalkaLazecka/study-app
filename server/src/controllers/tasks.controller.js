@@ -355,3 +355,88 @@ export const getTasksByStudent = async (req, res) => {
         res.status(500).json({error: err.message});
     }
 };
+
+export const getTasksByGroup = async (req, res) => {
+    try {
+        const groupId = req.params.groupId;
+        const studentId = req.user.id;
+        const [result] = await pool.query(
+            `SELECT id, tytul, zrobione FROM zadanie WHERE grupa_id = ? AND student_id = ? ORDER BY deadline ASC`,
+            [groupId, studentId]
+        );
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+};
+
+export const addGroupTask = async (req, res) => {
+    const { tytul } = req.body;
+    if (!tytul) return res.status(400).json({error: "Title required"});
+    const groupId = req.params.groupId;
+    const studentId = req.user.id;
+    try {
+        const id = uuidv4();
+        await pool.query(
+            `INSERT INTO zadanie (id, tytul, grupa_id, student_id, zrobione) VALUES (?, ?, ?, ?, 0)`,
+            [id, tytul, groupId, studentId]
+        );
+        res.status(201).json({message: "Task added", id});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+};
+
+export const updateGroupTask = async (req, res) => {
+    const { tytul } = req.body;
+    if (!tytul) return res.status(400).json({error: "Title required"});
+    const groupId = req.params.groupId;
+    const taskId = req.params.id;
+    const studentId = req.user.id;
+    try {
+        await pool.query(
+            `UPDATE zadanie SET tytul = ? WHERE id = ? AND grupa_id = ? AND student_id = ?`,
+            [tytul, taskId, groupId, studentId]
+        );
+        res.json({message: "Task updated"});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+};
+
+export const toggleGroupTask = async (req, res) => {
+    const groupId = req.params.groupId;
+    const taskId = req.params.id;
+    const studentId = req.user.id;
+    try {
+        const [rows] = await pool.query(
+            `SELECT zrobione FROM zadanie WHERE id = ? AND grupa_id = ? AND student_id = ?`,
+            [taskId, groupId, studentId]
+        );
+        if (!rows.length) return res.status(404).json({error: "Task not found"});
+        const newDone = rows[0].zrobione ? 0 : 1;
+        await pool.query(
+            `UPDATE zadanie SET zrobione = ? WHERE id = ? AND grupa_id = ? AND student_id = ?`,
+            [newDone, taskId, groupId, studentId]
+        );
+        res.json({message: "Task toggled", zrobione: newDone});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+};
+
+export const deleteGroupTask = async (req, res) => {
+    const groupId = req.params.groupId;
+    const taskId = req.params.id;
+    const studentId = req.user.id;
+    try {
+        await pool.query(
+            `DELETE FROM zadanie WHERE id = ? AND grupa_id = ? AND student_id = ?`,
+            [taskId, groupId, studentId]
+        );
+        res.json({message: "Task deleted"});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+};
+
