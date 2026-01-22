@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {
     getGroupTasks,
-    createGroupTask,
-    updateGroupTask,
-    deleteGroupTask,
-} from "@/features/auth/api/groupTodoApi";
+    createTask,
+    updateTask,
+    deleteTask,
+} from "@/features/auth/api/todoApi";
 import styles from "../styles/GroupTodo.module.css";
 
 import { STATUS_DONE, STATUS_ON_GOING } from "@/features/auth/api/todoApi";
@@ -51,27 +51,41 @@ export default function GroupTodoList({ groupId }) {
     const handleToggleDone = async (id) => {
         const task = todos.find((t) => t.id === id);
         if (!task) return;
+
         const newDone = !task.done;
-        setTodos((todos) => todos.map((t) => (t.id === id ? { ...t, done: newDone } : t)));
+        const newStatus = newDone
+            ? STATUS_DONE
+            : STATUS_ON_GOING;
+
+        setTodos((todos) =>
+            todos.map((t) => (t.id === id ? { ...t, done: newDone } : t))
+        );
         try {
-            await updateGroupTask(groupId, id, {
-                ...task,
-                status_zadania_id: newDone ? STATUS_DONE : STATUS_ON_GOING,
+            await updateTask(id, {
+                tytul: task.tytul,
+                tresc: task.tresc || "",
+                priorytet: task.priority,
+                deadline: task.deadline,
+                wysilek: task.effort,
+                status_zadania_id: newStatus,
+                automatyczne_powiadomienie:
+                task.automatyczne_powiadomienie || 0,
             });
         } catch (e) {
-            setTodos((todos) => todos.map((t) => (t.id === id ? { ...t, done: !newDone } : t)));
-            setError("Update failed: " + e.message);
+            setTodos((prev) =>
+                prev.map((t) =>
+                    t.id === id
+                        ? {...t, done: !newDone}
+                        : t
+                )
+            );
+            setError(err.message);
         }
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Delete this task?")) return;
-        try {
-            await deleteGroupTask(groupId, id);
-            setTodos((todos) => todos.filter((t) => t.id !== id));
-        } catch (e) {
-            setError("Delete failed: " + e.message);
-        }
+        await deleteTask(id);
+        setTodos((prev) => prev.filter((t) => t.id !== id));
     };
 
     const handleEdit = (task) => {

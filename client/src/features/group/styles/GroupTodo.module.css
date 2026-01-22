@@ -1,5 +1,5 @@
 .todo-root {
-  background: var(--widget-bg, #fff);
+  background: transparent;
   border-radius: 12px;
   padding: 1.2rem 1.5rem 0.3rem 1.5rem;
   margin: 0;

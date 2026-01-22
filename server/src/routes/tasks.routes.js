@@ -33,9 +33,5 @@ router.put("/:id", requireAuth, updateTaskValidator, validate, updateTask);
 router.delete("/:id", requireAuth, taskIdValidator, validate, deleteTask);
 
 router.get("/group/:groupId", requireAuth, getTasksByGroup);
-router.post("/group/:groupId", requireAuth, createTaskValidator, validate, addGroupTask);
-router.put("/group/:groupId/:id", requireAuth, updateTaskValidator, validate, updateGroupTask);
-router.patch("/group/:groupId/:id/toggle", requireAuth, toggleGroupTask);
-router.delete("/group/:groupId/:id", requireAuth, taskIdValidator, validate, deleteGroupTask);
 
 export default router;
