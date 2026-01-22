@@ -133,20 +133,22 @@ export default function GroupTodoList({groupId}) {
         }
         try {
             if (formEditId) {
-                await updateGroupTask(groupId, formEditId, {
+                await updateTask(groupId, formEditId, {
                     ...form,
                     status_zadania_id: todos.find((t) => t.id === formEditId)?.done
                         ? STATUS_DONE
                         : STATUS_ON_GOING,
                 });
             } else {
-                await createGroupTask(groupId, {...form, grupa_id: groupId});
+                await createTask(groupId, {...form, grupa_id: groupId});
             }
             const data = await getGroupTasks(groupId);
             setTodos(data.map((t) => ({...t, done: t.status_zadania_id === STATUS_DONE})));
             closeForm();
         } catch (e) {
             setError("Error: " + e.message);
+        } finally {
+            setShowForm(false);
         }
     };
 
