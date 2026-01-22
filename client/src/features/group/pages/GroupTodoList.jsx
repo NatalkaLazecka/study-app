@@ -7,9 +7,9 @@ import {
 } from "@/features/auth/api/todoApi";
 import styles from "../styles/GroupTodo.module.css";
 
-import { STATUS_DONE, STATUS_ON_GOING } from "@/features/auth/api/todoApi";
+import {STATUS_DONE, STATUS_ON_GOING} from "@/features/auth/api/todoApi";
 
-export default function GroupTodoList({ groupId }) {
+export default function GroupTodoList({groupId}) {
     const [todos, setTodos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
@@ -58,7 +58,7 @@ export default function GroupTodoList({ groupId }) {
             : STATUS_ON_GOING;
 
         setTodos((todos) =>
-            todos.map((t) => (t.id === id ? { ...t, done: newDone } : t))
+            todos.map((t) => (t.id === id ? {...t, done: newDone} : t))
         );
         try {
             await updateTask(id, {
@@ -69,7 +69,7 @@ export default function GroupTodoList({ groupId }) {
                 wysilek: task.effort,
                 status_zadania_id: newStatus,
                 automatyczne_powiadomienie:
-                task.automatyczne_powiadomienie || 0,
+                    task.automatyczne_powiadomienie || 0,
             });
         } catch (e) {
             setTodos((prev) =>
@@ -119,7 +119,7 @@ export default function GroupTodoList({ groupId }) {
         setError("");
     };
     const handleFormChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const {name, value, type, checked} = e.target;
         setForm((f) => ({
             ...f,
             [name]: type === "checkbox" ? checked : value,
@@ -140,10 +140,10 @@ export default function GroupTodoList({ groupId }) {
                         : STATUS_ON_GOING,
                 });
             } else {
-                await createGroupTask(groupId, { ...form, grupa_id: groupId });
+                await createGroupTask(groupId, {...form, grupa_id: groupId});
             }
             const data = await getGroupTasks(groupId);
-            setTodos(data.map((t) => ({ ...t, done: t.status_zadania_id === STATUS_DONE })));
+            setTodos(data.map((t) => ({...t, done: t.status_zadania_id === STATUS_DONE})));
             closeForm();
         } catch (e) {
             setError("Error: " + e.message);
@@ -178,63 +178,63 @@ export default function GroupTodoList({ groupId }) {
             ) : (
                 <table className={styles["todo-table"]}>
                     <tbody>
-                        {paginatedTodos.map((t) => (
-                            <tr
-                                key={t.id}
-                                className={`${styles["todo-row"]} ${t.done ? styles["todo-done"] : ""}`}
-                            >
-                                <td className={styles["todo-cell"]} onClick={() => handleToggleDone(t.id)}>
-                                    <input
-                                        type="checkbox"
-                                        className={styles["todo-checkbox"]}
-                                        checked={t.done}
-                                        readOnly
-                                    />
-                                    {t.tytul}
-                                </td>
-                                <td className={styles["todo-cell"]}>
-                                    {Array(3)
-                                        .fill()
-                                        .map((_, i) => (
-                                            <span
-                                                key={i}
-                                                className={`${styles["emoji"]} ${
-                                                    i < t.priorytet ? styles["activeFire"] : ""
-                                                }`}
-                                            >
-                                                <i className="fa-solid fa-fire" />
+                    {paginatedTodos.map((t) => (
+                        <tr
+                            key={t.id}
+                            className={`${styles["todo-row"]} ${t.done ? styles["todo-done"] : ""}`}
+                        >
+                            <td className={styles["todo-cell"]} onClick={() => handleToggleDone(t.id)}>
+                                <input
+                                    type="checkbox"
+                                    className={styles["todo-checkbox"]}
+                                    checked={t.done}
+                                    readOnly
+                                />
+                                {t.tytul}
+                            </td>
+                            <td className={styles["todo-cell"]}>
+                                {Array(3)
+                                    .fill()
+                                    .map((_, i) => (
+                                        <span
+                                            key={i}
+                                            className={`${styles["emoji"]} ${
+                                                i < t.priorytet ? styles["activeFire"] : ""
+                                            }`}
+                                        >
+                                                <i className="fa-solid fa-fire"/>
                                             </span>
-                                        ))}
-                                </td>
-                                <td className={styles["todo-cell"]}>
-                                    {Array(4)
-                                        .fill()
-                                        .map((_, i) => (
-                                            <span
-                                                key={i}
-                                                className={`${styles["emoji"]} ${
-                                                    i < t.wysilek ? styles["activeCircle"] : ""
-                                                }`}
-                                            >
-                                                <i className={i < t.wysilek ? "fa-solid fa-circle" : "fa-regular fa-circle"} />
+                                    ))}
+                            </td>
+                            <td className={styles["todo-cell"]}>
+                                {Array(4)
+                                    .fill()
+                                    .map((_, i) => (
+                                        <span
+                                            key={i}
+                                            className={`${styles["emoji"]} ${
+                                                i < t.wysilek ? styles["activeCircle"] : ""
+                                            }`}
+                                        >
+                                                <i className={i < t.wysilek ? "fa-solid fa-circle" : "fa-regular fa-circle"}/>
                                             </span>
-                                        ))}
-                                </td>
-                                <td className={styles["todo-cell"]}>
+                                    ))}
+                            </td>
+                            <td className={styles["todo-cell"]}>
                                     <span className={styles["edit-icon"]} onClick={() => handleEdit(t)} title="Edit">
-                                        <i className="fa-solid fa-arrow-right" />
+                                        <i className="fa-solid fa-arrow-right"/>
                                     </span>
-                                    <span
-                                        className={styles["delete-icon"]}
-                                        style={{ marginLeft: "8px", color: "#ff4d6d" }}
-                                        onClick={() => handleDelete(t.id)}
-                                        title="Delete"
-                                    >
-                                        <i className="fa-solid fa-trash" />
+                                <span
+                                    className={styles["delete-icon"]}
+                                    style={{marginLeft: "8px", color: "#ff4d6d"}}
+                                    onClick={() => handleDelete(t.id)}
+                                    title="Delete"
+                                >
+                                        <i className="fa-solid fa-trash"/>
                                     </span>
-                                </td>
-                            </tr>
-                        ))}
+                            </td>
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
             )}
@@ -263,50 +263,52 @@ export default function GroupTodoList({ groupId }) {
                     <div className={styles["modal"]} onClick={(e) => e.stopPropagation()}>
                         <h3>{formEditId ? "Edit" : "Add"} To-Do</h3>
                         <form onSubmit={handleFormSubmit}>
-                            <input
-                                name="tytul"
-                                className={styles["modal-input"]}
-                                value={form.tytul}
-                                onChange={handleFormChange}
-                                autoFocus
-                                placeholder="Title *"
-                            />
-                            <textarea
-                                name="tresc"
-                                className={styles["modal-textarea"]}
-                                rows={3}
-                                value={form.tresc}
-                                onChange={handleFormChange}
-                                placeholder="Content"
-                            />
+                            <label className={styles["modal-label"]}>
+                                Title *
+                                <input
+                                    name="tytul"
+                                    className={styles["modal-input"]}
+                                    value={form.tytul}
+                                    onChange={handleFormChange}
+                                    autoFocus
+                                    placeholder="Title *"
+                                />
+                            </label>
+                            <label className={styles["modal-label"]}>
+                                Content
+                                <textarea
+                                    name="tresc"
+                                    className={styles["modal-textarea"]}
+                                    rows={2}
+                                    value={form.tresc}
+                                    onChange={handleFormChange}
+                                    placeholder="Content"
+                                />
+                            </label>
                             <div className={styles["modal-row"]}>
-                                <label>
-                                    Priority:&nbsp;
+                                <label>Priority:
                                     <select name="priorytet" value={form.priorytet} onChange={handleFormChange}>
-                                        {[1, 2, 3].map((i) => (
-                                            <option value={i} key={i}>
-                                                {i}
-                                            </option>
-                                        ))}
+                                        {[1, 2, 3].map(i => <option key={i} value={i}>{i}</option>)}
                                     </select>
                                 </label>
-                                <label>
-                                    Effort:&nbsp;
+                                <label>Effort:
                                     <select name="wysilek" value={form.wysilek} onChange={handleFormChange}>
-                                        {[1, 2, 3, 4].map((i) => (
-                                            <option value={i} key={i}>
-                                                {i}
-                                            </option>
-                                        ))}
+                                        {[1, 2, 3, 4].map(i => <option key={i} value={i}>{i}</option>)}
                                     </select>
                                 </label>
                             </div>
-                            <div className={styles["modal-row"]}>
-                                <label>
-                                    Deadline:&nbsp;
-                                    <input name="deadline" type="date" value={form.deadline} onChange={handleFormChange} />
-                                </label>
-                                <label>
+                            <label className={styles["modal-label"]}>
+                                Deadline:
+                                <input
+                                    name="deadline"
+                                    type="date"
+                                    className={styles["modal-input"]}
+                                    value={form.deadline}
+                                    onChange={handleFormChange}
+                                />
+                            </label>
+                            <div className={styles["modal-row"]} style={{justifyContent: "flex-start"}}>
+                                <label style={{margin: "0 0.7em 0 0"}}>
                                     <input
                                         type="checkbox"
                                         name="automatyczne_powiadomienie"
@@ -318,9 +320,7 @@ export default function GroupTodoList({ groupId }) {
                             </div>
                             <div className={styles["modal-buttons"]}>
                                 <button type="submit">{formEditId ? "Save" : "Add"}</button>
-                                <button type="button" onClick={closeForm}>
-                                    Cancel
-                                </button>
+                                <button type="button" onClick={closeForm}>Cancel</button>
                             </div>
                         </form>
                     </div>
