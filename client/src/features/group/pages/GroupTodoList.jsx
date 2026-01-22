@@ -4,7 +4,7 @@ import {
     createGroupTask,
     updateGroupTask,
     deleteGroupTask,
-} from "./groupTodoApi";
+} from "@/features/auth/api/groupTodoApi.js";
 import styles from "./GroupTodo.module.css";
 
 import { STATUS_DONE, STATUS_ON_GOING } from "@/features/auth/api/todoApi";
