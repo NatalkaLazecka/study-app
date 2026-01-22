@@ -38,8 +38,15 @@ export async function getTaskById(taskId) {
   return data;
 }
 
+export async function createTask(payload) {
+    const res = await apiFetch(`/api/tasks`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+    });
+    return await res.json();
+}
+
 export async function getNotificationModes() {
     const res = await apiFetch(`/api/tasks/notification-modes`);
     return await res.json();
 }
-
