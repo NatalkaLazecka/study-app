@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import GroupTodoList from "@/features/groupTodo/GroupTodoList";
+import GroupTodoList from "./GroupTodoList.js";
 
 import styles from "../styles/Group.module.css";
 import {useGroups} from "../store/groupStore";
