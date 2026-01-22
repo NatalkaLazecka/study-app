@@ -38,51 +38,8 @@ export async function getTaskById(taskId) {
   return data;
 }
 
-export async function createTask(payload) {
-    const res = await apiFetch(`/api/tasks`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-    });
-    return await res.json();
-}
-
 export async function getNotificationModes() {
     const res = await apiFetch(`/api/tasks/notification-modes`);
-    return await res.json();
-}
-
-export async function getGroupTasks(groupId) {
-    const res = await apiFetch(`/api/tasks/group/${groupId}`);
-    return await res.json();
-}
-
-export async function addGroupTask(groupId, payload) {
-    const res = await apiFetch(`/api/tasks/group/${groupId}`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-    });
-    return await res.json();
-}
-
-export async function updateGroupTask(groupId, taskId, payload) {
-    const res = await apiFetch(`/api/tasks/group/${groupId}/${taskId}`, {
-        method: "PUT",
-        body: JSON.stringify(payload),
-    });
-    return await res.json();
-}
-
-export async function toggleGroupTask(groupId, taskId) {
-    const res = await apiFetch(`/api/tasks/group/${groupId}/${taskId}/toggle`, {
-        method: "PATCH",
-    });
-    return await res.json();
-}
-
-export async function deleteGroupTask(groupId, taskId) {
-    const res = await apiFetch(`/api/tasks/group/${groupId}/${taskId}`, {
-        method: "DELETE",
-    });
     return await res.json();
 }
 
