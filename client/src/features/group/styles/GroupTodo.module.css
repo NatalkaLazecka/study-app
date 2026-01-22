@@ -164,7 +164,6 @@
 }
 
 .modal {
-    display: flex;
     color: var(--text, #e8d2e7);
     background: rgba(25, 20, 32, 0.99);
     border: 2px solid var(--accent, #ff66c4);
@@ -215,6 +214,16 @@
     width: 100%;
     display: block;
     margin: 5px 0 5px 0;
+    border-radius: 7px;
+    border: 1px solid var(--accent, #ff66c4);
+    background: rgba(25, 14, 30, 0.94);
+    color: var(--text, #e8d2e7);
+    min-height: 2.3em;
+    font-size: 1em;
+    padding: 5px 5px;
+    font-family: 'Roboto Mono', monospace;
+    box-shadow: 0 1px 6px #b854b41a;
+    transition: border .2s, box-shadow .2s;
 }
 
 .modal-input:focus, .modal-textarea:focus {
