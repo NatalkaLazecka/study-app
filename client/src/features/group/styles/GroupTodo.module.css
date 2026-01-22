@@ -183,7 +183,7 @@
     display: block;
     font-size: 0.95em;
     font-family: 'Roboto Mono', monospace;
-    color: var(--accent,#ff66c4);
+    color: var(--accent, #ff66c4);
     margin-bottom: 0.23em;
     margin-top: 0.55em;
     letter-spacing: .02em;
@@ -198,16 +198,40 @@
         max-height: 98vh;
         overflow-y: auto;
     }
+
+    .modal-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.3em;
+    }
 }
 
 .modal h3, .modal h2 {
     margin-top: 0;
-    margin-bottom: .8em;
+    margin-bottom: 5px;
     font-size: 1.35em;
     font-family: 'Roboto Mono', monospace;
     font-weight: 700;
     color: var(--accent);
     letter-spacing: .03em;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.2em 2.4em;
+    align-items: start;
+    margin-top: 1.2em;
+}
+
+.modal-colLeft, .modal-colRight {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+}
+
+.modal-colRight .modal-buttons {
+    margin-top: 1.2em;
 }
 
 .modal-input, .modal-textarea, .modal select, .modal input[type="date"] {

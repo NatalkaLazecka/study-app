@@ -262,65 +262,70 @@ export default function GroupTodoList({groupId}) {
                 <div className={styles["modal-overlay"]} onClick={closeForm}>
                     <div className={styles["modal"]} onClick={(e) => e.stopPropagation()}>
                         <h3>{formEditId ? "Edit" : "Add"} To-Do</h3>
-                        <form onSubmit={handleFormSubmit}>
-                            <label className={styles["modal-label"]}>
-                                Title *
-                                <input
-                                    name="tytul"
-                                    className={styles["modal-input"]}
-                                    value={form.tytul}
-                                    onChange={handleFormChange}
-                                    autoFocus
-                                    placeholder="Title *"
-                                />
-                            </label>
-                            <label className={styles["modal-label"]}>
-                                Content
-                                <textarea
-                                    name="tresc"
-                                    className={styles["modal-textarea"]}
-                                    rows={2}
-                                    value={form.tresc}
-                                    onChange={handleFormChange}
-                                    placeholder="Content"
-                                />
-                            </label>
-                            <div className={styles["modal-row"]}>
-                                <label>Priority:
-                                    <select name="priorytet" value={form.priorytet} onChange={handleFormChange}>
-                                        {[1, 2, 3].map(i => <option key={i} value={i}>{i}</option>)}
-                                    </select>
+                        <form onSubmit={handleFormSubmit} className={styles["modal-grid"]}>
+                            <div className={styles["modal-colLeft"]}>
+                                <label className={styles["modal-label"]}>
+                                    Title *
+                                    <input
+                                        name="tytul"
+                                        className={styles["modal-input"]}
+                                        value={form.tytul}
+                                        onChange={handleFormChange}
+                                        autoFocus
+                                        placeholder="Title *"
+                                    />
                                 </label>
-                                <label>Effort:
-                                    <select name="wysilek" value={form.wysilek} onChange={handleFormChange}>
-                                        {[1, 2, 3, 4].map(i => <option key={i} value={i}>{i}</option>)}
-                                    </select>
+                                <label className={styles["modal-label"]}>
+                                    Description
+                                    <input
+                                        name="tresc"
+                                        className={styles["modal-input"]}
+                                        value={form.tresc}
+                                        onChange={handleFormChange}
+                                        placeholder="Short description"
+                                    />
                                 </label>
                             </div>
-                            <label className={styles["modal-label"]}>
-                                Deadline:
-                                <input
-                                    name="deadline"
-                                    type="date"
-                                    className={styles["modal-input"]}
-                                    value={form.deadline}
-                                    onChange={handleFormChange}
-                                />
-                            </label>
-                            <div className={styles["modal-row"]} style={{justifyContent: "flex-start"}}>
-                                <label style={{margin: "0 0.7em 0 0"}}>
+                            <div className={styles["modal-colRight"]}>
+                                <div className={styles["modal-row"]}>
+                                    <label>
+                                        Priority:
+                                        <select name="priorytet" value={form.priorytet} onChange={handleFormChange}>
+                                            {[1, 2, 3].map(i => <option key={i} value={i}>{i}</option>)}
+                                        </select>
+                                    </label>
+                                    <label>
+                                        Effort:
+                                        <select name="wysilek" value={form.wysilek} onChange={handleFormChange}>
+                                            {[1, 2, 3, 4].map(i => <option key={i} value={i}>{i}</option>)}
+                                        </select>
+                                    </label>
+                                </div>
+                                <label className={styles["modal-label"]}>
+                                    Deadline:
                                     <input
-                                        type="checkbox"
-                                        name="automatyczne_powiadomienie"
-                                        checked={!!form.automatyczne_powiadomienie}
+                                        name="deadline"
+                                        type="date"
+                                        className={styles["modal-input"]}
+                                        value={form.deadline}
                                         onChange={handleFormChange}
                                     />
-                                    Auto-notify
                                 </label>
-                            </div>
-                            <div className={styles["modal-buttons"]}>
-                                <button type="submit">{formEditId ? "Save" : "Add"}</button>
-                                <button type="button" onClick={closeForm}>Cancel</button>
+                                <div className={styles["modal-row"]} style={{justifyContent: "flex-start"}}>
+                                    <label style={{margin: "0 0.7em 0 0"}}>
+                                        <input
+                                            type="checkbox"
+                                            name="automatyczne_powiadomienie"
+                                            checked={!!form.automatyczne_powiadomienie}
+                                            onChange={handleFormChange}
+                                        />
+                                        Auto-notify
+                                    </label>
+                                </div>
+                                <div className={styles["modal-buttons"]}>
+                                    <button type="submit">{formEditId ? "Save" : "Add"}</button>
+                                    <button type="button" onClick={closeForm}>Cancel</button>
+                                </div>
                             </div>
                         </form>
                     </div>
