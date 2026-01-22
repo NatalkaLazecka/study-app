@@ -7,11 +7,7 @@ import {
     getTaskById,
     getTasksByStudent,
     getNotificationModes,
-    getTasksByGroup,
-    addGroupTask,
-    updateGroupTask,
-    toggleGroupTask,
-    deleteGroupTask
+    getTasksByGroup
 } from "../controllers/tasks.controller.js";
 import {requireAuth} from "../middleware/requireAuth.js";
 import {
