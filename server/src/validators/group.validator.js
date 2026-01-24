@@ -40,8 +40,8 @@ export const createGroupValidator = [
     .withMessage("Group name must be a string"),
 
   body("kategoria_grupa_id")
-    .optional({ nullable: true })
-    .isInt()
+    .optional()
+    .isUUID()
     .withMessage("Invalid category ID format"),
 ];
 
