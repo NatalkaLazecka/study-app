@@ -142,7 +142,7 @@ export default function SchedulePage() {
                 {loading ? (
                     <p className={styles["loading-p"]}>Loading schedule...</p>
                 ) : isEmpty ? (
-                    <div className={styles["empty-state"]}>
+                    <div className={styles["empty-state"]} ${styles["err-message"]}>
                         <h3>No classes have been added to your schedule.</h3>
                     </div>
                 ) : (
