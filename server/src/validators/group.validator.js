@@ -42,8 +42,6 @@ export const createGroupValidator = [
     body("kategoria_grupa_id")
         .optional()
         .isString()
-        .trim()
-        .isUUID()
         .withMessage("Invalid category ID format"),
 ];
 
