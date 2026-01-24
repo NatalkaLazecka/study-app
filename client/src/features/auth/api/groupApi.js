@@ -16,6 +16,10 @@ export async function getGroupCategories() {
 }
 
 export async function createGroup(name, categoryId) {
+    console.log("api create group with name:", {
+    nazwa: name,
+    kategoria_grupa_id: categoryId
+});
     const res = await apiFetch("/api/groups", {
         method: "POST",
         body: JSON.stringify({nazwa: name.trim(), kategoria_grupa_id: categoryId}),
