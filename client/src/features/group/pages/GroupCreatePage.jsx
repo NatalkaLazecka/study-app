@@ -331,7 +331,7 @@ export default function GroupCreatePage() {
                     <button
                         className={calendarStyles["end-button"]}
                         onClick={save}
-                        disabled={saving || !name.trim()}
+                        disabled={saving || !name.trim() || !categoryId}
                     >
                         {saving ? "CREATING..." : "CREATE GROUP"}
                     </button>
