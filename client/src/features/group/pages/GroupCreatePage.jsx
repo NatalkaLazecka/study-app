@@ -86,6 +86,7 @@ export default function GroupCreatePage() {
     };
 
     const save = async () => {
+       console.log("CATEGORY ID BEFORE SAVE:", categoryId);
         if (!canSubmit()) {
             if (memberAddErrors.length > 0) {
                 alert("Please remove members with errors before creating the group");
