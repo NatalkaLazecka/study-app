@@ -1,0 +1,307 @@
+.todo-root {
+    background: none;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem 0.3rem 1.5rem;
+    margin: 0;
+    min-height: unset;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--text);
+}
+
+.todo-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.todo-add-button {
+    background: var(--accent, #ff4d6d);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    padding: 2px 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-right: -8px;
+}
+
+.todo-add-button:hover {
+    background: #ff0033;
+}
+
+.todo-headers {
+    display: flex;
+    gap: 1.2em;
+    margin: 10px 0 3px 0;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #ff4d6d;
+    letter-spacing: 0.2em;
+}
+
+.todo-header-btn {
+    flex: 1;
+    min-width: 70px;
+}
+
+.todo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+}
+
+.todo-row {
+    background: transparent;
+    transition: background-color .2s;
+}
+
+.todo-row:hover {
+    background: #fff2;
+}
+
+.todo-done {
+    opacity: 0.7;
+    text-decoration: line-through;
+    color: #888;
+}
+
+.todo-cell {
+    padding: 8px 2px;
+    vertical-align: middle;
+    min-width: 40px;
+}
+
+.edit-icon, .delete-icon {
+    cursor: pointer;
+    font-size: 1em;
+    margin-right: 1px;
+    opacity: 0.82;
+    transition: .2s;
+}
+
+.edit-icon:hover, .delete-icon:hover {
+    opacity: 1;
+    scale: 1.13;
+}
+
+.todo-checkbox {
+    accent-color: var(--accent, #ff4d6d);
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.emoji {
+    margin: 0 1px;
+    color: #bbbabb;
+    font-size: 1.05em;
+}
+
+.activeFire {
+    color: orange;
+}
+
+.activeCircle {
+    color: #54bfff;
+}
+
+.muted {
+    font-size: 0.91em;
+    color: #777;
+    text-align: center;
+    margin-top: 18px;
+}
+
+.loading {
+    color: #aaa;
+    padding: 20px 0;
+}
+
+.err, .err-message {
+    color: var(--accent, #ff66c4);
+    background: #38273447;
+    margin: 8px 0;
+    border-radius: 7px;
+    padding: 2px 10px;
+    font-size: 1em;
+    font-family: 'Roboto Mono', monospace;
+    border: 1px solid var(--accent, #ff66c4);
+}
+
+.err-close {
+    float: right;
+    cursor: pointer;
+    color: #000;
+    font-size: 1.4em;
+    padding: 0 5px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1020;
+    background: radial-gradient(ellipse 70% 60% at 55% 28%, #b854b496 0%, #3d2a3ca8 75%, #160c1abb 100%), rgba(30, 24, 38, 0.50);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    animation: fadeInOverlay .4s;
+    padding-top: 4vh;
+    padding-bottom: 2vh;
+}
+
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    color: var(--text, #e8d2e7);
+    background: rgba(25, 20, 32, 0.99);
+    border: 2px solid var(--accent, #ff66c4);
+    border-radius: 18px;
+    min-width: 310px;
+    max-width: 96vw;
+    box-shadow: 0 4px 36px #b854b455, 0 2px 12px #0a061022;
+    padding: 1.6rem 1.1rem 1.2rem 1.1rem;
+    z-index: 1050;
+    font-family: 'Roboto Mono', monospace;
+    text-shadow: 0 0 2px #b854b488;
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+}
+
+.modal label {
+    display: block;
+    font-size: 0.95em;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--accent, #ff66c4);
+    margin-bottom: 0.23em;
+    margin-top: 0.55em;
+    letter-spacing: .02em;
+    font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .modal {
+        min-width: 98vw;
+        padding: 0.8rem 0.5rem 0.7rem 0.5rem;
+        border-radius: 12px;
+        max-height: 98vh;
+        overflow-y: auto;
+    }
+
+    .modal-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.3em;
+    }
+}
+
+.modal h3, .modal h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.35em;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: .03em;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.2em 2.4em;
+    align-items: start;
+    margin-top: 1.2em;
+}
+
+.modal-colLeft, .modal-colRight {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+}
+
+.modal-colRight .modal-buttons {
+    margin-top: 1.2em;
+}
+
+.modal-input, .modal-textarea, .modal select, .modal input[type="date"] {
+    width: 100%;
+    display: block;
+    margin: 5px 0 5px 0;
+    border-radius: 7px;
+    border: 1px solid var(--accent, #ff66c4);
+    background: rgba(25, 14, 30, 0.94);
+    color: var(--text, #e8d2e7);
+    min-height: 2.3em;
+    font-size: 1em;
+    padding: 5px 5px;
+    font-family: 'Roboto Mono', monospace;
+    box-shadow: 0 1px 6px #b854b41a;
+    transition: border .2s, box-shadow .2s;
+}
+
+.modal-input:focus, .modal-textarea:focus {
+    outline: 2px solid var(--accent, #ff66c4);
+    border-color: var(--accent, #ff66c4);
+    background: rgba(30, 14, 46, .99);
+    box-shadow: 0 0 0 3px #b854b4bb;
+}
+
+.modal-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1.1em;
+    align-items: center;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.modal-row label {
+    font-size: 0.96em;
+    color: var(--accent);
+    font-family: 'Roboto Mono', monospace;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1em;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.modal-buttons > button {
+    background: var(--accent, #ff66c4);
+    color: var(--bg, #140b11);
+    border: none;
+    border-radius: 8px;
+    padding: 7px 23px;
+    font-weight: 600;
+    font-size: 1em;
+    font-family: 'Roboto Mono', monospace;
+    cursor: pointer;
+    transition: box-shadow .2s, background .21s;
+    box-shadow: 0 2px 12px #b854b433;
+    margin-top: 7px;
+    letter-spacing: .03em;
+}
+
+.modal-buttons > button:last-child {
+    background: #eee;
+    color: #444;
+    font-weight: 500;
+}
+
+.modal-buttons > button:hover {
+    filter: brightness(1.07);
+    box-shadow: 0 2px 24px #b854b466;
+}

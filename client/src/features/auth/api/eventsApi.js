@@ -67,3 +67,8 @@ export async function getEventById(eventId) {
   const res = await apiFetch(`/api/events/${eventId}`);
   return res.json();
 }
+
+export const getRepeatModes = async () => {
+    const res = await apiFetch("/api/events/repeatModes");
+    return await res.json();
+};

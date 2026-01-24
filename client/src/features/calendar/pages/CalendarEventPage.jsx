@@ -13,9 +13,11 @@ import {
     deleteEvent,
     getNotificationModes,
     getEventById,
+    getRepeatModes
 } from "../../auth/api/eventsApi.js";
 import todoStyles from "../../todo/styles/Todo.module.css";
 import calendarStyles from "../styles/CalendarPage.module.css";
+import CustomSelect from "../../schedule/component/CustomSelect";
 
 export default function CalendarEventPage() {
     const [eventId, setEventId] = useState("");
@@ -37,6 +39,9 @@ export default function CalendarEventPage() {
     const [notificationModes, setNotificationModes] = useState([]);
     const [selectedModes, setSelectedModes] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
+
+    const [repeatModes, setRepeatModes] = useState([]);
+    const [selectedRepeatMode, setSelectedRepeatMode] = useState("");
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -63,7 +68,19 @@ export default function CalendarEventPage() {
     }, []);
 
     useEffect(() => {
-        const id = searchParams.get("id");
+        const loadRepeatModes = async () => {
+            try {
+                const modes = await getRepeatModes();
+                setRepeatModes(modes);
+            } catch (err) {
+                console.error("Error loading repeat modes:", err);
+            }
+        };
+        void loadRepeatModes();
+    }, []);
+
+    useEffect(() => {
+        const id = searchParams.get("eventId");
 
         if (id) {
             setEventId(id);
@@ -82,6 +99,8 @@ export default function CalendarEventPage() {
                     if (event.tryby_powiadomien && event.tryby_powiadomien.length > 0) {
                         setSelectedModes(event.tryby_powiadomien.map(t => t.id));
                     }
+
+                    if (event.rodzaj_powtarzania_id) setSelectedRepeatMode(event.rodzaj_powtarzania_id);
                 } catch (err) {
                     console.error("Error loading event:", err);
                     setError(err.message);
@@ -221,9 +240,9 @@ export default function CalendarEventPage() {
                 data_koncowa: endDate || null,
                 priorytet: "normal",
                 rodzaj_wydarzenia_id: categoryId,
-                rodzaj_powtarzania_id: null,
+                rodzaj_powtarzania_id: selectedRepeatMode || null,
                 automatyczne_powiadomienia: autoNotify ? 1 : 0,
-                tryby_powiadomien:  selectedModes,
+                tryby_powiadomien: selectedModes,
             };
 
             if (eventId) {
@@ -344,6 +363,21 @@ export default function CalendarEventPage() {
                                 <span className={styles["toggle-slider"]}></span>
                             </label>
                         </div>
+                    </div>
+
+                    <div className={styles["input-box"]}>
+                        <p className={styles["input-title"]}>Repeat</p>
+                        <CustomSelect
+                            value={selectedRepeatMode}
+                            onChange={setSelectedRepeatMode}
+                            options={repeatModes.map(mode => ({
+                                value: mode.id,
+                                label: mode.nazwa
+                            }))}
+                            placeholder="No repeat"
+                            isSearchable={false}
+                            isClearable={false}
+                        />
                     </div>
 
                     {autoNotify && (

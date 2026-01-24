@@ -17,7 +17,7 @@ export default function CalendarEventComponent({ variant }) {
 
     const handleArrowClick = () => {
         const params = new URLSearchParams({
-            id: variant.id,
+            eventId: variant.id,
             date: variant.data_start,
             title: variant.tytul || '',
             describe: variant.opis || '',
