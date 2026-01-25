@@ -140,7 +140,7 @@ export default function GroupTodoList({groupId}) {
                         : STATUS_ON_GOING,
                 });
             } else {
-                await createTask(groupId, {...form, grupa_id: groupId});
+                await createTask({...form, grupa_id: groupId});
             }
             const data = await getGroupTasks(groupId);
             setTodos(data.map((t) => ({
