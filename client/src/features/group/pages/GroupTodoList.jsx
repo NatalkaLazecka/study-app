@@ -34,7 +34,20 @@ export default function GroupTodoList({groupId}) {
             try {
                 setLoading(true);
                 const data = await getGroupTasks(groupId);
-                setTodos(data);
+
+                setTodos(
+                    data.map((task) => ({
+                        id: task.id,
+                        tytul: task.tytul,
+                        tresc: task.tresc,
+                        deadline: task.deadline,
+                        done: task.status_zadania_id === STATUS_DONE,
+                        priority: task.priorytet,
+                        effort: task.wysilek,
+                        automatyczne_powiadomienie:
+                            task.automatyczne_powiadomienie || 0,
+                    }))
+                );
             } catch (e) {
                 setError("Failed to load tasks: " + e.message);
             } finally {
@@ -48,13 +61,13 @@ export default function GroupTodoList({groupId}) {
         const task = todos.find((t) => t.id === id);
         if (!task) return;
 
-        const newDone = !task.status_zadania_id;
+        const newDone = !task.done;
         const newStatus = newDone
             ? STATUS_DONE
             : STATUS_ON_GOING;
 
         setTodos((todos) =>
-            todos.map((t) => (t.id === id ? {...t, status_zadania_id: newDone} : t))
+            todos.map((t) => (t.id === id ? {...t, done: newDone} : t))
         );
         try {
             await updateTask(id, {
@@ -71,7 +84,7 @@ export default function GroupTodoList({groupId}) {
             setTodos((prev) =>
                 prev.map((t) =>
                     t.id === id
-                        ? {...t, status_zadania_id: !newDone}
+                        ? {...t, done: !newDone}
                         : t
                 )
             );
@@ -174,13 +187,13 @@ export default function GroupTodoList({groupId}) {
                     {paginatedTodos.map((t) => (
                         <tr
                             key={t.id}
-                            className={`${styles["todo-row"]} ${t.status_zadania_id === STATUS_DONE ? styles["todo-done"] : ""}`}
+                            className={`${styles["todo-row"]} ${t.done ? styles["todo-done"] : ""}`}
                         >
                             <td className={styles["todo-cell"]} onClick={() => handleToggleDone(t.id)}>
                                 <input
                                     type="checkbox"
                                     className={styles["todo-checkbox"]}
-                                    checked={t.status_zadania_id === STATUS_DONE}
+                                    checked={t.done}
                                     readOnly
                                 />
                                 {t.tytul}
