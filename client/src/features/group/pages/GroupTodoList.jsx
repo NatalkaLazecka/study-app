@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {
     getGroupTasks,
     createTask,
     updateTask,
     deleteTask,
+    STATUS_DONE,
+    STATUS_ON_GOING,
 } from "@/features/auth/api/todoApi";
 import styles from "../styles/GroupTodo.module.css";
-
-import {STATUS_DONE, STATUS_ON_GOING} from "@/features/auth/api/todoApi";
 
 export default function GroupTodoList({groupId}) {
     const [todos, setTodos] = useState([]);
@@ -34,7 +34,6 @@ export default function GroupTodoList({groupId}) {
             try {
                 setLoading(true);
                 const data = await getGroupTasks(groupId);
-                console.log("Data: ", data);
 
                 setTodos(
                     data.map((task) => ({
@@ -49,21 +48,14 @@ export default function GroupTodoList({groupId}) {
                             task.automatyczne_powiadomienie || 0,
                     }))
                 );
-            } catch (e) {
-                setError("Failed to load tasks: " + e.message);
+            } catch (err) {
+                setError("Failed to load tasks: " + err.message);
             } finally {
                 setLoading(false);
             }
         };
-        void load();
-        console.log("Todos: ", todos);
+        load();
     }, [groupId]);
-
-    useEffect(
-        () => {
-            console.log("Todos: ", todos);
-        }
-    )
 
     const handleToggleDone = async (id) => {
         const task = todos.find((t) => t.id === id);
@@ -207,7 +199,7 @@ export default function GroupTodoList({groupId}) {
                             </td>
                             <td className={styles["todo-cell"]}>
                                 {Array(3)
-                                    .fill()
+                                    .fill(null)
                                     .map((_, i) => (
                                         <span
                                             key={i}
@@ -221,7 +213,7 @@ export default function GroupTodoList({groupId}) {
                             </td>
                             <td className={styles["todo-cell"]}>
                                 {Array(4)
-                                    .fill()
+                                    .fill(null)
                                     .map((_, i) => (
                                         <span
                                             key={i}
