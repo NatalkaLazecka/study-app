@@ -53,5 +53,7 @@ export async function getNotificationModes() {
 
 export async function getGroupTasks(groupId) {
     const res = await apiFetch(`/api/tasks/group/${groupId}`);
+    console.log("API TODO getGroupTasks");
+    console.log(res);
     return res.json();
 }
