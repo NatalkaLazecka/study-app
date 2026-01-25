@@ -46,7 +46,7 @@ export async function addMemberToGroup(groupId, email) {
 
         return await res.json();
     } catch (err) {
-        console.error('❌ [groupApi] Exception:', err);
+        console.error('[groupApi] Exception:', err);
         throw err;
     }
 }

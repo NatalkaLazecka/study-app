@@ -16,17 +16,20 @@ export default function SchedulePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [fullWeek, setFullWeek] = useState(false);
+    const [isEmpty, setIsEmpty] = useState(false);
 
     useEffect(() => {
         const loadSchedule = async () => {
             try {
                 const data = await getStudentSchedule();
                 setSchedule(data);
+                setIsEmpty(data.length === 0);
             } catch (err) {
-                if (err.message?.includes("401")){
+                if (err.message?.includes("401")) {
                     navigate("/login");
                 } else {
-                    setError(err.message || "Schedule is empty")
+                    setSchedule([]);
+                    setIsEmpty(true);
                 }
             } finally {
                 setLoading(false);
@@ -87,6 +90,7 @@ export default function SchedulePage() {
         try {
             await clearStudentSchedule();
             setSchedule([]);
+            setIsEmpty(true);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -137,6 +141,10 @@ export default function SchedulePage() {
 
                 {loading ? (
                     <p className={styles["loading-p"]}>Loading schedule...</p>
+                ) : isEmpty ? (
+                    <div className={`${styles["empty-state"]} ${styles["err-message"]}`}>
+                        <h3>No classes have been added to your schedule.</h3>
+                    </div>
                 ) : (
                     <div className={styles["schedule-content"]}>
                         {Object.keys(scheduleByDay).map((day) => (
