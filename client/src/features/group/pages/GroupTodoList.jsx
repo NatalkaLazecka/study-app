@@ -24,41 +24,37 @@ export default function GroupTodoList({groupId}) {
         deadline: "",
         priorytet: 1,
         wysilek: 1,
-        automatyczne_powiadomienie: false,
+        status_zadania_id: STATUS_ON_GOING,
+        automatyczne_powiadomienie: false
     };
     const [form, setForm] = useState(emptyTask);
 
     useEffect(() => {
         const load = async () => {
-            setLoading(true);
             try {
+                setLoading(true);
                 const data = await getGroupTasks(groupId);
-                setTodos(
-                    data.map((t) => ({
-                        ...t,
-                        done: t.status_zadania_id === STATUS_DONE,
-                    }))
-                );
+                setTodos(data);
             } catch (e) {
                 setError("Failed to load tasks: " + e.message);
             } finally {
                 setLoading(false);
             }
         };
-        load();
+        void load();
     }, [groupId]);
 
     const handleToggleDone = async (id) => {
         const task = todos.find((t) => t.id === id);
         if (!task) return;
 
-        const newDone = !task.done;
+        const newDone = !task.status_zadania_id;
         const newStatus = newDone
             ? STATUS_DONE
             : STATUS_ON_GOING;
 
         setTodos((todos) =>
-            todos.map((t) => (t.id === id ? {...t, done: newDone} : t))
+            todos.map((t) => (t.id === id ? {...t, status_zadania_id: newDone} : t))
         );
         try {
             await updateTask(id, {
@@ -71,11 +67,11 @@ export default function GroupTodoList({groupId}) {
                 automatyczne_powiadomienie:
                     task.automatyczne_powiadomienie || 0,
             });
-        } catch (e) {
+        } catch (err) {
             setTodos((prev) =>
                 prev.map((t) =>
                     t.id === id
-                        ? {...t, done: !newDone}
+                        ? {...t, status_zadania_id: !newDone}
                         : t
                 )
             );
@@ -96,6 +92,8 @@ export default function GroupTodoList({groupId}) {
             priorytet: task.priorytet || 1,
             wysilek: task.wysilek || 1,
             automatyczne_powiadomienie: task.automatyczne_powiadomienie || 0,
+            grupa_id: task.grupa_id || null,
+            status_zadania_id: task.status_zadania_id || STATUS_ON_GOING,
         });
         setFormEditId(task.id);
         setShowForm(true);
@@ -133,20 +131,13 @@ export default function GroupTodoList({groupId}) {
         }
         try {
             if (formEditId) {
-                await updateTask(groupId, formEditId, {
-                    ...form,
-                    status_zadania_id: todos.find((t) => t.id === formEditId)?.done
-                        ? STATUS_DONE
-                        : STATUS_ON_GOING,
-                });
+                await updateTask(formEditId, form);
             } else {
+                console.log("SEND TO BACKEND", { ...form, grupa_id: groupId });
                 await createTask({...form, grupa_id: groupId});
             }
             const data = await getGroupTasks(groupId);
-            setTodos(data.map((t) => ({
-                ...t,
-                done: t.status_zadania_id === STATUS_DONE
-            })));
+            setTodos(data);
             closeForm();
         } catch (e) {
             setError("Error: " + e.message);
@@ -184,7 +175,7 @@ export default function GroupTodoList({groupId}) {
                     {paginatedTodos.map((t) => (
                         <tr
                             key={t.id}
-                            className={`${styles["todo-row"]} ${t.done ? styles["todo-done"] : ""}`}
+                            className={`${styles["todo-row"]} ${t.status_zadania_id ? styles["todo-done"] : ""}`}
                         >
                             <td className={styles["todo-cell"]} onClick={() => handleToggleDone(t.id)}>
                                 <input
