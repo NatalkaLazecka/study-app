@@ -35,9 +35,6 @@ export default function GroupTodoList({groupId}) {
                 setLoading(true);
                 const data = await getGroupTasks(groupId);
 
-                console.log("TodoList load");
-                console.log(data);
-
                 setTodos(
                     data.map((task) => ({
                         id: task.id,
@@ -55,9 +52,6 @@ export default function GroupTodoList({groupId}) {
                 setError("Failed to load tasks: " + e.message);
             } finally {
                 setLoading(false);
-
-                console.log("Todo after load");
-                console.log(todos);
             }
         };
         void load();
@@ -73,7 +67,9 @@ export default function GroupTodoList({groupId}) {
             : STATUS_ON_GOING;
 
         setTodos((todos) =>
-            todos.map((t) => (t.id === id ? {...t, done: newDone} : t))
+            todos.map((t) =>
+                (t.id === id ? {...t, done: newDone} : t)
+            )
         );
         try {
             await updateTask(id, {
