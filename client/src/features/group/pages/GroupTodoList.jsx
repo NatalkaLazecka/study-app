@@ -174,13 +174,13 @@ export default function GroupTodoList({groupId}) {
                     {paginatedTodos.map((t) => (
                         <tr
                             key={t.id}
-                            className={`${styles["todo-row"]} ${t.status_zadania_id ? styles["todo-done"] : ""}`}
+                            className={`${styles["todo-row"]} ${t.status_zadania_id === STATUS_DONE ? styles["todo-done"] : ""}`}
                         >
                             <td className={styles["todo-cell"]} onClick={() => handleToggleDone(t.id)}>
                                 <input
                                     type="checkbox"
                                     className={styles["todo-checkbox"]}
-                                    checked={t.done}
+                                    checked={t.status_zadania_id === STATUS_DONE}
                                     readOnly
                                 />
                                 {t.tytul}
@@ -219,7 +219,7 @@ export default function GroupTodoList({groupId}) {
                                     </span>
                                 <span
                                     className={styles["delete-icon"]}
-                                    style={{marginLeft: "8px", color: "#ff4d6d"}}
+                                    style={styles["trash-icon"]}
                                     onClick={() => handleDelete(t.id)}
                                     title="Delete"
                                 >
