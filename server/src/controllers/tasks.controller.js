@@ -379,6 +379,7 @@ export const getTasksByGroup = async (req, res) => {
             WHERE z.student_id = ? and z.grupa_id = ?
             ORDER BY z.deadline ASC`,
             [studentId, groupId]);
+
         res.json(result);
     } catch (err) {
         res.status(500).json({error: err.message});

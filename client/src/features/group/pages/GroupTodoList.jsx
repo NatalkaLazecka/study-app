@@ -55,7 +55,14 @@ export default function GroupTodoList({groupId}) {
             }
         };
         void load();
+        console.log("Todos: ", todos);
     }, [groupId]);
+
+    useEffect(
+        () => {
+            console.log("Todos: ", todos);
+        }
+    )
 
     const handleToggleDone = async (id) => {
         const task = todos.find((t) => t.id === id);
@@ -187,10 +194,7 @@ export default function GroupTodoList({groupId}) {
                 <table className={styles["todo-table"]}>
                     <tbody>
                     {paginatedTodos.map((t) => (
-                        <tr
-                            key={t.id}
-                            className={`${styles["todo-row"]} ${t.done ? styles["todo-done"] : ""}`}
-                        >
+                        <tr key={t.id} className={`${styles["todo-row"]} ${t.done ? styles["todo-done"] : ""}`}>
                             <td className={styles["todo-cell"]} onClick={() => handleToggleDone(t.id)}>
                                 <input
                                     type="checkbox"
