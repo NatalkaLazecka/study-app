@@ -25,7 +25,7 @@ export default function GroupTodoList({groupId}) {
         priorytet: 1,
         wysilek: 1,
         status_zadania_id: STATUS_ON_GOING,
-        automatyczne_powiadomienie: false
+        automatyczne_powiadomienie: 0
     };
     const [form, setForm] = useState(emptyTask);
 
@@ -120,7 +120,7 @@ export default function GroupTodoList({groupId}) {
         const {name, value, type, checked} = e.target;
         setForm((f) => ({
             ...f,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
         }));
     };
     const handleFormSubmit = async (e) => {
@@ -133,7 +133,6 @@ export default function GroupTodoList({groupId}) {
             if (formEditId) {
                 await updateTask(formEditId, form);
             } else {
-                console.log("SEND TO BACKEND", { ...form, grupa_id: groupId });
                 await createTask({...form, grupa_id: groupId});
             }
             const data = await getGroupTasks(groupId);
