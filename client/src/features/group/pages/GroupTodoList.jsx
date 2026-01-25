@@ -34,6 +34,7 @@ export default function GroupTodoList({groupId}) {
             try {
                 setLoading(true);
                 const data = await getGroupTasks(groupId);
+                console.log("Data: ", data);
 
                 setTodos(
                     data.map((task) => ({
