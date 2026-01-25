@@ -210,7 +210,7 @@ export const addTask = async (req, res) => {
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [id, tytul, tresc, priorytet, deadline,
                 automatyczne_powiadomienie || 0,
-                studentId, status_zadania_id, wysilek, grupa_id]
+                studentId, status_zadania_id, wysilek, grupa_id || null]
         );
 
         if (tryby_powiadomien && tryby_powiadomien.length > 0) {

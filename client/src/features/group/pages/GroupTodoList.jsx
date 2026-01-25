@@ -143,12 +143,13 @@ export default function GroupTodoList({groupId}) {
                 await createTask(groupId, {...form, grupa_id: groupId});
             }
             const data = await getGroupTasks(groupId);
-            setTodos(data.map((t) => ({...t, done: t.status_zadania_id === STATUS_DONE})));
+            setTodos(data.map((t) => ({
+                ...t,
+                done: t.status_zadania_id === STATUS_DONE
+            })));
             closeForm();
         } catch (e) {
             setError("Error: " + e.message);
-        } finally {
-            setShowForm(false);
         }
     };
 
