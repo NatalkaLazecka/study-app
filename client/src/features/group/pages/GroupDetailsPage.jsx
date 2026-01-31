@@ -34,6 +34,7 @@ export default function GroupDetailsPage() {
     const {id} = useParams();
     const navigate = useNavigate();
     const [noteFiles, setNoteFiles] = useState({});
+    const [noteFilesToUpload, setNoteFilesToUpload] = useState([]);
 
     const {currentGroup, fetchGroupDetails, clearCurrentGroup,} = useGroups();
 
@@ -121,14 +122,22 @@ export default function GroupDetailsPage() {
         }
 
         try {
-            await createGroupNote(id, {
+            const result = await createGroupNote(id, {
                 tytul: noteTitle.trim(),
                 opis: noteContent.trim() || null
             });
+            const noteId = result.id;
+
+            if (noteId && noteFilesToUpload.length > 0) {
+                for (const file of noteFilesToUpload) {
+                    await uploadNoteFile(noteId, file);
+                }
+            }
 
             setShowNoteModal(false);
             setNoteTitle("");
             setNoteContent("");
+            setNoteFilesToUpload([]);
             setNoteError("");
             await loadNotes();
             await loadAnnouncements();
@@ -365,10 +374,17 @@ export default function GroupDetailsPage() {
                                             <ul>
                                                 {noteFiles[note.id].map(f => (
                                                     <li key={f.id}>
-                                                        <span onClick={() => handleNoteFileDownload(f.id, f.nazwa)} style={{cursor: 'pointer'}}>
+                                                        <span
+                                                            onClick={() => handleNoteFileDownload(f.id, f.nazwa)}
+                                                            style={{cursor: 'pointer', marginRight: 8}}
+                                                            title="Pobierz plik"
+                                                        >
                                                             <i className="fa-solid fa-file"/> {f.nazwa}
                                                         </span>
-                                                        <button onClick={() => handleNoteFileDelete(note.id, f.id)}>
+                                                        <button
+                                                            onClick={() => handleNoteFileDelete(note.id, f.id)}
+                                                            title="Usuń plik"
+                                                        >
                                                             <i className="fa-solid fa-x"/>
                                                         </button>
                                                     </li>
@@ -376,9 +392,6 @@ export default function GroupDetailsPage() {
                                             </ul>
                                         </div>
                                     )}
-                                    <div>
-                                        <input type="file" onChange={e => handleNoteFileUpload(note.id, e)}/>
-                                    </div>
                                     <small>
                                         by {note.author.imie || 'Unknown'} {note.author.nazwisko || ''}
                                     </small>
@@ -426,6 +439,7 @@ export default function GroupDetailsPage() {
                         setNoteError("");
                         setNoteTitle("");
                         setNoteContent("");
+                        setNoteFilesToUpload([]); // czyść wybrane pliki przy zamknięciu modala!
                     }}
                 >
                     <div className={styles["modal"]} onClick={(e) => e.stopPropagation()}>
@@ -444,6 +458,22 @@ export default function GroupDetailsPage() {
                             className={styles["modal-textarea"]}
                             rows={5}
                         />
+                        {/* ---- Dodaj input plików ---- */}
+                        <div style={{margin: "10px 0"}}>
+                            <input
+                                type="file"
+                                multiple
+                                onChange={e => setNoteFilesToUpload(Array.from(e.target.files))}
+                            />
+                            {noteFilesToUpload.length > 0 && (
+                                <ul>
+                                    {noteFilesToUpload.map(file =>
+                                        <li key={file.name}>{file.name}</li>
+                                    )}
+                                </ul>
+                            )}
+                        </div>
+                        {/* ---- ---- */}
                         {noteError && <p className={styles["error"]}>{noteError}</p>}
                         <div className={styles["modal-buttons"]}>
                             <button onClick={handleAddNote}>Create</button>
@@ -452,6 +482,7 @@ export default function GroupDetailsPage() {
                                 setNoteError("");
                                 setNoteTitle("");
                                 setNoteContent("");
+                                setNoteFilesToUpload([]);
                             }}>
                                 Cancel
                             </button>
