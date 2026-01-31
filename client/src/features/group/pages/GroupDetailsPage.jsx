@@ -15,7 +15,11 @@ import {
     getGroupNotes,
     createGroupNote,
     deleteGroupNote,
-    getGroupAnnouncements
+    getGroupAnnouncements,
+    getNoteFiles,
+    uploadNoteFile,
+    downloadNoteFile,
+    deleteNoteFile,
 } from "@/features/auth/api/groupApi";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -29,6 +33,7 @@ const DEFAULT_LAYOUT = [
 export default function GroupDetailsPage() {
     const {id} = useParams();
     const navigate = useNavigate();
+    const [noteFiles, setNoteFiles] = useState({});
 
     const {currentGroup, fetchGroupDetails, clearCurrentGroup,} = useGroups();
 
@@ -49,6 +54,39 @@ export default function GroupDetailsPage() {
     const [noteError, setNoteError] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [announcements, setAnnouncements] = useState([]);
+
+    const fetchNoteFiles = async (noteId) => {
+        const files = await getNoteFiles(noteId);
+        setNoteFiles(prev => ({...prev, [noteId]: files}));
+    }
+
+    useEffect(() => {
+        notes.forEach(note => {
+            void fetchNoteFiles(note.id);
+        })
+    }, [notes]);
+
+    const handleNoteFileUpload = async (noteId, event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        await uploadNoteFile(noteId, file);
+        fetchNoteFiles(noteId);
+    };
+
+    const handleNoteFileDownload = async (fileId, fileName) => {
+        const blob = await downloadNoteFile(fileId);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    const handleNoteFileDelete = async (noteId, fileId) => {
+        await deleteNoteFile(fileId);
+        fetchNoteFiles(noteId);
+    };
 
     const loadNotes = async () => {
         try {
@@ -322,6 +360,25 @@ export default function GroupDetailsPage() {
                                         </button>
                                     </div>
                                     {note.opis && <p>{note.opis}</p>}
+                                    {noteFiles[note.id] && noteFiles[note.id].length > 0 && (
+                                        <div>
+                                            <ul>
+                                                {noteFiles[note.id].map(f => (
+                                                    <li key={f.id}>
+                                                        <span onClick={() => handleNoteFileDownload(f.id, f.nazwa)} style={{cursor: 'pointer'}}>
+                                                            <i className="fa-solid fa-file"/> {f.nazwa}
+                                                        </span>
+                                                        <button onClick={() => handleNoteFileDelete(note.id, f.id)}>
+                                                            <i className="fa-solid fa-x"/>
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    <div>
+                                        <input type="file" onChange={e => handleNoteFileUpload(note.id, e)}/>
+                                    </div>
                                     <small>
                                         by {note.author.imie || 'Unknown'} {note.author.nazwisko || ''}
                                     </small>

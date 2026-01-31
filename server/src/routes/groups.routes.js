@@ -12,6 +12,10 @@ import {
     deleteGroupNote,
     getGroupAnnouncements,
     getGroupCategories,
+    getNoteFiles,
+    uploadNoteFile,
+    downloadNoteFile,
+    deleteNoteFile, noteFileUpload,
 } from "../controllers/groups.controller.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 import {validate} from "../middleware/validate.js";
@@ -44,5 +48,10 @@ router.post("/:id/notes", requireAuth, createNoteValidator, validate, createGrou
 router.delete("/:id/notes/:noteId", requireAuth, deleteNoteValidator, validate, deleteGroupNote);
 
 router.get("/:id/announcements", requireAuth, getAnnouncementsValidator, validate, getGroupAnnouncements);
+
+router.get("/:noteId/files", requireAuth, getNoteFiles);
+router.post("/:noteId/file", requireAuth, noteFileUpload, uploadNoteFile);
+router.get("/:fileId/download", requireAuth, downloadNoteFile);
+router.delete("/:fileId", requireAuth, deleteNoteFile);
 
 export default router;

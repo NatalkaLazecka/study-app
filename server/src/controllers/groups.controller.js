@@ -1,5 +1,135 @@
 import pool from "../database/db.js";
 import {v4 as uuidv4} from "uuid";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import {fileURLToPath} from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const noteFilesDir = path.join(__dirname, "../uploads/note-files");
+if (!fs.existsSync(noteFilesDir)) fs.mkdirSync(noteFilesDir, {recursive: true});
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, noteFilesDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${uuidv4()}-${file.originalname}`);
+    }
+});
+export const noteFileUpload = multer({storage}).single("file");
+
+export const getNoteFiles = async (req, res) => {
+    const noteId = req.params.noteId;
+    const studentId = req.user.id;
+    const [[note]] = await pool.query(
+        "SELECT grupa_id FROM notatka WHERE id = ?", [noteId]
+    );
+    if (!note) return res.status(404).json({message: "Note not found"});
+    const [[member]] = await pool.query(
+        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note.grupa_id, studentId]
+    );
+    if (!member) return res.status(403).json({message: "No permission"});
+    const [files] = await pool.query(
+        `SELECT id, nazwa, sciezka, data_dodania
+         FROM plik_notatka
+         WHERE notatka_id = ?
+         ORDER BY data_dodania DESC`,
+        [noteId]
+    );
+    res.json(files);
+};
+
+export const uploadNoteFile = async (req, res) => {
+    const noteId = req.params.noteId;
+    const studentId = req.user.id;
+
+    if (!req.file)
+        return res.status(400).json({error: "Brak pliku"});
+
+    const [[note]] = await pool.query(
+        "SELECT grupa_id FROM notatka WHERE id = ?",
+        [noteId]);
+
+    if (!note)
+        return res.status(404).json({message: "Note not found"});
+
+    const [[member]] = await pool.query(
+        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note.grupa_id, studentId]
+    );
+
+    if (!member)
+        return res.status(403).json({message: "No permission"});
+
+    const id = uuidv4();
+    await pool.query(
+        `INSERT INTO plik_notatka (id, nazwa, sciezka, data_dodania, notatka_id, dostep_grupa_id)
+         VALUES (?, ?, ?, NOW(), ?, ?)`,
+        [id, req.file.originalname, req.file.filename, noteId, note.grupa_id]
+    );
+    res.status(201).json({message: "File uploaded", id});
+};
+
+export const downloadNoteFile = async (req, res) => {
+    const fileId = req.params.fileId;
+    const studentId = req.user.id;
+
+    const [[file]] = await pool.query(
+        "SELECT nazwa, sciezka, notatka_id FROM plik_notatka WHERE id = ?", [fileId]
+    );
+
+    if (!file)
+        return res.status(404).json({error: "File not found"});
+
+    const [[note]] = await pool.query(
+        "SELECT grupa_id FROM notatka WHERE id = ?",
+        [file.notatka_id]);
+
+    if (!note)
+        return res.status(404).json({error: "Note not found"});
+
+    const [[member]] = await pool.query(
+        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note.grupa_id, studentId]
+    );
+
+    if (!member)
+        return res.status(403).json({message: "No permission"});
+
+    const filePath = path.join(noteFilesDir, file.sciezka);
+
+    if (!fs.existsSync(filePath))
+        return res.status(404).json({error: "No file on server"});
+
+    res.download(filePath, file.nazwa);
+};
+
+export const deleteNoteFile = async (req, res) => {
+    const fileId = req.params.fileId;
+    const studentId = req.user.id;
+
+    const [[file]] = await pool.query(
+        "SELECT plik_notatka.*, n.student_id, g.administrator FROM plik_notatka INNER JOIN notatka n ON n.id = plik_notatka.notatka_id INNER JOIN grupa g ON n.grupa_id = g.id WHERE plik_notatka.id = ?",
+        [fileId]
+    );
+
+    if (!file)
+        return res.status(404).json({error: "File not found"});
+
+    if (file.student_id !== studentId && file.administrator !== studentId)
+        return res.status(403).json({error: "No permission to delete file"});
+
+    const filePath = path.join(noteFilesDir, file.sciezka);
+
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+    await pool.query(
+        "DELETE FROM plik_notatka WHERE id = ?",
+        [fileId]);
+
+    res.json({message: "File deleted"});
+};
 
 async function createAnnouncement(groupId, studentId, type, content, metadata = null) {
     const [typeRes] = await pool.query(
@@ -53,11 +183,14 @@ export const createGroup = async (req, res) => {
 
     try {
         const [existing] = await pool.query(
-            `SELECT id FROM grupa WHERE nazwa = ? AND administrator = ?`,
+            `SELECT id
+             FROM grupa
+             WHERE nazwa = ?
+               AND administrator = ?`,
             [safeName, studentId]
         );
 
-        if (existing.length > 0){
+        if (existing.length > 0) {
             return res.status(409).json({
                 message: `Group "${safeName}" already exists`
             });
@@ -65,7 +198,9 @@ export const createGroup = async (req, res) => {
 
         if (kategoria_grupa_id) {
             const [categoryCheck] = await pool.query(
-                `SELECT id FROM kategoria_grupy WHERE id = ? `,
+                `SELECT id
+                 FROM kategoria_grupy
+                 WHERE id = ? `,
                 [kategoria_grupa_id]
             );
 
@@ -99,7 +234,6 @@ export const createGroup = async (req, res) => {
         res.status(500).json({error: err.message});
     }
 };
-
 
 export const getGroupDetails = async (req, res) => {
     const groupId = req.params.id;
@@ -402,8 +536,8 @@ export const deleteGroup = async (req, res) => {
                           WHERE grupa_id = ?`, [groupId]
         );
         await pool.query(`DELETE
-                         FROM ogloszenie
-                         WHERE grupa_id = ? `, [groupId]
+                          FROM ogloszenie
+                          WHERE grupa_id = ? `, [groupId]
         );
         await pool.query(`DELETE
                           FROM grupa_student
