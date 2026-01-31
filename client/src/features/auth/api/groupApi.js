@@ -115,7 +115,6 @@ export async function uploadNoteFile(noteId, file) {
         throw new Error("Błąd uploadu pliku (backend nie zwrócił poprawnego JSON)");
     }
 }
-}
 export async function downloadNoteFile(fileId) {
     return fetch(`/api/groups/${fileId}/download`).then(res => res.blob());
 }
