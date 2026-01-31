@@ -103,10 +103,18 @@ export async function getNoteFiles(noteId) {
 export async function uploadNoteFile(noteId, file) {
     const formData = new FormData();
     formData.append('file', file);
-    return fetch(`/api/groups/${noteId}/file`, {
+    const res = await fetch(`/api/groups/${noteId}/file`, {
         method: 'POST',
         body: formData,
-    }).then(res => res.json());
+    });
+
+    const text = await res.text();
+    try {
+        return JSON.parse(text);
+    } catch {
+        throw new Error("Błąd uploadu pliku (backend nie zwrócił poprawnego JSON)");
+    }
+}
 }
 export async function downloadNoteFile(fileId) {
     return fetch(`/api/groups/${fileId}/download`).then(res => res.blob());
