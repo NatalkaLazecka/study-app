@@ -356,33 +356,3 @@ export const getTasksByStudent = async (req, res) => {
     }
 };
 
-export const getTasksByGroup = async (req, res) => {
-    try {
-        const groupId = req.params.groupId;
-        const studentId = req.user.id;
-        const [result] = await pool.query(`
-            SELECT z.id,
-                   z.tytul,
-                   z.tresc,
-                   z.priorytet,
-                   z.deadline,
-                   z.student_id,
-                   z.status_zadania_id,
-                   z.wysilek,
-                   z.grupa_id,
-                   CAST(z.automatyczne_powiadomienie AS UNSIGNED) AS automatyczne_powiadomienie,
-                   s.nazwa                                        AS status,
-                   g.nazwa                                        AS grupa
-            FROM zadanie z
-                     LEFT JOIN status_zadania s ON z.status_zadania_id = s.id
-                     LEFT JOIN grupa g ON z.grupa_id = g.id
-            WHERE z.student_id = ? and z.grupa_id = ?
-            ORDER BY z.deadline ASC`,
-            [studentId, groupId]);
-
-        res.json(result);
-    } catch (err) {
-        res.status(500).json({error: err.message});
-    }
-};
-

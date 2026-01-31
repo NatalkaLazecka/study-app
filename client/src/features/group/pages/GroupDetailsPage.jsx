@@ -3,7 +3,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import GroupTodoList from "./GroupTodoList.jsx";
 
 import styles from "../styles/Group.module.css";
 import {useGroups} from "../store/groupStore";
@@ -25,7 +24,6 @@ const DEFAULT_LAYOUT = [
     {i: "members", x: 0, y: 0, w: 4, h: 18},
     {i: "notes", x: 4, y: 0, w: 4, h: 18},
     {i: "ann", x: 8, y: 0, w: 4, h: 18},
-    {i: "group-todo", x: 0, y: 18, w: 12, h: 12},
 ];
 
 export default function GroupDetailsPage() {
@@ -358,13 +356,6 @@ export default function GroupDetailsPage() {
                                 <p className={styles["muted"]}>No activity yet</p>
                             )}
                         </div>
-                    </Widget>
-                </div>
-
-                {/* To-Do for group */}
-                <div key="group-todo">
-                    <Widget title="To-Do's">
-                        <GroupTodoList groupId={currentGroup.id}/>
                     </Widget>
                 </div>
             </ResponsiveGridLayout>

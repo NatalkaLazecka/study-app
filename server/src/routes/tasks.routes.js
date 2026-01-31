@@ -6,8 +6,7 @@ import {
     deleteTask,
     getTaskById,
     getTasksByStudent,
-    getNotificationModes,
-    getTasksByGroup
+    getNotificationModes
 } from "../controllers/tasks.controller.js";
 import {requireAuth} from "../middleware/requireAuth.js";
 import {
@@ -27,7 +26,5 @@ router.post("/", requireAuth, createTaskValidator, validate, addTask);
 router.get("/:id", requireAuth, taskIdValidator, validate, getTaskById);
 router.put("/:id", requireAuth, updateTaskValidator, validate, updateTask);
 router.delete("/:id", requireAuth, taskIdValidator, validate, deleteTask);
-
-router.get("/group/:groupId", requireAuth, getTasksByGroup);
 
 export default router;
