@@ -49,8 +49,8 @@ router.delete("/:id/notes/:noteId", requireAuth, deleteNoteValidator, validate, 
 
 router.get("/:id/announcements", requireAuth, getAnnouncementsValidator, validate, getGroupAnnouncements);
 
-router.get("/notes/:noteId/files", requireAuth, getNoteFiles);
-router.post("/notes/:noteId/file", requireAuth, noteFileUpload, uploadNoteFile);
+router.get("/:id/notes/:noteId/files", requireAuth, getNoteFiles);
+router.post("/id:/notes/:noteId/file", requireAuth, noteFileUpload, uploadNoteFile);
 router.get("/:fileId/download", requireAuth, downloadNoteFile);
 router.delete("/:fileId", requireAuth, deleteNoteFile);
 
