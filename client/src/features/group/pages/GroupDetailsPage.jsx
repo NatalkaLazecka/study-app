@@ -16,7 +16,6 @@ import {
     createGroupNote,
     deleteGroupNote,
     getGroupAnnouncements,
-    getNoteFiles,
     uploadNoteFile,
     downloadNoteFile,
     deleteNoteFile,
@@ -33,7 +32,7 @@ const DEFAULT_LAYOUT = [
 export default function GroupDetailsPage() {
     const {id} = useParams();
     const navigate = useNavigate();
-    const [noteFiles, setNoteFiles] = useState({});
+    //const [noteFiles, setNoteFiles] = useState({});
     const [noteFilesToUpload, setNoteFilesToUpload] = useState([]);
 
     const {currentGroup, fetchGroupDetails, clearCurrentGroup,} = useGroups();
@@ -56,25 +55,25 @@ export default function GroupDetailsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [announcements, setAnnouncements] = useState([]);
 
-    const fetchNoteFiles = async (noteId) => {
-        try {
-            const files = await getNoteFiles(noteId);
-            setNoteFiles(prev => ({...prev, [noteId]: files}));
-        } catch (err) {
-            if (err.message?.includes("403") || err.message?.includes("No perrmision")) {
-                setNoteFiles(prev => ({...prev, [noteId]: []}));
-                return;
-            }
-            console.log("Failed to load note files:", err);
-        }
-
-    }
-
-    useEffect(() => {
-        notes.forEach(note => {
-            void fetchNoteFiles(note.id);
-        })
-    }, [notes]);
+    // const fetchNoteFiles = async (noteId) => {
+    //     try {
+    //         const files = await getNoteFiles(noteId);
+    //         setNoteFiles(prev => ({...prev, [noteId]: files}));
+    //     } catch (err) {
+    //         if (err.message?.includes("403") || err.message?.includes("No perrmision")) {
+    //             setNoteFiles(prev => ({...prev, [noteId]: []}));
+    //             return;
+    //         }
+    //         console.log("Failed to load note files:", err);
+    //     }
+    //
+    // }
+    //
+    // useEffect(() => {
+    //     notes.forEach(note => {
+    //         void fetchNoteFiles(note.id);
+    //     })
+    // }, [notes]);
 
     const handleNoteFileUpload = async (noteId, event) => {
         const file = event.target.files[0];
@@ -383,10 +382,10 @@ export default function GroupDetailsPage() {
                                         </button>
                                     </div>
                                     {note.opis && <p>{note.opis}</p>}
-                                    {noteFiles[note.id] && noteFiles[note.id].length > 0 && (
+                                    {note.files && note.files.length > 0 && (
                                         <div>
                                             <ul>
-                                                {noteFiles[note.id].map(f => (
+                                                {note.files.map(f => (
                                                     <li key={f.id}>
                                                         <span
                                                             onClick={() => handleNoteFileDownload(f.id, f.nazwa)}
