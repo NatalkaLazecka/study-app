@@ -137,9 +137,6 @@ export const deleteNoteFile = async (req, res) => {
     if (!file[0])
         return res.status(404).json({error: "File not found"});
 
-    // if (file.student_id !== studentId && file.administrator !== studentId)
-    //     return res.status(403).json({error: "No permission to delete file"});
-
     const [member] = await pool.query(
         "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?",
         [file.grupa_id, studentId]

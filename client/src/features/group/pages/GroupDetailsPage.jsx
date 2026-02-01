@@ -446,7 +446,7 @@ export default function GroupDetailsPage() {
                         setNoteError("");
                         setNoteTitle("");
                         setNoteContent("");
-                        setNoteFilesToUpload([]); // czyść wybrane pliki przy zamknięciu modala!
+                        setNoteFilesToUpload([]);
                     }}
                 >
                     <div className={styles["modal"]} onClick={(e) => e.stopPropagation()}>
