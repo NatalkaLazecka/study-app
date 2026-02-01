@@ -83,7 +83,7 @@ export default function GroupDetailsPage() {
             await uploadNoteFile(noteId, file);
             await loadNotes();
         }catch (err){
-            console.error("Upload failed:", err);
+            console.error("Upload failed:" ,err);
         }
 
     };
