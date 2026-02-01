@@ -58,17 +58,17 @@ export default function GroupDetailsPage() {
 
     const fetchNoteFiles = async (noteId) => {
         try {
-
-            const files = await getNoteFiles(id, noteId);
+            const files = await getNoteFiles(noteId);
             setNoteFiles(prev => ({...prev, [noteId]: files}));
         } catch (err) {
-            if (err.message?.includes("403") || err.message?.includes("No permission")) {
+            if (err.message?.includes("403") || err.message?.includes("No perrmision")) {
                 setNoteFiles(prev => ({...prev, [noteId]: []}));
                 return;
             }
             console.log("Failed to load note files:", err);
         }
-    };
+
+    }
 
     useEffect(() => {
         notes.forEach(note => {
@@ -80,9 +80,9 @@ export default function GroupDetailsPage() {
         const file = event.target.files[0];
         if (!file) return;
         try {
-            await uploadNoteFile(id, noteId, file);
+            await uploadNoteFile(noteId, file);
             await loadNotes();
-        } catch (err) {
+        }catch (err){
             console.error("Upload failed:", err);
         }
 

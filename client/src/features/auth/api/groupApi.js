@@ -105,7 +105,7 @@ export async function uploadNoteFile(noteId, file) {
     const formData = new FormData();
     formData.append('file', file);
     //const res = await apiFetch(`/api/groups/${noteId}/file`,
-    const res = await apiFetch(`/api/groups/${groupId}/notes/${noteId}/file`,{
+    const res = await apiFetch(`/api/groups/notes/${noteId}/file`,{
         method: 'POST',
         body: formData,
     });
