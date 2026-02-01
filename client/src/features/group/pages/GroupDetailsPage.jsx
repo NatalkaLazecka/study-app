@@ -394,12 +394,6 @@ export default function GroupDetailsPage() {
                                                         >
                                                             <i className="fa-solid fa-file"/> {f.nazwa}
                                                         </span>
-                                                        <button
-                                                            onClick={() => handleNoteFileDelete(note.id, f.id)}
-                                                            title="Usuń plik"
-                                                        >
-                                                            <i className="fa-solid fa-x"/>
-                                                        </button>
                                                     </li>
                                                 ))}
                                             </ul>
