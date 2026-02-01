@@ -98,12 +98,14 @@ export async function getGroupAnnouncements(groupId) {
 }
 
 export async function getNoteFiles(noteId) {
-    return apiFetch(`/api/groups/${noteId}/files`).then(res => res.json());
+    //return apiFetch(`/api/groups/${noteId}/files`)
+    return apiFetch(`/api/groups/notes/${noteId}/files`).then(res => res.json());
 }
 export async function uploadNoteFile(noteId, file) {
     const formData = new FormData();
     formData.append('file', file);
-    const res = await apiFetch(`/api/groups/${noteId}/file`, {
+    //const res = await apiFetch(`/api/groups/${noteId}/file`,
+    const res = await apiFetch(`/api/groups/notes/${noteId}/file`,{
         method: 'POST',
         body: formData,
     });
@@ -116,8 +118,10 @@ export async function uploadNoteFile(noteId, file) {
     }
 }
 export async function downloadNoteFile(fileId) {
-    return apiFetch(`/api/groups/${fileId}/download`).then(res => res.blob());
+    //return apiFetch(`/api/groups/${fileId}/download`)
+    return apiFetch(`/api/groups/files/${fileId}/download`).then(res => res.blob());
 }
 export async function deleteNoteFile(fileId) {
-    return apiFetch(`/api/groups/${fileId}`, { method: 'DELETE' });
+    //return apiFetch(`/api/groups/${fileId}`
+    return apiFetch(`/api/groups/files/${fileId}`, { method: 'DELETE' });
 }
