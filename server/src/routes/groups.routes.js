@@ -51,7 +51,7 @@ router.get("/:id/announcements", requireAuth, getAnnouncementsValidator, validat
 
 router.get("/notes/:noteId/files", requireAuth, getNoteFiles);
 router.post("/notes/:noteId/file", requireAuth, noteFileUpload, uploadNoteFile);
-router.get("/:fileId/download", requireAuth, downloadNoteFile);
-router.delete("/:fileId", requireAuth, deleteNoteFile);
+router.get("/files/:fileId/download", requireAuth, downloadNoteFile);
+router.delete("/files/:fileId", requireAuth, deleteNoteFile);
 
 export default router;
