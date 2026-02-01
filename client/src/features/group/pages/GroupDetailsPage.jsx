@@ -57,8 +57,17 @@ export default function GroupDetailsPage() {
     const [announcements, setAnnouncements] = useState([]);
 
     const fetchNoteFiles = async (noteId) => {
-        const files = await getNoteFiles(noteId);
-        setNoteFiles(prev => ({...prev, [noteId]: files}));
+        try {
+            const files = await getNoteFiles(noteId);
+            setNoteFiles(prev => ({...prev, [noteId]: files}));
+        } catch (err) {
+            if (err.message?.includes("403") || err.message?.includes("No perrmision")) {
+                setNoteFiles(prev => ({...prev, [noteId]: []}));
+                return;
+            }
+            console.log("Failed to load note files:", err);
+        }
+
     }
 
     useEffect(() => {
@@ -70,8 +79,13 @@ export default function GroupDetailsPage() {
     const handleNoteFileUpload = async (noteId, event) => {
         const file = event.target.files[0];
         if (!file) return;
-        await uploadNoteFile(noteId, file);
-        fetchNoteFiles(noteId);
+        try {
+            await uploadNoteFile(noteId, file);
+            await loadNotes();
+        }catch (err){
+            console.error("Upload failed:", err);
+        }
+
     };
 
     const handleNoteFileDownload = async (fileId, fileName) => {
