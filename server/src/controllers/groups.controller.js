@@ -94,12 +94,14 @@ export const downloadNoteFile = async (req, res) => {
     const fileId = req.params.fileId;
     const studentId = req.user.id;
 
-    const [file] = await pool.query(
+    const [files] = await pool.query(
         "SELECT nazwa, sciezka, notatka_id FROM plik_notatka WHERE id = ?", [fileId]
     );
 
-    if (!file[0])
+    if (!files[0])
         return res.status(404).json({error: "File not found"});
+
+    const file = files[0];
 
     const [note] = await pool.query(
         "SELECT grupa_id FROM notatka WHERE id = ?",
@@ -109,7 +111,7 @@ export const downloadNoteFile = async (req, res) => {
         return res.status(404).json({error: "Note not found"});
 
     const [member] = await pool.query(
-        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note.grupa_id, studentId]
+        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note[0].grupa_id, studentId]
     );
 
     if (!member[0])
@@ -135,8 +137,17 @@ export const deleteNoteFile = async (req, res) => {
     if (!file[0])
         return res.status(404).json({error: "File not found"});
 
-    if (file.student_id !== studentId && file.administrator !== studentId)
+    // if (file.student_id !== studentId && file.administrator !== studentId)
+    //     return res.status(403).json({error: "No permission to delete file"});
+
+    const [member] = await pool.query(
+        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?",
+        [file.grupa_id, studentId]
+    );
+
+    if (!member[0])
         return res.status(403).json({error: "No permission to delete file"});
+
 
     const filePath = path.join(noteFilesDir, file.sciezka);
 
