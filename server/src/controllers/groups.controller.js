@@ -64,11 +64,9 @@ export const uploadNoteFile = async (req, res) => {
         return res.status(404).json({message: "Note not found"});
 
     const [member] = await pool.query(
-        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note.grupa_id, studentId]
+        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?",
+        [note[0].grupa_id, studentId]
     );
-
-    // if (!member[0])
-    //     return res.status(403).json({message: "No permission"});
 
     const [group] = await pool.query(
         "SELECT administrator FROM grupa WHERE id = ?",

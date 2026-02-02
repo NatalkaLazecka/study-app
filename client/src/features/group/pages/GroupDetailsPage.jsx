@@ -32,7 +32,6 @@ const DEFAULT_LAYOUT = [
 export default function GroupDetailsPage() {
     const {id} = useParams();
     const navigate = useNavigate();
-    //const [noteFiles, setNoteFiles] = useState({});
     const [noteFilesToUpload, setNoteFilesToUpload] = useState([]);
 
     const {currentGroup, fetchGroupDetails, clearCurrentGroup,} = useGroups();
@@ -55,25 +54,7 @@ export default function GroupDetailsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [announcements, setAnnouncements] = useState([]);
 
-    // const fetchNoteFiles = async (noteId) => {
-    //     try {
-    //         const files = await getNoteFiles(noteId);
-    //         setNoteFiles(prev => ({...prev, [noteId]: files}));
-    //     } catch (err) {
-    //         if (err.message?.includes("403") || err.message?.includes("No perrmision")) {
-    //             setNoteFiles(prev => ({...prev, [noteId]: []}));
-    //             return;
-    //         }
-    //         console.log("Failed to load note files:", err);
-    //     }
-    //
-    // }
-    //
-    // useEffect(() => {
-    //     notes.forEach(note => {
-    //         void fetchNoteFiles(note.id);
-    //     })
-    // }, [notes]);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleNoteFileUpload = async (noteId, event) => {
         const file = event.target.files[0];
@@ -81,8 +62,8 @@ export default function GroupDetailsPage() {
         try {
             await uploadNoteFile(noteId, file);
             await loadNotes();
-        }catch (err){
-            console.error("Upload failed:" ,err);
+        } catch (err) {
+            console.error("Upload failed:", err);
         }
 
     };
@@ -167,7 +148,7 @@ export default function GroupDetailsPage() {
             await loadNotes();
             await loadAnnouncements();
         } catch (err) {
-            alert(err.message || "Failed to delete note");
+            setErrorMessage(err.message || "Failed to delete note");
         }
     };
 
@@ -320,18 +301,27 @@ export default function GroupDetailsPage() {
 
                         <div className={styles["members-list"]}>
                             {currentGroup.members.map((m) => (
-                                <div key={m.id} className={styles["member-item"]}>
+                                <div key={m.id}
+                                     className={`${styles["member-item"]} ${m.isAdmin ? styles["member-item-admin"] : ""}`}>
                                     <div className={styles["avatar"]}>
-                                        <i className="fa-regular fa-user"/>
+                                        {m.isAdmin ? (
+                                            <i className="fa-solid fa-crown"/>
+                                        ) : (
+                                            <i className="fa-regular fa-user"/>
+                                        )}
                                     </div>
                                     <div className={styles["member-info"]}>
                                         <div className={styles["member-name"]}>
                                             {m.imie} {m.nazwisko}
-                                            {m.isAdmin && (
-                                                <span className={styles["admin-badge"]}>ADMIN</span>
-                                            )}
                                         </div>
-                                        <div className={styles["member-email"]}>{m.e_mail}</div>
+                                        <div className={styles["member-email"]}>
+                                            {m.e_mail}
+                                        </div>
+                                        {m.isAdmin && (
+                                            <div className={styles["admin-label"]}>
+                                                ADMIN
+                                            </div>
+                                        )}
                                     </div>
 
                                     {isAdmin && !m.isAdmin && (
@@ -524,6 +514,24 @@ export default function GroupDetailsPage() {
                                 Cancel
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* GLOBAL ERROR MESSAGE */}
+            {errorMessage && (
+                <div
+                    className={styles["modal-overlay"]}
+                    onClick={() => setErrorMessage("")}>
+                    <div
+                        className={styles["error-modal"]}
+                        onClick={(e) => e.stopPropagation()}>
+                        <p>{errorMessage}</p>
+                        <button
+                            className={styles["error-modal-btn"]}
+                            onClick={() => setErrorMessage("")}>
+                            OK
+                        </button>
                     </div>
                 </div>
             )}
