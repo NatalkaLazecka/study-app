@@ -148,7 +148,12 @@ export default function GroupDetailsPage() {
             await loadNotes();
             await loadAnnouncements();
         } catch (err) {
-            setErrorMessage(err.message || "Failed to delete note");
+            let errorText = err.message || "Failed to delete note";
+            errorText = errorText
+                .replace(/^.*"message"\s*:\s*"/, '')
+                .replace(/".*$/, '');
+
+            setErrorMessage(errorText);
         }
     };
 

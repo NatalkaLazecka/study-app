@@ -136,6 +136,7 @@
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     transition: all 0.2s;
+    border: 1px solid transparent;
 }
 
 .member-item:hover {
@@ -143,21 +144,21 @@
 }
 
 .member-item-admin {
-    background: rgba(232, 91, 191, 0.1);
-    border: 2px solid var(--accent);
-    box-shadow: 0 0 12px rgba(232, 91, 191, 0.3);
+    background: rgba(232, 91, 191, 0.1) !important;
+    border: 2px solid var(--accent) !important;
+    box-shadow: 0 0 12px rgba(232, 91, 191, 0.3) !important;
 }
 
 .member-item-admin:hover {
-    background: rgba(232, 91, 191, 0.15);
-    box-shadow: 0 0 16px rgba(232, 91, 191, 0.4);
+    background: rgba(232, 91, 191, 0.15) !important;
+    box-shadow: 0 0 16px rgba(232, 91, 191, 0.4) !important;
 }
 
 .member-item-admin .avatar {
-    background: linear-gradient(135deg, var(--accent), #c74da6);
-    border-color: var(--accent);
-    color: white;
-    box-shadow: 0 0 10px rgba(232, 91, 191, 0.5);
+    background: linear-gradient(135deg, var(--accent), #c74da6) !important;
+    border-color: var(--accent) !important;
+    color: white !important;
+    box-shadow: 0 0 10px rgba(232, 91, 191, 0.5) !important;
 }
 
 .avatar {
@@ -171,6 +172,7 @@
     justify-content: center;
     font-size: 1.125rem;
     color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s;
 }
 
 .member-info {
@@ -336,8 +338,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    max-height: 500px;
-    overflow-y: auto;
 }
 
 .announcement-item {
@@ -655,7 +655,7 @@
 
 .error-modal p {
     margin: 0 0 1.5rem 0;
-    color: #d32f2f;
+    color: #fd6464;
     font-size: 1rem;
     line-height: 1.5;
 }

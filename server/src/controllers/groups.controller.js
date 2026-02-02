@@ -309,7 +309,7 @@ export const getGroupDetails = async (req, res) => {
                 imie: m.imie,
                 nazwisko: m.nazwisko,
                 e_mail: m.e_mail,
-                is_admin: m.is_admin === 1
+                isAdmin: m.is_admin === 1
             })),
             isCurrentUserAdmin: group.administrator === studentId
         });
