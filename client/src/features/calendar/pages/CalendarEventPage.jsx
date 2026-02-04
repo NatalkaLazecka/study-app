@@ -365,21 +365,6 @@ export default function CalendarEventPage() {
                         </div>
                     </div>
 
-                    <div className={styles["input-box"]}>
-                        <p className={styles["input-title"]}>Repeat</p>
-                        <CustomSelect
-                            value={selectedRepeatMode}
-                            onChange={setSelectedRepeatMode}
-                            options={repeatModes.map(mode => ({
-                                value: mode.id,
-                                label: mode.nazwa
-                            }))}
-                            placeholder="No repeat"
-                            isSearchable={false}
-                            isClearable={false}
-                        />
-                    </div>
-
                     {autoNotify && (
                         <div className={todoStyles["notification-modes"]}>
                             <p className={calendarStyles["input-title"]}>
@@ -413,6 +398,21 @@ export default function CalendarEventPage() {
                             )}
                         </div>
                     )}
+
+                    <div className={styles["input-box"]}>
+                        <p className={styles["input-title"]}>Repeat</p>
+                        <CustomSelect
+                            value={selectedRepeatMode}
+                            onChange={setSelectedRepeatMode}
+                            options={repeatModes.map(mode => ({
+                                value: mode.id,
+                                label: mode.nazwa
+                            }))}
+                            placeholder="No repeat"
+                            isSearchable={false}
+                            isClearable={false}
+                        />
+                    </div>
 
                     <div className={styles["import-box"]} onClick={handleFileClick}>
                         <div className={styles["import-icon"]}>
