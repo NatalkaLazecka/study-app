@@ -47,6 +47,7 @@ export default function GroupDetailsPage() {
     const [addError, setAddError] = useState("");
 
     const [notes, setNotes] = useState([]);
+    const [noteToDelete, setNoteToDelete] = useState(null);
     const [showNoteModal, setShowNoteModal] = useState(false);
     const [noteTitle, setNoteTitle] = useState("");
     const [noteContent, setNoteContent] = useState("");
@@ -141,12 +142,17 @@ export default function GroupDetailsPage() {
     };
 
     const handleDeleteNote = async (noteId) => {
-        if (!window.confirm("Delete this note?")) return;
+        setNoteToDelete(noteId);
+    };
+
+    const confirmDeleteNote = async () => {
+        if (!noteToDelete) return;
 
         try {
-            await deleteGroupNote(id, noteId);
+            await deleteGroupNote(id, noteToDelete);
             await loadNotes();
             await loadAnnouncements();
+            setNoteToDelete(null);
         } catch (err) {
             let errorText = err.message || "Failed to delete note";
             errorText = errorText
@@ -154,6 +160,7 @@ export default function GroupDetailsPage() {
                 .replace(/".*$/, '');
 
             setErrorMessage(errorText);
+            setNoteToDelete(null);
         }
     };
 
@@ -516,6 +523,33 @@ export default function GroupDetailsPage() {
                                 setAddError("");
                                 setNewMemberEmail("");
                             }}>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* CONFIRMATION MODAL - DELETE NOTE */}
+            {noteToDelete && (
+                <div
+                    className={styles["modal-overlay"]}
+                    onClick={() => setNoteToDelete(null)}>
+                    <div
+                        className={styles["confirm-modal"]}
+                        onClick={(e) => e.stopPropagation()}>
+                        <i className="fa-solid fa-triangle-exclamation"
+                           style={{fontSize: '2rem', color: 'var(--accent)', marginBottom: '1rem'}}/>
+                        <p>Delete this note?</p>
+                        <div className={styles["confirm-modal-buttons"]}>
+                            <button
+                                className={styles["confirm-modal-btn-delete"]}
+                                onClick={confirmDeleteNote}>
+                                Delete
+                            </button>
+                            <button
+                                className={styles["confirm-modal-btn-cancel"]}
+                                onClick={() => setNoteToDelete(null)}>
                                 Cancel
                             </button>
                         </div>
