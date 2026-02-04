@@ -641,30 +641,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: clamp(3px, calc(2px + 0.5dvh), 6px);
-    height: clamp(120px, 15dvh, 200px);
-    overflow-y: auto;
     padding-right: 5px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--pink) rgba(255, 255, 255, 0.05);
-}
-
-.files-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.files-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-}
-
-.files-list::-webkit-scrollbar-thumb {
-    background: var(--pink);
-    border-radius: 10px;
-    transition: background 0.3s;
-}
-
-.files-list::-webkit-scrollbar-thumb:hover {
-    background: var(--light);
 }
 
 .file-item {
