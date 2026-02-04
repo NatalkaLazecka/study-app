@@ -385,6 +385,18 @@ export const deleteEvent = async (req, res) => {
             return res.status(404).json({ error: "Event not found" });
         }
 
+        const [files] = await pool.query(
+            'SELECT sciezka FROM plik_wydarzenie WHERE wydarzenie_id = ?',
+            [req.params.id]
+        );
+
+        for (const file of files) {
+            const filePath = path.join(__dirname, '../uploads/event-files', file.sciezka);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
+
         await pool.query(
             'DELETE FROM aktywnosc_w_ramach_wydarzenia WHERE wydarzenie_id = ?',
             [req.params.id]

@@ -8,7 +8,8 @@ import {
     createEventValidator,
     updateEventValidator,
     eventIdParamValidator,
-    fileIdParamValidator
+    fileIdParamValidator,
+    deleteEventValidator
 } from "../validators/event.validator.js";
 
 import {validate} from "../middleware/validate.js";
@@ -25,7 +26,7 @@ router.get("/repeatModes", getRepeatModes);
 router.post("/", requireAuth, createEventValidator, validate, addEvent);
 router.get("/:eventId", requireAuth, eventIdParamValidator, getEventById);
 router.put("/:id", requireAuth, updateEventValidator, validate, updateEvent);
-router.delete("/:id", requireAuth, eventIdParamValidator, validate, deleteEvent);
+router.delete("/:id", requireAuth, deleteEventValidator, validate, deleteEvent);
 
 router.get("/:eventId/files", requireAuth, eventIdParamValidator, validate, getEventFiles);
 router.post("/:eventId/files", requireAuth, eventIdParamValidator, validate, uploadMiddleware, uploadEventFile);

@@ -59,4 +59,10 @@ export const fileIdParamValidator = [
   param("fileId")
     .isUUID()
     .withMessage("Invalid fileId"),
-    ];
+];
+
+export const deleteEventValidator = [
+  param("id")
+    .isUUID()
+    .withMessage("Invalid event id"),
+];
