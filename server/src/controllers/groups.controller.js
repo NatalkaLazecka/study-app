@@ -1,25 +1,13 @@
 import pool from "../database/db.js";
 import {v4 as uuidv4} from "uuid";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
-import {fileURLToPath} from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const storage = multer.memoryStorage();
 
-const noteFilesDir = path.join(__dirname, "../uploads/note-files");
-if (!fs.existsSync(noteFilesDir)) fs.mkdirSync(noteFilesDir, {recursive: true});
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, noteFilesDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${uuidv4()}-${file.originalname}`);
-    }
-});
-export const noteFileUpload = multer({storage}).single("file");
+export const noteFileUpload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 }
+}).single("file");
 
 export const getNoteFiles = async (req, res) => {
     const noteId = req.params.noteId;
@@ -33,14 +21,14 @@ export const getNoteFiles = async (req, res) => {
         return res.status(404).json({message: "Note not found"});
 
     const [member] = await pool.query(
-        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note.grupa_id, studentId]
+        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note[0].grupa_id, studentId]
     );
 
     if (!member[0])
         return res.status(403).json({message: "No permission"});
 
     const [files] = await pool.query(
-        `SELECT id, nazwa, sciezka, data_dodania
+        `SELECT id, nazwa, data_dodania
          FROM plik_notatka
          WHERE notatka_id = ?
          ORDER BY data_dodania DESC`,
@@ -80,10 +68,13 @@ export const uploadNoteFile = async (req, res) => {
     }
 
     const id = uuidv4();
+    const fileName = req.file.originalname;
+    const fileBuffer = req.file.buffer;
+
     await pool.query(
-        `INSERT INTO plik_notatka (id, nazwa, sciezka, data_dodania, notatka_id, dostep_grupa_id)
+        `INSERT INTO plik_notatka (id, nazwa, zawartosc, data_dodania, notatka_id, dostep_grupa_id)
          VALUES (?, ?, ?, NOW(), ?, ?)`,
-        [id, req.file.originalname, req.file.filename, noteId, note.grupa_id]
+        [id, fileName, fileBuffer, noteId, note[0].grupa_id]
     );
     res.status(201).json({message: "File uploaded", id});
 };
@@ -92,67 +83,71 @@ export const downloadNoteFile = async (req, res) => {
     const fileId = req.params.fileId;
     const studentId = req.user.id;
 
-    const [files] = await pool.query(
-        "SELECT nazwa, sciezka, notatka_id FROM plik_notatka WHERE id = ?", [fileId]
-    );
+    try {
+        const [files] = await pool.query(
+            "SELECT nazwa, zawartosc, notatka_id FROM plik_notatka WHERE id = ?", [fileId]
+        );
 
-    if (!files[0])
-        return res.status(404).json({error: "File not found"});
+        if (!files[0])
+            return res.status(404).json({error: "File not found"});
 
-    const file = files[0];
+        const file = files[0];
 
-    const [note] = await pool.query(
-        "SELECT grupa_id FROM notatka WHERE id = ?",
-        [file.notatka_id]);
+        const [note] = await pool.query(
+            "SELECT grupa_id FROM notatka WHERE id = ?",
+            [file.notatka_id]);
 
-    if (!note[0])
-        return res.status(404).json({error: "Note not found"});
+        if (!note[0])
+            return res.status(404).json({error: "Note not found"});
 
-    const [member] = await pool.query(
-        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note[0].grupa_id, studentId]
-    );
+        const [member] = await pool.query(
+            "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?", [note[0].grupa_id, studentId]
+        );
 
-    if (!member[0])
-        return res.status(403).json({message: "No permission"});
+        if (!member[0])
+            return res.status(403).json({message: "No permission"});
 
-    const filePath = path.join(noteFilesDir, file.sciezka);
-
-    if (!fs.existsSync(filePath))
-        return res.status(404).json({error: "No file on server"});
-
-    res.download(filePath, file.nazwa);
+        res.setHeader('Content-Disposition', `attachment; filename="${file.nazwa}"`);
+        res.setHeader('Content-Type', 'application/octet-stream');
+        res.send(file.zawartosc);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
 };
 
 export const deleteNoteFile = async (req, res) => {
     const fileId = req.params.fileId;
     const studentId = req.user.id;
 
-    const [file] = await pool.query(
-        "SELECT plik_notatka.*, n.student_id, g.administrator FROM plik_notatka INNER JOIN notatka n ON n.id = plik_notatka.notatka_id INNER JOIN grupa g ON n.grupa_id = g.id WHERE plik_notatka.id = ?",
-        [fileId]
-    );
+    try{
+        const [file] = await pool.query(
+            `SELECT plik_notatka.*, n.student_id, g.administrator, n.grupa_id
+         FROM plik_notatka 
+         INNER JOIN notatka n ON n.id = plik_notatka.notatka_id 
+         INNER JOIN grupa g ON n.grupa_id = g.id 
+         WHERE plik_notatka.id = ?`,
+            [fileId]
+        );
 
-    if (!file[0])
-        return res.status(404).json({error: "File not found"});
+        if (!file[0])
+            return res.status(404).json({error: "File not found"});
 
-    const [member] = await pool.query(
-        "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?",
-        [file.grupa_id, studentId]
-    );
+        const [member] = await pool.query(
+            "SELECT 1 FROM grupa_student WHERE grupa_id = ? AND student_id = ?",
+            [file[0].grupa_id, studentId]
+        );
 
-    if (!member[0])
-        return res.status(403).json({error: "No permission to delete file"});
+        if (!member[0])
+            return res.status(403).json({error: "No permission to delete file"});
 
+        await pool.query(
+            "DELETE FROM plik_notatka WHERE id = ?",
+            [fileId]);
 
-    const filePath = path.join(noteFilesDir, file.sciezka);
-
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-
-    await pool.query(
-        "DELETE FROM plik_notatka WHERE id = ?",
-        [fileId]);
-
-    res.json({message: "File deleted"});
+        res.json({message: "File deleted"});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
 };
 
 async function createAnnouncement(groupId, studentId, type, content, metadata = null) {
@@ -611,7 +606,7 @@ export const getGroupNotes = async (req, res) => {
 
         const notesWithFiles = await Promise.all(notes.map(async (note) => {
             const [files] = await pool.query(
-                `SELECT id, nazwa, sciezka, data_dodania
+                `SELECT id, nazwa, data_dodania
                  FROM plik_notatka
                  WHERE notatka_id = ?
                    AND (dostep_grupa_id = ? OR dostep_grupa_id IS NULL)
@@ -632,7 +627,6 @@ export const getGroupNotes = async (req, res) => {
                 files: files.map(f => ({
                     id: f.id,
                     nazwa: f.nazwa,
-                    sciezka: f.sciezka,
                     data_dodania: f.data_dodania
                 }))
             };
